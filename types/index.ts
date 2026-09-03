@@ -72,6 +72,24 @@ export interface BookWishlist {
   referenceUrl?: string;
 }
 
+export interface LibrarySettings {
+  schoolName: string;
+  studentBorrowDays: number;
+  teacherBorrowDays: number;
+  maxBooksPerPerson: number;
+  finePerDay: number;
+  adminPasscode: string;
+}
+
+export const DEFAULT_SETTINGS: LibrarySettings = {
+  schoolName: 'ห้องสมุดโรงเรียน',
+  studentBorrowDays: 7,
+  teacherBorrowDays: 14,
+  maxBooksPerPerson: 3,
+  finePerDay: 5,
+  adminPasscode: '1234',
+};
+
 export const BOOK_CATEGORIES = [
   'วิทยาศาสตร์และเทคโนโลยี',
   'คณิตศาสตร์',

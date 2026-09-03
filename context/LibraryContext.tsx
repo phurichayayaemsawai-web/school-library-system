@@ -1,15 +1,15 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Book, BorrowTransaction, BookWishlist, Borrower, WishlistStatus } from '@/types';
-import { INITIAL_BOOKS, INITIAL_TRANSACTIONS, INITIAL_WISHLISTS } from '@/lib/mockData';
-import { getTodayString, isOverdue } from '@/lib/utils';
+import { Book, BorrowTransaction, BookWishlist, Borrower, WishlistStatus, LibrarySettings, DEFAULT_SETTINGS } from '@/types';
+import { INITIAL_BOOKS, INITIAL_TRANSACTIONS, INITIAL_WISHLISTS, SAMPLE_BOOKS } from '@/lib/mockData';
+import { getTodayString, isOverdue, addDays } from '@/lib/utils';
 
 interface BorrowParams {
   bookId: string;
   borrower: Borrower;
-  borrowDate: string;
-  dueDate: string;
+  borrowDate?: string;
+  dueDate?: string;
   notes?: string;
 }
 
@@ -17,6 +17,8 @@ interface LibraryContextType {
   books: Book[];
   transactions: BorrowTransaction[];
   wishlists: BookWishlist[];
+  settings: LibrarySettings;
+  updateSettings: (newSettings: Partial<LibrarySettings>) => void;
   addBook: (book: Omit<Book, 'id' | 'createdAt' | 'totalBorrowedCount' | 'status'>) => Book;
   updateBook: (id: string, book: Partial<Book>) => void;
   deleteBook: (id: string) => void;
@@ -25,22 +27,25 @@ interface LibraryContextType {
   addWishlist: (item: Omit<BookWishlist, 'id' | 'createdAt' | 'status'>) => BookWishlist;
   updateWishlistStatus: (id: string, status: WishlistStatus, librarianNotes?: string) => void;
   deleteWishlist: (id: string) => void;
-  resetToDefaultData: () => void;
+  loadSampleData: () => void;
+  clearAllData: () => void;
   isLoaded: boolean;
 }
 
 const LibraryContext = createContext<LibraryContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  BOOKS: 'school_library_books_v1',
-  TRANSACTIONS: 'school_library_transactions_v1',
-  WISHLISTS: 'school_library_wishlists_v1',
+  BOOKS: 'school_lib_books_clean_v2',
+  TRANSACTIONS: 'school_lib_trx_clean_v2',
+  WISHLISTS: 'school_lib_wish_clean_v2',
+  SETTINGS: 'school_lib_settings_clean_v2',
 };
 
 export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [books, setBooks] = useState<Book[]>(INITIAL_BOOKS);
   const [transactions, setTransactions] = useState<BorrowTransaction[]>(INITIAL_TRANSACTIONS);
   const [wishlists, setWishlists] = useState<BookWishlist[]>(INITIAL_WISHLISTS);
+  const [settings, setSettings] = useState<LibrarySettings>(DEFAULT_SETTINGS);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   // Load from LocalStorage on mount
@@ -49,6 +54,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const storedBooks = localStorage.getItem(STORAGE_KEYS.BOOKS);
       const storedTransactions = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
       const storedWishlists = localStorage.getItem(STORAGE_KEYS.WISHLISTS);
+      const storedSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
 
       if (storedBooks) {
         setBooks(JSON.parse(storedBooks));
@@ -58,7 +64,6 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       if (storedTransactions) {
         const parsedTrx: BorrowTransaction[] = JSON.parse(storedTransactions);
-        // Refresh overdue status
         const refreshedTrx = parsedTrx.map((trx) => {
           if (trx.status === 'ACTIVE' && isOverdue(trx.dueDate, trx.returnDate)) {
             return { ...trx, status: 'OVERDUE' as const };
@@ -75,6 +80,12 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       } else {
         localStorage.setItem(STORAGE_KEYS.WISHLISTS, JSON.stringify(INITIAL_WISHLISTS));
       }
+
+      if (storedSettings) {
+        setSettings({ ...DEFAULT_SETTINGS, ...JSON.parse(storedSettings) });
+      } else {
+        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(DEFAULT_SETTINGS));
+      }
     } catch (e) {
       console.warn('LocalStorage not accessible, using in-memory state.', e);
     } finally {
@@ -82,13 +93,12 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, []);
 
-  // Save changes to LocalStorage
   const saveBooks = (newBooks: Book[]) => {
     setBooks(newBooks);
     try {
       localStorage.setItem(STORAGE_KEYS.BOOKS, JSON.stringify(newBooks));
     } catch (e) {
-      console.warn('Error saving books to LocalStorage', e);
+      console.warn('Error saving books', e);
     }
   };
 
@@ -97,7 +107,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     try {
       localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(newTrx));
     } catch (e) {
-      console.warn('Error saving transactions to LocalStorage', e);
+      console.warn('Error saving transactions', e);
     }
   };
 
@@ -106,7 +116,17 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     try {
       localStorage.setItem(STORAGE_KEYS.WISHLISTS, JSON.stringify(newWishlists));
     } catch (e) {
-      console.warn('Error saving wishlists to LocalStorage', e);
+      console.warn('Error saving wishlists', e);
+    }
+  };
+
+  const updateSettings = (newSettings: Partial<LibrarySettings>) => {
+    const updated = { ...settings, ...newSettings };
+    setSettings(updated);
+    try {
+      localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(updated));
+    } catch (e) {
+      console.warn('Error saving settings', e);
     }
   };
 
@@ -124,19 +144,17 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return newBook;
   };
 
-  // Update Book
   const updateBook = (id: string, updatedFields: Partial<Book>) => {
     const updated = books.map((b) => (b.id === id ? { ...b, ...updatedFields } : b));
     saveBooks(updated);
   };
 
-  // Delete Book
   const deleteBook = (id: string) => {
     const updated = books.filter((b) => b.id !== id);
     saveBooks(updated);
   };
 
-  // Borrow Book: Automatically change book status to BORROWED & create transaction
+  // Borrow Book: Automatically toggles book status to BORROWED & calculates due date from settings
   const borrowBook = (params: BorrowParams): { success: boolean; message: string; transaction?: BorrowTransaction } => {
     const book = books.find((b) => b.id === params.bookId);
     if (!book) {
@@ -144,8 +162,14 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
 
     if (book.status === 'BORROWED') {
-      return { success: false, message: 'หนังสือเล่มนี้กำลังถูกยืมอยู่ ไม่สามารถทำรายการได้' };
+      return { success: false, message: 'หนังสือเล่มนี้กำลังถูกยืมอยู่' };
     }
+
+    const borrowDate = params.borrowDate || getTodayString();
+    
+    // Calculate due date based on user type and configured settings if not provided
+    const durationDays = params.borrower.type === 'STUDENT' ? settings.studentBorrowDays : settings.teacherBorrowDays;
+    const dueDate = params.dueDate || addDays(new Date(borrowDate), durationDays);
 
     const newTransactionId = `TRX-${new Date().getFullYear()}-${String(transactions.length + 1).padStart(3, '0')}`;
     const newTransaction: BorrowTransaction = {
@@ -155,13 +179,12 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       bookCoverUrl: book.coverUrl,
       bookCategory: book.category,
       borrower: params.borrower,
-      borrowDate: params.borrowDate || getTodayString(),
-      dueDate: params.dueDate,
-      status: isOverdue(params.dueDate) ? 'OVERDUE' : 'ACTIVE',
+      borrowDate,
+      dueDate,
+      status: isOverdue(dueDate) ? 'OVERDUE' : 'ACTIVE',
       notes: params.notes,
     };
 
-    // Update book status to BORROWED & increment borrow count
     const updatedBooks = books.map((b) =>
       b.id === book.id
         ? { ...b, status: 'BORROWED' as const, totalBorrowedCount: b.totalBorrowedCount + 1 }
@@ -173,12 +196,12 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     return {
       success: true,
-      message: `บันทึกการยืม "${book.title}" สำเร็จ`,
+      message: `บันทึกการยืม "${book.title}" สำเร็จ (กำหนดส่งคืน: ${dueDate})`,
       transaction: newTransaction,
     };
   };
 
-  // Return Book: Automatically change book status to AVAILABLE & update transaction
+  // Return Book: Automatically toggles book status to AVAILABLE
   const returnBook = (transactionId: string, returnDate?: string): { success: boolean; message: string } => {
     const trx = transactions.find((t) => t.id === transactionId);
     if (!trx) {
@@ -191,14 +214,12 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     const actualReturnDate = returnDate || getTodayString();
 
-    // Update transaction
     const updatedTransactions = transactions.map((t) =>
       t.id === transactionId
         ? { ...t, returnDate: actualReturnDate, status: 'RETURNED' as const }
         : t
     );
 
-    // Update book status to AVAILABLE
     const updatedBooks = books.map((b) =>
       b.id === trx.bookId ? { ...b, status: 'AVAILABLE' as const } : b
     );
@@ -212,7 +233,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
   };
 
-  // Wishlist Actions
+  // Wishlists
   const addWishlist = (item: Omit<BookWishlist, 'id' | 'createdAt' | 'status'>): BookWishlist => {
     const newWishlist: BookWishlist = {
       ...item,
@@ -243,10 +264,14 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     saveWishlists(updated);
   };
 
-  const resetToDefaultData = () => {
-    saveBooks(INITIAL_BOOKS);
-    saveTransactions(INITIAL_TRANSACTIONS);
-    saveWishlists(INITIAL_WISHLISTS);
+  const loadSampleData = () => {
+    saveBooks(SAMPLE_BOOKS);
+  };
+
+  const clearAllData = () => {
+    saveBooks([]);
+    saveTransactions([]);
+    saveWishlists([]);
   };
 
   return (
@@ -255,6 +280,8 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         books,
         transactions,
         wishlists,
+        settings,
+        updateSettings,
         addBook,
         updateBook,
         deleteBook,
@@ -263,7 +290,8 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         addWishlist,
         updateWishlistStatus,
         deleteWishlist,
-        resetToDefaultData,
+        loadSampleData,
+        clearAllData,
         isLoaded,
       }}
     >

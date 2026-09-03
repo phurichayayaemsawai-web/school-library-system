@@ -12,7 +12,8 @@ import {
   X, 
   Library,
   History,
-  ClipboardList
+  Zap,
+  ShieldCheck
 } from 'lucide-react';
 import { useLibrary } from '@/context/LibraryContext';
 import { cn } from '@/lib/utils';
@@ -20,44 +21,50 @@ import { cn } from '@/lib/utils';
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { books, transactions, wishlists } = useLibrary();
+  const { books, transactions, wishlists, settings } = useLibrary();
 
   const activeBorrowsCount = transactions.filter((t) => t.status === 'ACTIVE' || t.status === 'OVERDUE').length;
   const pendingWishlistsCount = wishlists.filter((w) => w.status === 'PENDING').length;
 
   const navItems = [
     {
-      name: 'หน้าแรก / ค้นหา',
+      name: 'หน้าแรก',
       href: '/',
       icon: Library,
     },
     {
-      name: 'แคตตาล็อกหนังสือ',
-      href: '/books',
-      icon: BookOpen,
-      badge: books.length,
-    },
-    {
-      name: 'ระบบยืม - คืน',
-      href: '/borrow-return',
-      icon: ArrowLeftRight,
-      badge: activeBorrowsCount > 0 ? activeBorrowsCount : undefined,
+      name: 'ยืมด่วน (นักเรียน)',
+      href: '/quick-borrow',
+      icon: Zap,
       badgeColor: 'bg-amber-500 text-white',
     },
     {
-      name: 'ประวัติการยืม-คืน',
+      name: 'แคตตาล็อก',
+      href: '/books',
+      icon: BookOpen,
+      badge: books.length > 0 ? books.length : undefined,
+    },
+    {
+      name: 'รายการยืม-คืน',
+      href: '/borrow-return',
+      icon: ArrowLeftRight,
+      badge: activeBorrowsCount > 0 ? activeBorrowsCount : undefined,
+      badgeColor: 'bg-indigo-600 text-white',
+    },
+    {
+      name: 'ประวัติ',
       href: '/borrow-return/history',
       icon: History,
     },
     {
-      name: 'ครูเสนอซื้อหนังสือ',
+      name: 'ครูเสนอซื้อ',
       href: '/wishlist',
       icon: Sparkles,
       badge: pendingWishlistsCount > 0 ? pendingWishlistsCount : undefined,
-      badgeColor: 'bg-indigo-600 text-white',
+      badgeColor: 'bg-purple-600 text-white',
     },
     {
-      name: 'แดชบอร์ดภาพรวม',
+      name: 'สถิติ',
       href: '/dashboard',
       icon: LayoutDashboard,
     },
@@ -74,19 +81,21 @@ export const Navbar: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-lg text-slate-900 tracking-tight">ห้องสมุดโรงเรียน</span>
-                <span className="text-[10px] font-semibold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-200">
-                  v1.0
+                <span className="font-bold text-base sm:text-lg text-slate-900 tracking-tight">
+                  {settings.schoolName || 'ห้องสมุดโรงเรียน'}
+                </span>
+                <span className="text-[10px] font-semibold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-200 hidden sm:inline">
+                  v2.0
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 leading-none">School Library Management</p>
+              <p className="text-[11px] text-slate-500 leading-none">ระบบยืม-คืนห้องสมุด</p>
             </div>
           </Link>
 
           {/* Desktop Nav Links */}
           <nav className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => {
-              const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href) && !navItems.some(n => n.href !== item.href && n.href.startsWith(item.href) && pathname === n.href));
+              const isActive = pathname === item.href;
               const Icon = item.icon;
 
               return (
@@ -94,9 +103,9 @@ export const Navbar: React.FC = () => {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    'flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all',
+                    'flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all',
                     isActive
-                      ? 'bg-indigo-50 text-indigo-700 font-semibold shadow-xs'
+                      ? 'bg-indigo-50 text-indigo-700 shadow-sm'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
                   )}
                 >
@@ -117,14 +126,14 @@ export const Navbar: React.FC = () => {
             })}
           </nav>
 
-          {/* Action Button & Mobile Menu Trigger */}
+          {/* Admin / Teacher portal trigger */}
           <div className="flex items-center gap-2">
             <Link
-              href="/wishlist/dashboard"
-              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors border border-slate-200"
+              href="/admin"
+              className="inline-flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white transition-all shadow-sm"
             >
-              <ClipboardList className="w-3.5 h-3.5 text-indigo-600" />
-              <span>สรุปจัดซื้อ (สำหรับห้องสมุด)</span>
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span>แอดมิน / ครู</span>
             </Link>
 
             <button
@@ -174,16 +183,6 @@ export const Navbar: React.FC = () => {
               </Link>
             );
           })}
-          <div className="pt-2 border-t border-slate-100">
-            <Link
-              href="/wishlist/dashboard"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium bg-slate-100 text-slate-800"
-            >
-              <ClipboardList className="w-4 h-4 text-indigo-600" />
-              <span>Dashboard วิเคราะห์จัดซื้อหนังสือ</span>
-            </Link>
-          </div>
         </div>
       )}
     </header>
