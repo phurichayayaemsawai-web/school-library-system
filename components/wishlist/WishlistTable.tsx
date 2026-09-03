@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { BookWishlist, WishlistStatus, SCHOOL_DEPARTMENTS } from '@/types';
 import { useLibrary } from '@/context/LibraryContext';
-import { Badge } from '@/ui/Badge';
+import { Badge } from '@/components/ui/Badge';
 import { formatThaiDate, formatCurrency } from '@/lib/utils';
 import { 
   Search, 

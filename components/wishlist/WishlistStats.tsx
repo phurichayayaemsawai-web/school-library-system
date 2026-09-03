@@ -3,7 +3,7 @@
 import React from 'react';
 import { BookWishlist, SCHOOL_DEPARTMENTS } from '@/types';
 import { formatCurrency } from '@/lib/utils';
-import { StatCard } from '@/ui/StatCard';
+import { StatCard } from '@/components/ui/StatCard';
 import { Sparkles, DollarSign, Clock, CheckCircle2, ShoppingBag, School } from 'lucide-react';
 
 interface WishlistStatsProps {

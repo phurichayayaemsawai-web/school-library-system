@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Book } from '@/types';
-import { Badge } from '@/ui/Badge';
+import { Badge } from '@/components/ui/Badge';
 import { X, BookOpen, MapPin, Calendar, Hash, User, Bookmark } from 'lucide-react';
 
 interface BookModalProps {

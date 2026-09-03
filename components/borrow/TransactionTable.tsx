@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { BorrowTransaction } from '@/types';
-import { Badge } from '@/ui/Badge';
+import { Badge } from '@/components/ui/Badge';
 import { formatThaiDate, isOverdue, getDaysRemaining } from '@/lib/utils';
 import { 
   Search, 
