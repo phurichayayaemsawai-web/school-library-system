@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Book, BorrowTransaction, BookWishlist, Borrower, WishlistStatus, LibrarySettings, DEFAULT_SETTINGS } from '@/types';
-import { INITIAL_BOOKS, INITIAL_TRANSACTIONS, INITIAL_WISHLISTS, SAMPLE_BOOKS } from '@/lib/mockData';
+import { INITIAL_BOOKS, INITIAL_TRANSACTIONS, INITIAL_WISHLISTS } from '@/lib/mockData';
 import { getTodayString, isOverdue, addDays } from '@/lib/utils';
 
 interface BorrowParams {
@@ -19,7 +19,7 @@ interface LibraryContextType {
   wishlists: BookWishlist[];
   settings: LibrarySettings;
   updateSettings: (newSettings: Partial<LibrarySettings>) => void;
-  addBook: (book: Omit<Book, 'id' | 'createdAt' | 'totalBorrowedCount' | 'status'>) => Book;
+  addBook: (book: Omit<Book, 'id' | 'createdAt' | 'totalBorrowedCount' | 'status'> & { id?: string }) => Book;
   updateBook: (id: string, book: Partial<Book>) => void;
   deleteBook: (id: string) => void;
   borrowBook: (params: BorrowParams) => { success: boolean; message: string; transaction?: BorrowTransaction };
@@ -35,10 +35,10 @@ interface LibraryContextType {
 const LibraryContext = createContext<LibraryContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  BOOKS: 'school_lib_books_clean_v2',
-  TRANSACTIONS: 'school_lib_trx_clean_v2',
-  WISHLISTS: 'school_lib_wish_clean_v2',
-  SETTINGS: 'school_lib_settings_clean_v2',
+  BOOKS: 'school_lib_books_thai_v3',
+  TRANSACTIONS: 'school_lib_trx_thai_v3',
+  WISHLISTS: 'school_lib_wish_thai_v3',
+  SETTINGS: 'school_lib_settings_thai_v3',
 };
 
 export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -130,11 +130,15 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   };
 
-  // Add Book
-  const addBook = (data: Omit<Book, 'id' | 'createdAt' | 'totalBorrowedCount' | 'status'>): Book => {
+  // Add Book: Supports custom Book ID (รหัสหนังสือ เช่น TH-001) or auto generated
+  const addBook = (data: Omit<Book, 'id' | 'createdAt' | 'totalBorrowedCount' | 'status'> & { id?: string }): Book => {
+    const customOrGeneratedId = data.id?.trim() 
+      ? data.id.trim() 
+      : `TH-${String(books.length + 1).padStart(3, '0')}`;
+
     const newBook: Book = {
       ...data,
-      id: `BK-${String(books.length + 1).padStart(3, '0')}`,
+      id: customOrGeneratedId,
       status: 'AVAILABLE',
       totalBorrowedCount: 0,
       createdAt: getTodayString(),
@@ -156,18 +160,21 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // Borrow Book: Automatically toggles book status to BORROWED & calculates due date from settings
   const borrowBook = (params: BorrowParams): { success: boolean; message: string; transaction?: BorrowTransaction } => {
-    const book = books.find((b) => b.id === params.bookId);
+    // Find book by case-insensitive ID or ISBN or Title
+    const searchId = params.bookId.trim().toLowerCase();
+    const book = books.find((b) => b.id.toLowerCase() === searchId || b.isbn.toLowerCase() === searchId || b.title.toLowerCase() === searchId);
+    
     if (!book) {
-      return { success: false, message: 'ไม่พบข้อมูลหนังสือในระบบ' };
+      return { success: false, message: `ไม่พบข้อมูลหนังสือรหัส "${params.bookId}" ในระบบ กรุณาตรวจสอบรหัสหนังสืออีกครั้ง` };
     }
 
     if (book.status === 'BORROWED') {
-      return { success: false, message: 'หนังสือเล่มนี้กำลังถูกยืมอยู่' };
+      return { success: false, message: `หนังสือ "${book.title}" (รหัส ${book.id}) กำลังถูกยืมอยู่ ไม่สามารถทำรายการซ้ำได้` };
     }
 
     const borrowDate = params.borrowDate || getTodayString();
     
-    // Calculate due date based on user type and configured settings if not provided
+    // Calculate due date based on user type and configured settings
     const durationDays = params.borrower.type === 'STUDENT' ? settings.studentBorrowDays : settings.teacherBorrowDays;
     const dueDate = params.dueDate || addDays(new Date(borrowDate), durationDays);
 
@@ -196,7 +203,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     return {
       success: true,
-      message: `บันทึกการยืม "${book.title}" สำเร็จ (กำหนดส่งคืน: ${dueDate})`,
+      message: `บันทึกการยืม "${book.title}" (รหัส ${book.id}) ให้ ${params.borrower.name} เรียบร้อยแล้ว`,
       transaction: newTransaction,
     };
   };
@@ -229,7 +236,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     return {
       success: true,
-      message: `บันทึกการรับคืน "${trx.bookTitle}" เรียบร้อยแล้ว`,
+      message: `บันทึกการรับคืน "${trx.bookTitle}" (รหัส ${trx.bookId}) เรียบร้อยแล้ว`,
     };
   };
 
@@ -265,7 +272,50 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   const loadSampleData = () => {
-    saveBooks(SAMPLE_BOOKS);
+    saveBooks([
+      {
+        id: 'TH-001',
+        title: 'วรรณคดีไทยฉบับวิเคราะห์: ลิลิตพระลอ และ มัทนะพาธา',
+        author: 'ศ.ดร. รื่นฤทัย สัจจพันธุ์',
+        isbn: '978-616-1234-01-1',
+        category: 'วรรณคดีและวรรณกรรมไทย',
+        coverUrl: 'https://images.unsplash.com/photo-1532012164546-f432f2e3edd3?w=600&auto=format&fit=crop&q=80',
+        status: 'AVAILABLE',
+        publishedYear: '2567',
+        location: 'ตู้ภาษาไทย ชั้น 1 (TH-101)',
+        description: 'วิเคราะห์คุณค่าทางวรรณศิลป์ ปรัชญา และค่านิยมในวรรณคดีเรื่องเอกของไทยสำหรับนักเรียน ม.ปลาย',
+        totalBorrowedCount: 0,
+        createdAt: '2026-09-01',
+      },
+      {
+        id: 'TH-002',
+        title: 'บรรทัดฐานภาษาไทย เล่ม ๑-๔: หลักไวยากรณ์และการใช้คำ',
+        author: 'ราชบัณฑิตยสภา',
+        isbn: '978-616-1234-02-8',
+        category: 'หลักภาษาและการใช้ภาษาไทย',
+        coverUrl: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop&q=80',
+        status: 'AVAILABLE',
+        publishedYear: '2566',
+        location: 'ตู้ภาษาไทย ชั้น 1 (TH-102)',
+        description: 'คู่มือมาตรฐานหลักภาษาไทย วากยสัมพันธ์ และการสะกดคำที่ถูกต้องตามแบบแผน',
+        totalBorrowedCount: 0,
+        createdAt: '2026-09-01',
+      },
+      {
+        id: 'TH-003',
+        title: 'ศิลปะการประพันธ์ร้อยกรองและฉันทลักษณ์ไทย',
+        author: 'อาจารย์ฐะปะนีย์ นาครทรรพ',
+        isbn: '978-616-1234-03-5',
+        category: 'กวีนิพนธ์ ร้อยกรอง และฉันทลักษณ์',
+        coverUrl: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&auto=format&fit=crop&q=80',
+        status: 'AVAILABLE',
+        publishedYear: '2567',
+        location: 'ตู้ภาษาไทย ชั้น 2 (TH-201)',
+        description: 'หลักการแต่งโคลง ฉันท์ กาพย์ กลอน และร่าย พร้อมตัวอย่างกวีนิพนธ์ชั้นครู',
+        totalBorrowedCount: 0,
+        createdAt: '2026-09-01',
+      }
+    ]);
   };
 
   const clearAllData = () => {

@@ -5,18 +5,19 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useLibrary } from '@/context/LibraryContext';
 import { BOOK_CATEGORIES } from '@/types';
-import { BookOpen, ArrowLeft, Image as ImageIcon, MapPin, Hash, Calendar, Bookmark, CheckCircle2, Sparkles, Upload } from 'lucide-react';
+import { BookOpen, ArrowLeft, Image as ImageIcon, MapPin, Hash, Calendar, Bookmark, CheckCircle2, Sparkles, Upload, Scan } from 'lucide-react';
 
 export default function AddBookPage() {
   const router = useRouter();
-  const { addBook } = useLibrary();
+  const { addBook, books } = useLibrary();
 
+  const [bookId, setBookId] = useState(`TH-${String(books.length + 1).padStart(3, '0')}`);
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
-  const [category, setCategory] = useState<string>(BOOK_CATEGORIES[0]);
+  const [category, setCategory] = useState<string>(BOOK_CATEGORIES[0]); // วรรณคดีและวรรณกรรมไทย
   const [isbn, setIsbn] = useState('');
   const [publishedYear, setPublishedYear] = useState('2567');
-  const [location, setLocation] = useState('ตู้ A ชั้น 1');
+  const [location, setLocation] = useState('ตู้ภาษาไทย ชั้น 1');
   const [coverUrl, setCoverUrl] = useState('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80');
   const [description, setDescription] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -49,13 +50,14 @@ export default function AddBookPage() {
     }
 
     addBook({
+      id: bookId.trim() || `TH-${String(books.length + 1).padStart(3, '0')}`,
       title: title.trim(),
       author: author.trim(),
       category,
       isbn: isbn.trim() || `978-616-${Math.floor(1000 + Math.random() * 9000)}-${Math.floor(10 + Math.random() * 90)}`,
       coverUrl: coverUrl.trim() || sampleCovers[0],
       publishedYear: publishedYear.trim() || '2567',
-      location: location.trim() || 'ตู้ทั่วไป',
+      location: location.trim() || 'ตู้ภาษาไทย',
       description: description.trim(),
     });
 
@@ -70,18 +72,18 @@ export default function AddBookPage() {
       {/* Back button & Header */}
       <div>
         <Link
-          href="/books"
+          href="/admin"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition-colors mb-3"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>กลับไปยังแคตตาล็อกหนังสือ</span>
+          <span>กลับไปยังระบบแอดมิน / คลังหนังสือ</span>
         </Link>
         <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
           <BookOpen className="w-6 h-6 text-indigo-600" />
-          เพิ่มหนังสือใหม่เข้าคลังห้องสมุด
+          ลงทะเบียนหนังสือใหม่เข้าคลัง (ระบบหลังบ้านครู)
         </h1>
         <p className="text-xs text-slate-500 mt-0.5">
-          บันทึกข้อมูลและภาพปกหนังสือเพื่อเปิดให้ยืมในระบบ
+          กำหนดรหัสหนังสือและข้อมูลทางบรรณานุกรม เพื่อให้นักเรียนยืมด้วยรหัสได้ทันที
         </p>
       </div>
 
@@ -90,7 +92,7 @@ export default function AddBookPage() {
           <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
             <CheckCircle2 className="w-8 h-8" />
           </div>
-          <h2 className="text-lg font-bold text-slate-800">เพิ่มหนังสือเรียบร้อยแล้ว!</h2>
+          <h2 className="text-lg font-bold text-slate-800">ลงทะเบียนหนังสือรหัส "{bookId}" เรียบร้อยแล้ว!</h2>
           <p className="text-xs text-slate-500">กำลังนำท่านไปยังหน้ารายการหนังสือ...</p>
         </div>
       ) : (
@@ -152,6 +154,27 @@ export default function AddBookPage() {
           <div className="md:col-span-2">
             <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Book ID */}
+                <div className="sm:col-span-2 p-4 bg-indigo-50/60 border border-indigo-200 rounded-2xl">
+                  <label className="block text-xs font-bold text-indigo-950 mb-1">
+                    รหัสหนังสือ (Book ID / Barcode) <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <Scan className="w-4 h-4 text-indigo-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      required
+                      placeholder="เช่น TH-001, วค-01, หรือ 00123"
+                      value={bookId}
+                      onChange={(e) => setBookId(e.target.value)}
+                      className="w-full pl-10 pr-3.5 py-2.5 bg-white border border-indigo-300 rounded-xl text-xs font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                    />
+                  </div>
+                  <p className="text-[11px] text-indigo-600 mt-1">
+                    * รหัสนี้จะใช้ให้นักเรียนนำมาบอกครู หรือใช้เครื่องยิงบาร์โค้ดบันทึกการยืมใน 1 วินาที
+                  </p>
+                </div>
+
                 <div className="sm:col-span-2">
                   <label className="block text-xs font-bold text-slate-700 mb-1">
                     ชื่อหนังสือ <span className="text-red-500">*</span>
@@ -159,7 +182,7 @@ export default function AddBookPage() {
                   <input
                     type="text"
                     required
-                    placeholder="เช่น วิทยาศาสตร์กายภาพ ม.4 เล่ม 1"
+                    placeholder="เช่น วรรณคดีไทยฉบับวิเคราะห์: ลิลิตพระลอ"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
@@ -168,12 +191,12 @@ export default function AddBookPage() {
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    ชื่อผู้แต่ง / คณะผู้จัดทำ <span className="text-red-500">*</span>
+                    ชื่อผู้แต่ง / ผู้จัดทำ <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     required
-                    placeholder="เช่น ศ.ดร. ธนวัฒน์ หรือ สสวท."
+                    placeholder="เช่น ศ.ดร. รื่นฤทัย หรือ ราชบัณฑิตยสภา"
                     value={author}
                     onChange={(e) => setAuthor(e.target.value)}
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
@@ -199,7 +222,7 @@ export default function AddBookPage() {
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    รหัส ISBN
+                    รหัส ISBN (ถ้ามี)
                   </label>
                   <div className="relative">
                     <Hash className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -237,7 +260,7 @@ export default function AddBookPage() {
                     <MapPin className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
-                      placeholder="เช่น ตู้ A ชั้น 2 (A2-05)"
+                      placeholder="เช่น ตู้ภาษาไทย ชั้น 1 (TH-101)"
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
                       className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
@@ -247,7 +270,7 @@ export default function AddBookPage() {
 
                 <div className="sm:col-span-2">
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    URL รูปภาพปก (ถ้ามี)
+                    URL รูปภาพปก
                   </label>
                   <input
                     type="url"
@@ -265,7 +288,7 @@ export default function AddBookPage() {
                   <div className="relative">
                     <Bookmark className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-3" />
                     <textarea
-                      rows={4}
+                      rows={3}
                       placeholder="ระบุเนื้อหาย่อเพื่อให้นักเรียนและครูใช้ในการค้นคว้า..."
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
@@ -278,7 +301,7 @@ export default function AddBookPage() {
               {/* Submit Actions */}
               <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
                 <Link
-                  href="/books"
+                  href="/admin"
                   className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
                 >
                   ยกเลิก

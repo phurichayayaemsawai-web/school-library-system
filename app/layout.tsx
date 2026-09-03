@@ -5,8 +5,8 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 
 export const metadata: Metadata = {
-  title: 'ระบบการจัดการยืม-คืนหนังสือสำหรับโรงเรียน | School Library Management System',
-  description: 'ระบบยืม-คืนหนังสืออัจฉริยะสำหรับโรงเรียน แยกประเภทนักเรียนและครู พร้อมระบบ Book Procurement Wishlist สำหรับเสนอสั่งซื้อหนังสือใหม่',
+  title: 'ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓ | ระบบยืม-คืนหนังสือ',
+  description: 'ระบบยืม-คืนหนังสือออนไลน์ ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓ บันทึกด้วยรหัสหนังสือ กำหนดระยะเวลายืม และระบบแอดมินสำหรับครู',
 };
 
 export default function RootLayout({

@@ -3,29 +3,26 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useLibrary } from '@/context/LibraryContext';
+import { TeacherBorrowDesk } from '@/components/borrow/TeacherBorrowDesk';
 import { TransactionTable } from '@/components/borrow/TransactionTable';
-import { BorrowModal } from '@/components/borrow/BorrowModal';
 import { ReturnModal } from '@/components/borrow/ReturnModal';
 import { StatCard } from '@/components/ui/StatCard';
 import { Toast, ToastMessage } from '@/components/ui/Toast';
-import { Book, BorrowTransaction } from '@/types';
+import { BorrowTransaction } from '@/types';
 import { 
   ArrowLeftRight, 
   BookOpen, 
   Clock, 
   AlertTriangle, 
   CheckCircle2, 
-  Plus, 
   History,
-  GraduationCap,
-  UserCheck
+  Scan,
+  ShieldCheck
 } from 'lucide-react';
 
 export default function BorrowReturnPage() {
-  const { books, transactions } = useLibrary();
+  const { books, transactions, settings } = useLibrary();
 
-  const [isBorrowModalOpen, setIsBorrowModalOpen] = useState(false);
-  const [selectedBookForBorrow, setSelectedBookForBorrow] = useState<Book | null>(null);
   const [selectedTrxForReturn, setSelectedTrxForReturn] = useState<BorrowTransaction | null>(null);
   const [toast, setToast] = useState<ToastMessage | null>(null);
 
@@ -45,18 +42,8 @@ export default function BorrowReturnPage() {
     });
   };
 
-  const handleOpenBorrow = () => {
-    if (availableBooks.length === 0) {
-      alert('ขณะนี้ไม่มีหนังสือที่พร้อมให้ยืมในระบบ');
-      return;
-    }
-    // Default to the first available book or let the user choose in the modal
-    setSelectedBookForBorrow(availableBooks[0]);
-    setIsBorrowModalOpen(true);
-  };
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <Toast toast={toast} onClose={() => setToast(null)} />
 
       {/* Header & Quick Action Buttons */}
@@ -67,7 +54,7 @@ export default function BorrowReturnPage() {
             ระบบการยืม - คืนหนังสือ
           </h1>
           <p className="text-xs text-slate-500 mt-1">
-            บันทึกรายการยืมหนังสือแยกประเภทนักเรียน/ครู และบันทึกการรับคืนหนังสือ
+            {settings.schoolName || 'ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓'}
           </p>
         </div>
 
@@ -80,15 +67,18 @@ export default function BorrowReturnPage() {
             <span>ดูประวัติยืม-คืนทั้งหมด</span>
           </Link>
 
-          <button
-            onClick={handleOpenBorrow}
-            className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-200 transition-all flex items-center gap-2"
+          <Link
+            href="/admin"
+            className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm"
           >
-            <Plus className="w-4 h-4" />
-            <span>ทำรายการยืมหนังสือใหม่</span>
-          </button>
+            <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            <span>ตั้งค่าระยะเวลายืม ({settings.studentBorrowDays} วัน)</span>
+          </Link>
         </div>
       </div>
+
+      {/* Teacher Barcode / Book ID Borrow Desk */}
+      <TeacherBorrowDesk onSuccess={(msg) => showToast(msg, 'success')} />
 
       {/* Stats Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -117,9 +107,9 @@ export default function BorrowReturnPage() {
         />
 
         <StatCard
-          title="หนังสือที่พร้อมให้ยืม"
+          title="หนังสือพร้อมให้ยืม"
           value={`${availableBooks.length} เล่ม`}
-          subtitle={`จากทั้งหมด ${books.length} เล่ม`}
+          subtitle={`จากคลังทั้งหมด ${books.length} เล่ม`}
           icon={BookOpen}
           color="blue"
         />
@@ -145,23 +135,12 @@ export default function BorrowReturnPage() {
         <TransactionTable
           transactions={transactions}
           onReturnClick={(trx) => setSelectedTrxForReturn(trx)}
-          title="รายการยืม-คืนปัจจุบัน"
+          title="รายการหนังสือที่กำลังถูกยืมในขณะนี้"
           showFilters={true}
         />
       </div>
 
-      {/* Modals */}
-      {isBorrowModalOpen && (
-        <BorrowModal
-          book={selectedBookForBorrow}
-          onClose={() => {
-            setIsBorrowModalOpen(false);
-            setSelectedBookForBorrow(null);
-          }}
-          onSuccess={(msg) => showToast(msg, 'success')}
-        />
-      )}
-
+      {/* Return Modal */}
       <ReturnModal
         transaction={selectedTrxForReturn}
         onClose={() => setSelectedTrxForReturn(null)}
