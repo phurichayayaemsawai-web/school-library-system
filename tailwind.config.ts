@@ -34,9 +34,14 @@ const config: Config = {
         sans: ['Prompt', 'Sarabun', 'Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
+        '2xs': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+        'xs': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
         'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
         'card': '0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04)',
         'elevated': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+      },
+      backdropBlur: {
+        'xs': '2px',
       }
     },
   },

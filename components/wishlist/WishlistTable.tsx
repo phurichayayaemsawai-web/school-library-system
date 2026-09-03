@@ -241,7 +241,7 @@ export const WishlistTable: React.FC<WishlistTableProps> = ({ wishlists, isAdmin
                     <td className="py-3.5 px-4 max-w-xs">
                       <div className="space-y-1.5">
                         <p className="text-xs text-slate-700 leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
-                          "{item.reason}"
+                          {item.reason}
                         </p>
                         {item.librarianNotes && (
                           <div className="text-[11px] text-indigo-700 bg-indigo-50/80 p-1.5 rounded-lg border border-indigo-100 flex items-start gap-1">
