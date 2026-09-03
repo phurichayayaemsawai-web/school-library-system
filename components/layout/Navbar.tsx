@@ -1,0 +1,191 @@
+'use client';
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { 
+  BookOpen, 
+  ArrowLeftRight, 
+  Sparkles, 
+  LayoutDashboard, 
+  Menu, 
+  X, 
+  Library,
+  History,
+  ClipboardList
+} from 'lucide-react';
+import { useLibrary } from '@/context/LibraryContext';
+import { cn } from '@/lib/utils';
+
+export const Navbar: React.FC = () => {
+  const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { books, transactions, wishlists } = useLibrary();
+
+  const activeBorrowsCount = transactions.filter((t) => t.status === 'ACTIVE' || t.status === 'OVERDUE').length;
+  const pendingWishlistsCount = wishlists.filter((w) => w.status === 'PENDING').length;
+
+  const navItems = [
+    {
+      name: 'หน้าแรก / ค้นหา',
+      href: '/',
+      icon: Library,
+    },
+    {
+      name: 'แคตตาล็อกหนังสือ',
+      href: '/books',
+      icon: BookOpen,
+      badge: books.length,
+    },
+    {
+      name: 'ระบบยืม - คืน',
+      href: '/borrow-return',
+      icon: ArrowLeftRight,
+      badge: activeBorrowsCount > 0 ? activeBorrowsCount : undefined,
+      badgeColor: 'bg-amber-500 text-white',
+    },
+    {
+      name: 'ประวัติการยืม-คืน',
+      href: '/borrow-return/history',
+      icon: History,
+    },
+    {
+      name: 'ครูเสนอซื้อหนังสือ',
+      href: '/wishlist',
+      icon: Sparkles,
+      badge: pendingWishlistsCount > 0 ? pendingWishlistsCount : undefined,
+      badgeColor: 'bg-indigo-600 text-white',
+    },
+    {
+      name: 'แดชบอร์ดภาพรวม',
+      href: '/dashboard',
+      icon: LayoutDashboard,
+    },
+  ];
+
+  return (
+    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Brand Logo */}
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-indigo-200 group-hover:scale-105 transition-transform">
+              <BookOpen className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-lg text-slate-900 tracking-tight">ห้องสมุดโรงเรียน</span>
+                <span className="text-[10px] font-semibold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-200">
+                  v1.0
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 leading-none">School Library Management</p>
+            </div>
+          </Link>
+
+          {/* Desktop Nav Links */}
+          <nav className="hidden lg:flex items-center gap-1">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href) && !navItems.some(n => n.href !== item.href && n.href.startsWith(item.href) && pathname === n.href));
+              const Icon = item.icon;
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    'flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all',
+                    isActive
+                      ? 'bg-indigo-50 text-indigo-700 font-semibold shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
+                  )}
+                >
+                  <Icon className={cn('w-4 h-4', isActive ? 'text-indigo-600' : 'text-slate-500')} />
+                  <span>{item.name}</span>
+                  {item.badge !== undefined && (
+                    <span
+                      className={cn(
+                        'text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none',
+                        item.badgeColor || 'bg-slate-200 text-slate-700'
+                      )}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Action Button & Mobile Menu Trigger */}
+          <div className="flex items-center gap-2">
+            <Link
+              href="/wishlist/dashboard"
+              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors border border-slate-200"
+            >
+              <ClipboardList className="w-3.5 h-3.5 text-indigo-600" />
+              <span>สรุปจัดซื้อ (สำหรับห้องสมุด)</span>
+            </Link>
+
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 focus:outline-none"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Drawer */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-1 shadow-lg">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            const Icon = item.icon;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={cn(
+                  'flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium',
+                  isActive
+                    ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                    : 'text-slate-600 hover:bg-slate-100'
+                )}
+              >
+                <div className="flex items-center gap-2.5">
+                  <Icon className={cn('w-4 h-4', isActive ? 'text-indigo-600' : 'text-slate-500')} />
+                  <span>{item.name}</span>
+                </div>
+                {item.badge !== undefined && (
+                  <span
+                    className={cn(
+                      'text-xs font-bold px-2 py-0.5 rounded-full',
+                      item.badgeColor || 'bg-slate-200 text-slate-700'
+                    )}
+                  >
+                    {item.badge}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+          <div className="pt-2 border-t border-slate-100">
+            <Link
+              href="/wishlist/dashboard"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium bg-slate-100 text-slate-800"
+            >
+              <ClipboardList className="w-4 h-4 text-indigo-600" />
+              <span>Dashboard วิเคราะห์จัดซื้อหนังสือ</span>
+            </Link>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+};
