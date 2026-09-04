@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useLibrary } from '@/context/LibraryContext';
 import { BOOK_CATEGORIES } from '@/types';
-import { BookOpen, ArrowLeft, Image as ImageIcon, MapPin, Hash, Calendar, Bookmark, CheckCircle2, Sparkles, Upload, Scan } from 'lucide-react';
+import { BookOpen, ArrowLeft, Image as ImageIcon, MapPin, Hash, Calendar, Bookmark, CheckCircle2, Upload, Scan } from 'lucide-react';
 
 export default function AddBookPage() {
   const router = useRouter();
@@ -73,38 +73,39 @@ export default function AddBookPage() {
       <div>
         <Link
           href="/admin"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition-colors mb-3"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-blue-600 transition-colors mb-3"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>กลับไปยังระบบแอดมิน / คลังหนังสือ</span>
         </Link>
-        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
-          <BookOpen className="w-6 h-6 text-indigo-600" />
-          ลงทะเบียนหนังสือใหม่เข้าคลัง (ระบบหลังบ้านครู)
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2.5">
+          <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 shrink-0" />
+          <span>ลงทะเบียนหนังสือใหม่เข้าคลัง (ระบบหลังบ้านครู)</span>
         </h1>
-        <p className="text-xs text-slate-500 mt-0.5">
+        <p className="text-xs text-slate-500 mt-0.5 font-normal">
           กำหนดรหัสหนังสือและข้อมูลทางบรรณานุกรม เพื่อให้นักเรียนยืมด้วยรหัสได้ทันที
         </p>
       </div>
 
       {submitted ? (
-        <div className="bg-white rounded-3xl p-12 text-center border border-slate-200 shadow-sm space-y-3">
-          <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-10 sm:p-12 text-center border border-sky-100 shadow-sm space-y-3">
+          <div className="w-16 h-16 rounded-2xl sm:rounded-3xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
             <CheckCircle2 className="w-8 h-8" />
           </div>
-          <h2 className="text-lg font-bold text-slate-800">ลงทะเบียนหนังสือรหัส "{bookId}" เรียบร้อยแล้ว!</h2>
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">ลงทะเบียนหนังสือรหัส "{bookId}" เรียบร้อยแล้ว!</h2>
           <p className="text-xs text-slate-500">กำลังนำท่านไปยังหน้ารายการหนังสือ...</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Left Column: Cover preview & Upload */}
           <div className="space-y-4">
-            <div className="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm space-y-3">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-5 border border-sky-100 shadow-sm space-y-3">
               <h3 className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                <ImageIcon className="w-4 h-4 text-indigo-600" /> ภาพปกหนังสือ (Live Preview)
+                <ImageIcon className="w-4 h-4 text-blue-600 shrink-0" />
+                <span>ภาพปกหนังสือ (Live Preview)</span>
               </h3>
 
-              <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100 shadow-inner border border-slate-200">
+              <div className="aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 shadow-inner border border-slate-200">
                 <img
                   src={coverUrl}
                   alt="Preview ปกหนังสือ"
@@ -117,7 +118,7 @@ export default function AddBookPage() {
 
               {/* Upload local file */}
               <div>
-                <label className="flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-xl border border-dashed border-indigo-300 bg-indigo-50/50 hover:bg-indigo-50 text-indigo-700 text-xs font-semibold cursor-pointer transition-colors">
+                <label className="flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-xl border border-dashed border-sky-300 bg-sky-50/50 hover:bg-sky-50 text-blue-700 text-xs font-semibold cursor-pointer transition-colors">
                   <Upload className="w-4 h-4" />
                   <span>อัปโหลดรูปจากเครื่อง</span>
                   <input
@@ -139,7 +140,7 @@ export default function AddBookPage() {
                       type="button"
                       onClick={() => setCoverUrl(url)}
                       className={`w-10 h-14 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-all ${
-                        coverUrl === url ? 'border-indigo-600 scale-105 shadow-xs' : 'border-slate-200 opacity-70 hover:opacity-100'
+                        coverUrl === url ? 'border-blue-600 scale-105 shadow-xs' : 'border-slate-200 opacity-70 hover:opacity-100'
                       }`}
                     >
                       <img src={url} alt="preset" className="w-full h-full object-cover" />
@@ -152,31 +153,31 @@ export default function AddBookPage() {
 
           {/* Right Column: Form details */}
           <div className="md:col-span-2">
-            <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-5">
+            <form onSubmit={handleSubmit} className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-sky-100 shadow-sm space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Book ID */}
-                <div className="sm:col-span-2 p-4 bg-indigo-50/60 border border-indigo-200 rounded-2xl">
-                  <label className="block text-xs font-bold text-indigo-950 mb-1">
+                <div className="sm:col-span-2 p-4 bg-sky-50/70 border border-sky-200 rounded-2xl">
+                  <label className="block text-xs font-bold text-blue-950 mb-1">
                     รหัสหนังสือ (Book ID / Barcode) <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
-                    <Scan className="w-4 h-4 text-indigo-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Scan className="w-4 h-4 text-blue-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       required
                       placeholder="เช่น TH-001, วค-01, หรือ 00123"
                       value={bookId}
                       onChange={(e) => setBookId(e.target.value)}
-                      className="w-full pl-10 pr-3.5 py-2.5 bg-white border border-indigo-300 rounded-xl text-xs font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                      className="w-full pl-10 pr-3.5 py-2.5 bg-white border border-sky-300 rounded-xl text-xs font-mono font-bold text-blue-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                     />
                   </div>
-                  <p className="text-[11px] text-indigo-600 mt-1">
+                  <p className="text-[11px] text-blue-700 mt-1">
                     * รหัสนี้จะใช้ให้นักเรียนนำมาบอกครู หรือใช้เครื่องยิงบาร์โค้ดบันทึกการยืมใน 1 วินาที
                   </p>
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
                     ชื่อหนังสือ <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -185,12 +186,12 @@ export default function AddBookPage() {
                     placeholder="เช่น วรรณคดีไทยฉบับวิเคราะห์: ลิลิตพระลอ"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
                     ชื่อผู้แต่ง / ผู้จัดทำ <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -199,18 +200,18 @@ export default function AddBookPage() {
                     placeholder="เช่น ศ.ดร. รื่นฤทัย หรือ ราชบัณฑิตยสภา"
                     value={author}
                     onChange={(e) => setAuthor(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
                     หมวดหมู่หนังสือ <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none cursor-pointer"
+                    className="w-full px-3.5 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none cursor-pointer"
                   >
                     {BOOK_CATEGORIES.map((cat) => (
                       <option key={cat} value={cat}>
@@ -221,7 +222,7 @@ export default function AddBookPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
                     รหัส ISBN (ถ้ามี)
                   </label>
                   <div className="relative">
@@ -231,13 +232,13 @@ export default function AddBookPage() {
                       placeholder="978-616-xxx-xxx"
                       value={isbn}
                       onChange={(e) => setIsbn(e.target.value)}
-                      className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none font-mono"
+                      className="w-full pl-9 pr-3.5 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none font-mono"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
                     ปีที่พิมพ์ (พ.ศ.)
                   </label>
                   <div className="relative">
@@ -247,13 +248,13 @@ export default function AddBookPage() {
                       placeholder="2567"
                       value={publishedYear}
                       onChange={(e) => setPublishedYear(e.target.value)}
-                      className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
+                      className="w-full pl-9 pr-3.5 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
                     ตำแหน่งจัดเก็บในห้องสมุด (ตู้ / ชั้นวาง)
                   </label>
                   <div className="relative">
@@ -263,13 +264,13 @@ export default function AddBookPage() {
                       placeholder="เช่น ตู้ภาษาไทย ชั้น 1 (TH-101)"
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
-                      className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
+                      className="w-full pl-9 pr-3.5 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
                     URL รูปภาพปก
                   </label>
                   <input
@@ -277,12 +278,12 @@ export default function AddBookPage() {
                     placeholder="https://..."
                     value={coverUrl}
                     onChange={(e) => setCoverUrl(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
                     เรื่องย่อ / คำอธิบายรายละเอียด
                   </label>
                   <div className="relative">
@@ -292,23 +293,23 @@ export default function AddBookPage() {
                       placeholder="ระบุเนื้อหาย่อเพื่อให้นักเรียนและครูใช้ในการค้นคว้า..."
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
-                      className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none leading-relaxed"
+                      className="w-full pl-9 pr-3.5 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none leading-relaxed"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Submit Actions */}
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+              <div className="pt-4 border-t border-sky-50 flex items-center justify-end gap-3">
                 <Link
                   href="/admin"
-                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors whitespace-nowrap"
                 >
                   ยกเลิก
                 </Link>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-200 transition-all flex items-center gap-2"
+                  className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center gap-2 whitespace-nowrap hover:scale-105 active:scale-95"
                 >
                   <BookOpen className="w-4 h-4" />
                   <span>บันทึกหนังสือเข้าสู่ระบบ</span>

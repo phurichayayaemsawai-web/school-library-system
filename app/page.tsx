@@ -7,28 +7,24 @@ import { BookCard } from '@/components/books/BookCard';
 import { BookModal } from '@/components/books/BookModal';
 import { BorrowModal } from '@/components/borrow/BorrowModal';
 import { ReturnModal } from '@/components/borrow/ReturnModal';
-import { StatCard } from '@/components/ui/StatCard';
 import { Toast, ToastMessage } from '@/components/ui/Toast';
 import { Book, BorrowTransaction } from '@/types';
 import { 
   BookOpen, 
   ArrowLeftRight, 
-  Sparkles, 
   BookCheck, 
   Clock, 
-  Search, 
-  PlusCircle, 
   TrendingUp, 
   Zap, 
   ShieldCheck, 
-  Heart,
+  Bookmark,
   Plus
 } from 'lucide-react';
 
 export default function HomePage() {
-  const { books, transactions, wishlists, settings } = useLibrary();
+  const { books, transactions, settings } = useLibrary();
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery] = useState('');
   const [selectedBookForView, setSelectedBookForView] = useState<Book | null>(null);
   const [selectedBookForBorrow, setSelectedBookForBorrow] = useState<Book | null>(null);
   const [selectedTrxForReturn, setSelectedTrxForReturn] = useState<BorrowTransaction | null>(null);
@@ -36,7 +32,6 @@ export default function HomePage() {
 
   const availableBooks = books.filter((b) => b.status === 'AVAILABLE');
   const borrowedBooks = books.filter((b) => b.status === 'BORROWED');
-  const activeLoans = transactions.filter((t) => t.status === 'ACTIVE' || t.status === 'OVERDUE');
   const overdueLoans = transactions.filter((t) => t.status === 'OVERDUE');
 
   // Filter books for catalog
@@ -63,125 +58,131 @@ export default function HomePage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <Toast toast={toast} onClose={() => setToast(null)} />
 
-      {/* Cute Pink Hero Banner */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-pink-500 via-rose-400 to-pink-400 text-white p-8 sm:p-12 shadow-xl shadow-pink-200/50 border border-pink-200">
-        <div className="relative z-10 max-w-3xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-xs font-bold text-white shadow-2xs">
-            <Heart className="w-3.5 h-3.5 text-pink-100 fill-pink-100" />
-            <span>{settings.schoolName || 'ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓'}</span>
+      {/* Blue / Sky Hero Banner */}
+      <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-blue-700 via-blue-600 to-sky-500 text-white p-6 sm:p-10 lg:p-12 shadow-xl shadow-blue-500/20 border border-blue-400/30">
+        <div className="relative z-10 max-w-3xl space-y-3 sm:space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-semibold text-white shadow-2xs whitespace-nowrap">
+            <Bookmark className="w-3.5 h-3.5 text-sky-200 fill-sky-200 shrink-0" />
+            <span className="truncate">{settings.schoolName || 'ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓'}</span>
           </div>
 
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
             ระบบการจัดการการยืมคืนหนังสือ <br />
-            <span className="text-white drop-shadow-xs">
-              ของห้องสมุดหมวดภาษาไทย
+            <span className="text-sky-100 drop-shadow-xs">
+              ห้องสมุดหมวดภาษาไทย
             </span>
           </h1>
 
-          <p className="text-xs sm:text-sm text-pink-50 font-medium leading-relaxed pt-1">
-            ระบบการจัดการการยืมคืนหนังสือของห้องสมุดหมวดภาษาไทย
+          <p className="text-xs sm:text-sm text-sky-100/90 font-normal leading-relaxed max-w-2xl">
+            ค้นหา ยืม-คืน และบริหารคลังหนังสือของห้องสมุดหมวดภาษาไทยได้อย่างสะดวกรวดเร็ว ทุกอุปกรณ์
           </p>
 
           {/* Action buttons */}
-          <div className="flex flex-wrap items-center gap-3 pt-3">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-2 sm:pt-3">
             <Link
               href="/borrow-return"
-              className="px-6 py-3 rounded-2xl bg-white text-pink-600 hover:bg-pink-50 font-bold text-xs shadow-lg shadow-pink-600/20 transition-all flex items-center gap-2 hover:scale-105"
+              className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-white text-blue-700 hover:bg-sky-50 font-bold text-xs sm:text-sm shadow-lg shadow-blue-900/20 transition-all flex items-center gap-2 hover:scale-105 active:scale-95 whitespace-nowrap"
             >
-              <ArrowLeftRight className="w-4 h-4 text-pink-500" />
+              <ArrowLeftRight className="w-4 h-4 text-blue-600 shrink-0" />
               <span>เคาน์เตอร์ครูบันทึกการยืม (ใส่รหัส)</span>
             </Link>
 
             <Link
               href="/quick-borrow"
-              className="px-5 py-3 rounded-2xl bg-pink-600/80 hover:bg-pink-600 text-white font-bold text-xs backdrop-blur-md border border-white/30 transition-all flex items-center gap-2"
+              className="px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-blue-500/80 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm backdrop-blur-md border border-white/25 transition-all flex items-center gap-2 hover:scale-105 active:scale-95 whitespace-nowrap"
             >
-              <Zap className="w-4 h-4 text-amber-200 fill-amber-200" />
+              <Zap className="w-4 h-4 text-amber-300 fill-amber-300 shrink-0" />
               <span>นักเรียนยืมหนังสือด่วน</span>
             </Link>
 
             <Link
               href="/admin"
-              className="px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs backdrop-blur-md border border-white/20 transition-all flex items-center gap-1.5"
+              className="px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-white/10 hover:bg-white/20 text-white font-medium text-xs sm:text-sm backdrop-blur-md border border-white/20 transition-all flex items-center gap-1.5 whitespace-nowrap"
             >
-              <ShieldCheck className="w-4 h-4 text-pink-100" />
+              <ShieldCheck className="w-4 h-4 text-sky-200 shrink-0" />
               <span>แอดมิน / ครู</span>
             </Link>
           </div>
         </div>
 
         {/* Decorative soft circles */}
-        <div className="absolute -right-16 -bottom-16 w-80 h-80 bg-white/15 rounded-full blur-2xl pointer-events-none" />
-        <div className="absolute right-1/3 -top-16 w-64 h-64 bg-pink-300/30 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -right-16 -bottom-16 w-72 sm:w-80 h-72 sm:h-80 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute right-1/4 -top-16 w-60 h-60 bg-sky-300/20 rounded-full blur-2xl pointer-events-none" />
       </section>
 
-      {/* Cute Pink Stat Cards */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-3xl p-5 border border-pink-100 shadow-sm shadow-pink-100 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-slate-500">หนังสือในคลัง</p>
-            <h3 className="text-2xl font-black text-pink-600 mt-1">{books.length} เล่ม</h3>
-            <p className="text-[11px] text-slate-400 mt-0.5">พร้อมให้ยืม {availableBooks.length} เล่ม</p>
+      {/* Blue / Sky Stat Cards */}
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-sky-100 shadow-sm hover:border-sky-200 transition-all flex items-center justify-between">
+          <div className="min-w-0">
+            <p className="text-xs font-medium text-slate-500 truncate whitespace-nowrap">หนังสือในคลัง</p>
+            <h3 className="text-xl sm:text-2xl font-black text-blue-600 mt-1 truncate">{books.length} เล่ม</h3>
+            <p className="text-[11px] text-slate-400 mt-0.5 truncate whitespace-nowrap">พร้อมให้ยืม {availableBooks.length} เล่ม</p>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-pink-50 text-pink-500 flex items-center justify-center">
-            <BookOpen className="w-6 h-6" />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-3xl p-5 border border-pink-100 shadow-sm shadow-pink-100 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-slate-500">กำลังถูกยืมอยู่</p>
-            <h3 className="text-2xl font-black text-rose-600 mt-1">{borrowedBooks.length} เล่ม</h3>
-            <p className="text-[11px] text-slate-400 mt-0.5">เกินกำหนด {overdueLoans.length} เล่ม</p>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center">
-            <Clock className="w-6 h-6" />
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 ml-2">
+            <BookOpen className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl p-5 border border-pink-100 shadow-sm shadow-pink-100 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-slate-500">ยืมสะสมทั้งหมด</p>
-            <h3 className="text-2xl font-black text-pink-700 mt-1">{transactions.length} ครั้ง</h3>
-            <p className="text-[11px] text-slate-400 mt-0.5">สถิติการยืมในระบบ</p>
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-sky-100 shadow-sm hover:border-sky-200 transition-all flex items-center justify-between">
+          <div className="min-w-0">
+            <p className="text-xs font-medium text-slate-500 truncate whitespace-nowrap">กำลังถูกยืมอยู่</p>
+            <h3 className="text-xl sm:text-2xl font-black text-amber-600 mt-1 truncate">{borrowedBooks.length} เล่ม</h3>
+            <p className="text-[11px] text-slate-400 mt-0.5 truncate whitespace-nowrap">เกินกำหนด {overdueLoans.length} เล่ม</p>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center">
-            <TrendingUp className="w-6 h-6" />
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 ml-2">
+            <Clock className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl p-5 border border-pink-100 shadow-sm shadow-pink-100 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-slate-500">ระยะเวลายืม</p>
-            <h3 className="text-2xl font-black text-pink-600 mt-1">{settings.studentBorrowDays} วัน</h3>
-            <p className="text-[11px] text-slate-400 mt-0.5">ครูยืมได้ {settings.teacherBorrowDays} วัน</p>
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-sky-100 shadow-sm hover:border-sky-200 transition-all flex items-center justify-between">
+          <div className="min-w-0">
+            <p className="text-xs font-medium text-slate-500 truncate whitespace-nowrap">ยืมสะสมทั้งหมด</p>
+            <h3 className="text-xl sm:text-2xl font-black text-sky-600 mt-1 truncate">{transactions.length} ครั้ง</h3>
+            <p className="text-[11px] text-slate-400 mt-0.5 truncate whitespace-nowrap">สถิติการยืมในระบบ</p>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-pink-50 text-pink-500 flex items-center justify-center">
-            <Heart className="w-6 h-6" />
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0 ml-2">
+            <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-sky-100 shadow-sm hover:border-sky-200 transition-all flex items-center justify-between">
+          <div className="min-w-0">
+            <p className="text-xs font-medium text-slate-500 truncate whitespace-nowrap">ระยะเวลายืม</p>
+            <h3 className="text-xl sm:text-2xl font-black text-indigo-600 mt-1 truncate">{settings.studentBorrowDays} วัน</h3>
+            <p className="text-[11px] text-slate-400 mt-0.5 truncate whitespace-nowrap">ครูยืมได้ {settings.teacherBorrowDays} วัน</p>
+          </div>
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 ml-2">
+            <Bookmark className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
         </div>
       </section>
 
-      {/* Book Catalog Section or Clean State */}
-      <section className="space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Book Catalog Section */}
+      <section className="space-y-4 sm:space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <BookCheck className="w-5 h-5 text-pink-500" />
-              แคตตาล็อกหนังสือหมวดภาษาไทย
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
+              <BookCheck className="w-5 h-5 text-blue-600 shrink-0" />
+              <span>แคตตาล็อกหนังสือหมวดภาษาไทย</span>
             </h2>
-            <p className="text-xs text-pink-700 font-medium mt-0.5">
-              ระบบการจัดการการยืมคืนหนังสือของห้องสมุดหมวดภาษาไทย
+            <p className="text-xs text-slate-500 font-normal mt-0.5">
+              แสดงหนังสือแนะนำและหนังสือล่าสุดในห้องสมุด
             </p>
           </div>
 
           <div className="flex items-center gap-2">
             <Link
+              href="/books"
+              className="text-xs font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3.5 py-2 rounded-xl transition-all whitespace-nowrap"
+            >
+              ดูทั้งหมด ({books.length})
+            </Link>
+            <Link
               href="/books/new"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 px-4 py-2.5 rounded-2xl transition-all shadow-md shadow-pink-200"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 px-3.5 py-2 rounded-xl transition-all shadow-md shadow-blue-500/20 whitespace-nowrap"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>+ เพิ่มหนังสือใหม่</span>
@@ -190,34 +191,34 @@ export default function HomePage() {
         </div>
 
         {books.length === 0 ? (
-          <div className="bg-white rounded-3xl p-16 text-center border-2 border-dashed border-pink-200 shadow-sm space-y-4">
-            <div className="w-16 h-16 rounded-2xl bg-pink-50 text-pink-500 flex items-center justify-center mx-auto">
-              <BookOpen className="w-8 h-8 text-pink-400" />
+          <div className="bg-white rounded-2xl sm:rounded-3xl p-10 sm:p-16 text-center border-2 border-dashed border-sky-200 shadow-sm space-y-4">
+            <div className="w-16 h-16 rounded-2xl bg-sky-50 text-blue-500 flex items-center justify-center mx-auto">
+              <BookOpen className="w-8 h-8 text-blue-500" />
             </div>
             <div>
               <h3 className="font-bold text-slate-800 text-base">ระบบพร้อมใช้งาน — ยังไม่มีข้อมูลหนังสือในคลัง</h3>
-              <p className="text-xs text-slate-400 max-w-md mx-auto mt-1">
+              <p className="text-xs text-slate-500 max-w-md mx-auto mt-1">
                 คุณครูสามารถเริ่มต้นใส่รหัสหนังสือและข้อมูลหนังสือเล่มแรกเข้าระบบได้ทันที
               </p>
             </div>
-            <div className="flex justify-center gap-3 pt-2">
+            <div className="flex flex-wrap justify-center gap-3 pt-2">
               <Link
                 href="/books/new"
-                className="px-5 py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-2xl text-xs font-bold shadow-md shadow-pink-200 transition-all flex items-center gap-1.5"
+                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 text-white rounded-xl sm:rounded-2xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center gap-1.5"
               >
-                <PlusCircle className="w-4 h-4" />
+                <Plus className="w-4 h-4" />
                 <span>เพิ่มหนังสือเล่มแรก (กำหนดรหัสหนังสือ)</span>
               </Link>
               <Link
                 href="/admin"
-                className="px-4 py-2.5 bg-pink-50 hover:bg-pink-100 text-pink-700 rounded-2xl text-xs font-semibold transition-all"
+                className="px-4 py-2.5 bg-sky-50 hover:bg-sky-100 text-blue-700 rounded-xl sm:rounded-2xl text-xs font-semibold transition-all"
               >
                 ตั้งค่าระยะเวลายืม-คืน
               </Link>
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
             {displayedBooks.map((book) => (
               <BookCard
                 key={book.id}

@@ -67,16 +67,16 @@ export const WishlistTable: React.FC<WishlistTableProps> = ({ wishlists, isAdmin
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-4">
+    <div className="bg-white rounded-2xl sm:rounded-3xl border border-sky-100 shadow-sm overflow-hidden space-y-4">
       {/* Search & Filter Header */}
-      <div className="p-5 border-b border-slate-200 space-y-3">
+      <div className="p-4 sm:p-5 border-b border-sky-50 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-indigo-600" />
-              รายการเสนอสั่งซื้อหนังสือทั้งหมด
+            <h3 className="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-blue-600 shrink-0" />
+              <span>รายการเสนอสั่งซื้อหนังสือทั้งหมด</span>
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 font-normal">
               พบ {filtered.length} จากทั้งหมด {wishlists.length} รายการ
             </p>
           </div>
@@ -91,40 +91,40 @@ export const WishlistTable: React.FC<WishlistTableProps> = ({ wishlists, isAdmin
               placeholder="ค้นหาชื่อหนังสือ, ผู้แต่ง, ครูผู้เสนอ..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
+              className="w-full pl-9 pr-4 py-2 bg-sky-50/40 border border-sky-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none"
             />
           </div>
 
           {/* Status buttons */}
-          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+          <div className="flex items-center gap-1 bg-sky-50/70 p-1 rounded-xl border border-sky-100 overflow-x-auto">
             <button
               onClick={() => setStatusFilter('ALL')}
-              className={`flex-1 py-1.5 px-2 text-[11px] font-semibold rounded-lg transition-all ${
-                statusFilter === 'ALL' ? 'bg-white text-slate-800 shadow-2xs' : 'text-slate-600'
+              className={`flex-1 py-1.5 px-2 text-[11px] font-semibold rounded-lg transition-all whitespace-nowrap ${
+                statusFilter === 'ALL' ? 'bg-white text-blue-900 shadow-xs' : 'text-slate-600'
               }`}
             >
               ทั้งหมด
             </button>
             <button
               onClick={() => setStatusFilter('PENDING')}
-              className={`flex-1 py-1.5 px-2 text-[11px] font-semibold rounded-lg transition-all ${
-                statusFilter === 'PENDING' ? 'bg-amber-500 text-white shadow-2xs' : 'text-slate-600'
+              className={`flex-1 py-1.5 px-2 text-[11px] font-semibold rounded-lg transition-all whitespace-nowrap ${
+                statusFilter === 'PENDING' ? 'bg-amber-500 text-white shadow-xs' : 'text-slate-600'
               }`}
             >
               รอตรวจ
             </button>
             <button
               onClick={() => setStatusFilter('APPROVED')}
-              className={`flex-1 py-1.5 px-2 text-[11px] font-semibold rounded-lg transition-all ${
-                statusFilter === 'APPROVED' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600'
+              className={`flex-1 py-1.5 px-2 text-[11px] font-semibold rounded-lg transition-all whitespace-nowrap ${
+                statusFilter === 'APPROVED' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600'
               }`}
             >
               อนุมัติ
             </button>
             <button
               onClick={() => setStatusFilter('ORDERED')}
-              className={`flex-1 py-1.5 px-2 text-[11px] font-semibold rounded-lg transition-all ${
-                statusFilter === 'ORDERED' ? 'bg-emerald-600 text-white shadow-2xs' : 'text-slate-600'
+              className={`flex-1 py-1.5 px-2 text-[11px] font-semibold rounded-lg transition-all whitespace-nowrap ${
+                statusFilter === 'ORDERED' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600'
               }`}
             >
               สั่งแล้ว
@@ -136,7 +136,7 @@ export const WishlistTable: React.FC<WishlistTableProps> = ({ wishlists, isAdmin
             <select
               value={departmentFilter}
               onChange={(e) => setDepartmentFilter(e.target.value)}
-              className="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer"
+              className="w-full py-2 px-3 bg-sky-50/40 border border-sky-200 rounded-xl text-xs font-medium text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer"
             >
               <option value="ALL">ทุกกลุ่มสาระการเรียนรู้</option>
               {SCHOOL_DEPARTMENTS.map((dept) => (
@@ -152,21 +152,21 @@ export const WishlistTable: React.FC<WishlistTableProps> = ({ wishlists, isAdmin
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs text-slate-600">
-          <thead className="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200 uppercase tracking-wider text-[11px]">
+          <thead className="bg-sky-50/80 text-blue-950 font-bold border-b border-sky-100 uppercase tracking-wider text-[11px]">
             <tr>
-              <th className="py-3 px-4">หนังสือที่เสนอซื้อ</th>
-              <th className="py-3 px-4">กลุ่มสาระฯ / ครูผู้เสนอ</th>
-              <th className="py-3 px-4">ความเร่งด่วน / ราคาประเมิน</th>
-              <th className="py-3 px-4">เหตุผลความจำเป็น</th>
-              <th className="py-3 px-4">สถานะการพิจารณา</th>
-              {isAdmin && <th className="py-3 px-4 text-right">การจัดการ</th>}
+              <th className="py-3 px-4 whitespace-nowrap">หนังสือที่เสนอซื้อ</th>
+              <th className="py-3 px-4 whitespace-nowrap">กลุ่มสาระฯ / ครูผู้เสนอ</th>
+              <th className="py-3 px-4 whitespace-nowrap">ความเร่งด่วน / ราคาประเมิน</th>
+              <th className="py-3 px-4 whitespace-nowrap">เหตุผลความจำเป็น</th>
+              <th className="py-3 px-4 whitespace-nowrap">สถานะการพิจารณา</th>
+              {isAdmin && <th className="py-3 px-4 text-right whitespace-nowrap">การจัดการ</th>}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-sky-50">
             {filtered.length === 0 ? (
               <tr>
                 <td colSpan={6} className="text-center py-10 text-slate-400">
-                  <Clock className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                  <Clock className="w-8 h-8 text-sky-300 mx-auto mb-2" />
                   <span>ไม่พบรายการเสนอสั่งซื้อหนังสือตามเงื่อนไข</span>
                 </td>
               </tr>
@@ -175,11 +175,11 @@ export const WishlistTable: React.FC<WishlistTableProps> = ({ wishlists, isAdmin
                 const totalCost = item.estimatedPrice * item.quantity;
 
                 return (
-                  <tr key={item.id} className="hover:bg-slate-50/80 transition-colors">
+                  <tr key={item.id} className="hover:bg-sky-50/40 transition-colors">
                     {/* Book */}
                     <td className="py-3.5 px-4 max-w-xs">
                       <div>
-                        <span className="text-[10px] font-mono text-slate-400">
+                        <span className="text-[10px] font-mono text-slate-400 whitespace-nowrap">
                           {item.id} • {formatThaiDate(item.createdAt)}
                         </span>
                         <h4 className="font-bold text-slate-900 text-xs mt-0.5 leading-snug">
@@ -189,7 +189,7 @@ export const WishlistTable: React.FC<WishlistTableProps> = ({ wishlists, isAdmin
                           {item.authorPublisher}
                         </p>
                         {item.isbn && (
-                          <span className="text-[10px] font-mono text-slate-400 block">
+                          <span className="text-[10px] font-mono text-slate-400 block whitespace-nowrap">
                             ISBN: {item.isbn}
                           </span>
                         )}
@@ -198,7 +198,7 @@ export const WishlistTable: React.FC<WishlistTableProps> = ({ wishlists, isAdmin
                             href={item.referenceUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-1 text-[10px] text-indigo-600 hover:underline mt-0.5"
+                            className="inline-flex items-center gap-1 text-[10px] text-blue-600 hover:underline mt-0.5 whitespace-nowrap"
                           >
                             <ExternalLink className="w-2.5 h-2.5" /> ลิงก์อ้างอิง
                           </a>
@@ -209,15 +209,15 @@ export const WishlistTable: React.FC<WishlistTableProps> = ({ wishlists, isAdmin
                     {/* Department & Teacher */}
                     <td className="py-3.5 px-4 max-w-[200px]">
                       <div className="space-y-1">
-                        <span className="inline-block text-[10px] font-semibold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md border border-indigo-100">
+                        <span className="inline-block text-[10px] font-semibold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md border border-blue-100 whitespace-nowrap">
                           {item.department}
                         </span>
                         <div className="flex items-center gap-1 text-slate-800 font-medium">
-                          <User className="w-3 h-3 text-slate-400" />
-                          <span>{item.teacherName}</span>
+                          <User className="w-3 h-3 text-slate-400 shrink-0" />
+                          <span className="truncate">{item.teacherName}</span>
                         </div>
                         {item.teacherPhone && item.teacherPhone !== '-' && (
-                          <p className="text-[10px] text-slate-400">โทร: {item.teacherPhone}</p>
+                          <p className="text-[10px] text-slate-400 whitespace-nowrap">โทร: {item.teacherPhone}</p>
                         )}
                       </div>
                     </td>
@@ -244,8 +244,8 @@ export const WishlistTable: React.FC<WishlistTableProps> = ({ wishlists, isAdmin
                           {item.reason}
                         </p>
                         {item.librarianNotes && (
-                          <div className="text-[11px] text-indigo-700 bg-indigo-50/80 p-1.5 rounded-lg border border-indigo-100 flex items-start gap-1">
-                            <MessageSquare className="w-3 h-3 text-indigo-600 flex-shrink-0 mt-0.5" />
+                          <div className="text-[11px] text-blue-800 bg-sky-50 p-1.5 rounded-lg border border-sky-100 flex items-start gap-1">
+                            <MessageSquare className="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5" />
                             <span>
                               <strong>บันทึกห้องสมุด:</strong> {item.librarianNotes}
                             </span>
@@ -303,7 +303,7 @@ export const WishlistTable: React.FC<WishlistTableProps> = ({ wishlists, isAdmin
                               setNoteInput(item.librarianNotes || '');
                             }}
                             title="เพิ่ม/แก้ไขข้อความบันทึกห้องสมุด"
-                            className="p-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-sky-50 hover:text-blue-600 transition-colors"
                           >
                             <MessageSquare className="w-3.5 h-3.5" />
                           </button>
@@ -330,7 +330,7 @@ export const WishlistTable: React.FC<WishlistTableProps> = ({ wishlists, isAdmin
       {/* Note Editing Modal */}
       {editingItem && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-sky-100 space-y-4">
             <h3 className="text-sm font-bold text-slate-900">
               บันทึกข้อความจากฝ่ายห้องสมุด ({editingItem.title.slice(0, 30)}...)
             </h3>
@@ -339,7 +339,7 @@ export const WishlistTable: React.FC<WishlistTableProps> = ({ wishlists, isAdmin
               value={noteInput}
               onChange={(e) => setNoteInput(e.target.value)}
               placeholder="เช่น อนุมัติจัดสรรในงบไตรมาส 2, อยู่ระหว่างประสานสำนักพิมพ์..."
-              className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              className="w-full p-3 bg-slate-50 border border-sky-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
             <div className="flex justify-end gap-2">
               <button
@@ -350,7 +350,7 @@ export const WishlistTable: React.FC<WishlistTableProps> = ({ wishlists, isAdmin
               </button>
               <button
                 onClick={handleSaveNote}
-                className="px-4 py-1.5 text-xs font-bold bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                className="px-4 py-1.5 text-xs font-bold bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
                 บันทึกข้อความ
               </button>

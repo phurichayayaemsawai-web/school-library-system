@@ -16,10 +16,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="th">
-      <body className="flex flex-col min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-500 selection:text-white antialiased">
+      <body className="flex flex-col min-h-screen bg-slate-50 text-slate-900 selection:bg-sky-500 selection:text-white antialiased">
         <LibraryProvider>
           <Navbar />
-          <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <main className="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8">
             {children}
           </main>
           <Footer />

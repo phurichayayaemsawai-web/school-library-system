@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { useLibrary } from '@/context/LibraryContext';
 import { StatCard } from '@/components/ui/StatCard';
-import { formatThaiDate } from '@/lib/utils';
 import { 
   LayoutDashboard, 
   BookOpen, 
@@ -27,7 +26,6 @@ export default function LibraryDashboardPage() {
   const borrowedBooks = books.filter((b) => b.status === 'BORROWED');
   const activeLoans = transactions.filter((t) => t.status === 'ACTIVE' || t.status === 'OVERDUE');
   const overdueLoans = transactions.filter((t) => t.status === 'OVERDUE');
-  const returnedLoans = transactions.filter((t) => t.status === 'RETURNED');
 
   const studentLoansCount = transactions.filter((t) => t.borrower.type === 'STUDENT').length;
   const teacherLoansCount = transactions.filter((t) => t.borrower.type === 'TEACHER').length;
@@ -43,15 +41,15 @@ export default function LibraryDashboardPage() {
   const categoryList = Object.entries(categoryCounts).sort((a, b) => b[1] - a[1]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
-            <LayoutDashboard className="w-6 h-6 text-indigo-600" />
-            แดชบอร์ดภาพรวมสถิติห้องสมุด (Library Intelligence)
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2.5">
+            <LayoutDashboard className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 shrink-0" />
+            <span>แดชบอร์ดภาพรวมสถิติห้องสมุด (Library Intelligence)</span>
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 mt-1 font-normal">
             สรุปข้อมูลสถิติทรัพยากรหนังสือ อัตราการยืม-คืน และความต้องการหนังสือของโรงเรียน
           </p>
         </div>
@@ -59,7 +57,7 @@ export default function LibraryDashboardPage() {
         <div className="flex items-center gap-2">
           <Link
             href="/borrow-return"
-            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-200 transition-all flex items-center gap-1.5"
+            className="px-4 py-2 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center gap-1.5 whitespace-nowrap hover:scale-105 active:scale-95"
           >
             <ArrowLeftRight className="w-4 h-4" />
             <span>ไปที่ระบบยืม-คืน</span>
@@ -68,13 +66,13 @@ export default function LibraryDashboardPage() {
       </div>
 
       {/* 4 Main Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <StatCard
           title="จำนวนหนังสือทั้งหมด"
           value={`${books.length} เล่ม`}
           subtitle={`ยืมได้ ${availableBooks.length} • ถูกยืม ${borrowedBooks.length}`}
           icon={BookOpen}
-          color="indigo"
+          color="blue"
         />
 
         <StatCard
@@ -82,7 +80,7 @@ export default function LibraryDashboardPage() {
           value={`${Math.round((borrowedBooks.length / (books.length || 1)) * 100)}%`}
           subtitle={`กำลังยืม ${activeLoans.length} เล่ม`}
           icon={TrendingUp}
-          color="blue"
+          color="sky"
         />
 
         <StatCard
@@ -98,30 +96,30 @@ export default function LibraryDashboardPage() {
           value={`${wishlists.length} รายการ`}
           subtitle={`อนุมัติแล้ว ${wishlists.filter((w) => w.status === 'APPROVED' || w.status === 'ORDERED').length} รายการ`}
           icon={Sparkles}
-          color="purple"
+          color="indigo"
         />
       </div>
 
       {/* Mid Section: Top Books & Category Breakdown */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Left: Top 5 Most Borrowed Books */}
-        <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-sky-100 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-indigo-600" />
-              5 อันดับหนังสือยอดนิยม (ยืมบ่อยที่สุด)
+            <h3 className="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-blue-600 shrink-0" />
+              <span>5 อันดับหนังสือยอดนิยม (ยืมบ่อยที่สุด)</span>
             </h3>
-            <span className="text-xs text-slate-400">สถิติสะสม</span>
+            <span className="text-xs text-slate-400 whitespace-nowrap">สถิติสะสม</span>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5 sm:space-y-3">
             {topBooks.map((book, idx) => (
               <div
                 key={book.id}
-                className="flex items-center gap-3 p-3 bg-slate-50 hover:bg-indigo-50/50 rounded-2xl border border-slate-100 transition-colors"
+                className="flex items-center gap-3 p-2.5 sm:p-3 bg-slate-50 hover:bg-sky-50/50 rounded-xl sm:rounded-2xl border border-slate-100 transition-colors"
               >
                 <div
-                  className={`w-7 h-7 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0 ${
+                  className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0 ${
                     idx === 0
                       ? 'bg-amber-100 text-amber-800'
                       : idx === 1
@@ -137,7 +135,7 @@ export default function LibraryDashboardPage() {
                 <img
                   src={book.coverUrl}
                   alt={book.title}
-                  className="w-10 h-14 object-cover rounded-lg bg-slate-200 shadow-2xs flex-shrink-0"
+                  className="w-8 sm:w-10 h-11 sm:h-14 object-cover rounded-lg bg-slate-200 shadow-2xs flex-shrink-0"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = 'https://placehold.co/100x150/e2e8f0/475569?text=Book';
                   }}
@@ -149,8 +147,8 @@ export default function LibraryDashboardPage() {
                 </div>
 
                 <div className="text-right flex-shrink-0">
-                  <span className="text-xs font-bold text-indigo-600">{book.totalBorrowedCount}</span>
-                  <span className="text-[10px] text-slate-400 block">ครั้ง</span>
+                  <span className="text-xs font-bold text-blue-600">{book.totalBorrowedCount}</span>
+                  <span className="text-[10px] text-slate-400 block whitespace-nowrap">ครั้ง</span>
                 </div>
               </div>
             ))}
@@ -158,13 +156,13 @@ export default function LibraryDashboardPage() {
         </div>
 
         {/* Right: Category Distribution */}
-        <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-sky-100 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-              <PieChart className="w-4 h-4 text-indigo-600" />
-              การกระจายตัวของหนังสือตามหมวดหมู่วิชา
+            <h3 className="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-2">
+              <PieChart className="w-4 h-4 text-blue-600 shrink-0" />
+              <span>การกระจายตัวของหนังสือตามหมวดหมู่วิชา</span>
             </h3>
-            <span className="text-xs text-slate-400">{categoryList.length} หมวดหมู่</span>
+            <span className="text-xs text-slate-400 whitespace-nowrap">{categoryList.length} หมวดหมู่</span>
           </div>
 
           <div className="space-y-3 pt-1">
@@ -175,13 +173,13 @@ export default function LibraryDashboardPage() {
                 <div key={cat} className="space-y-1">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-semibold text-slate-700 truncate max-w-xs">{cat}</span>
-                    <span className="font-mono text-slate-500">
+                    <span className="font-mono text-slate-500 whitespace-nowrap">
                       {count} เล่ม ({percentage}%)
                     </span>
                   </div>
                   <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full"
+                      className="h-full bg-gradient-to-r from-blue-600 to-sky-500 rounded-full"
                       style={{ width: `${percentage}%` }}
                     />
                   </div>
@@ -193,39 +191,39 @@ export default function LibraryDashboardPage() {
       </div>
 
       {/* Bottom Row: Borrower Types Statistics & Quick Actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         {/* Borrower Type ratio */}
-        <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
-          <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-            <GraduationCap className="w-4 h-4 text-indigo-600" />
-            สัดส่วนผู้ใช้บริการยืมหนังสือ
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-sky-100 shadow-sm space-y-4">
+          <h3 className="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-2">
+            <GraduationCap className="w-4 h-4 text-blue-600 shrink-0" />
+            <span>สัดส่วนผู้ใช้บริการยืมหนังสือ</span>
           </h3>
 
-          <div className="grid grid-cols-2 gap-4 pt-2">
-            <div className="p-4 bg-sky-50/80 rounded-2xl border border-sky-100 text-center space-y-1">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 pt-2">
+            <div className="p-4 bg-sky-50/80 rounded-xl sm:rounded-2xl border border-sky-100 text-center space-y-1">
               <GraduationCap className="w-6 h-6 text-sky-600 mx-auto" />
-              <p className="text-xs text-sky-800 font-semibold">กลุ่มนักเรียน</p>
-              <h4 className="text-2xl font-black text-sky-950">{studentLoansCount} ครั้ง</h4>
-              <p className="text-[10px] text-sky-600">ยืมเฉลี่ย 7 วัน/ครั้ง</p>
+              <p className="text-xs text-sky-800 font-semibold truncate whitespace-nowrap">กลุ่มนักเรียน</p>
+              <h4 className="text-xl sm:text-2xl font-black text-sky-950 truncate">{studentLoansCount} ครั้ง</h4>
+              <p className="text-[10px] text-sky-600 truncate whitespace-nowrap">ยืมเฉลี่ย 7 วัน/ครั้ง</p>
             </div>
 
-            <div className="p-4 bg-purple-50/80 rounded-2xl border border-purple-100 text-center space-y-1">
-              <UserCheck className="w-6 h-6 text-purple-600 mx-auto" />
-              <p className="text-xs text-purple-800 font-semibold">กลุ่มครู / บุคลากร</p>
-              <h4 className="text-2xl font-black text-purple-950">{teacherLoansCount} ครั้ง</h4>
-              <p className="text-[10px] text-purple-600">ยืมเฉลี่ย 14 วัน/ครั้ง</p>
+            <div className="p-4 bg-indigo-50/80 rounded-xl sm:rounded-2xl border border-indigo-100 text-center space-y-1">
+              <UserCheck className="w-6 h-6 text-indigo-600 mx-auto" />
+              <p className="text-xs text-indigo-800 font-semibold truncate whitespace-nowrap">กลุ่มครู / บุคลากร</p>
+              <h4 className="text-xl sm:text-2xl font-black text-indigo-950 truncate">{teacherLoansCount} ครั้ง</h4>
+              <p className="text-[10px] text-indigo-600 truncate whitespace-nowrap">ยืมเฉลี่ย 14 วัน/ครั้ง</p>
             </div>
           </div>
         </div>
 
         {/* Quick Links & Shortcuts */}
-        <div className="bg-gradient-to-br from-indigo-50 via-slate-50 to-purple-50 rounded-3xl p-6 border border-indigo-100 shadow-sm flex flex-col justify-between">
+        <div className="bg-gradient-to-br from-blue-50 via-sky-50/50 to-indigo-50 rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-sky-200 shadow-sm flex flex-col justify-between">
           <div>
-            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-              <Bookmark className="w-4 h-4 text-indigo-600" />
-              การเข้าถึงระบบด่วน
+            <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-2">
+              <Bookmark className="w-4 h-4 text-blue-600 shrink-0" />
+              <span>การเข้าถึงระบบด่วน</span>
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-500 mt-1 font-normal">
               ลิงก์ไปยังโมดูลหลักของระบบห้องสมุดโรงเรียน
             </p>
           </div>
@@ -233,7 +231,7 @@ export default function LibraryDashboardPage() {
           <div className="grid grid-cols-2 gap-2.5 pt-4">
             <Link
               href="/books/new"
-              className="p-3 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between"
+              className="p-3 bg-white hover:bg-sky-50 border border-sky-100 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between whitespace-nowrap"
             >
               <span>+ เพิ่มหนังสือใหม่</span>
               <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
@@ -241,7 +239,7 @@ export default function LibraryDashboardPage() {
 
             <Link
               href="/borrow-return"
-              className="p-3 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between"
+              className="p-3 bg-white hover:bg-sky-50 border border-sky-100 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between whitespace-nowrap"
             >
               <span>ทำรายการยืม-คืน</span>
               <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
@@ -249,7 +247,7 @@ export default function LibraryDashboardPage() {
 
             <Link
               href="/wishlist"
-              className="p-3 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between"
+              className="p-3 bg-white hover:bg-sky-50 border border-sky-100 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between whitespace-nowrap"
             >
               <span>ครูเสนอซื้อหนังสือ</span>
               <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
@@ -257,7 +255,7 @@ export default function LibraryDashboardPage() {
 
             <Link
               href="/wishlist/dashboard"
-              className="p-3 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between"
+              className="p-3 bg-white hover:bg-sky-50 border border-sky-100 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between whitespace-nowrap"
             >
               <span>วิเคราะห์จัดซื้อ</span>
               <ArrowRight className="w-3.5 h-3.5 text-slate-400" />

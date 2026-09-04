@@ -11,11 +11,8 @@ import {
   ArrowLeft, 
   Download, 
   Plus, 
-  Sparkles, 
-  CheckCircle2, 
   Printer 
 } from 'lucide-react';
-import { formatCurrency } from '@/lib/utils';
 
 export default function WishlistDashboardPage() {
   const { wishlists } = useLibrary();
@@ -49,14 +46,14 @@ export default function WishlistDashboardPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <Toast toast={toast} onClose={() => setToast(null)} />
 
       {/* Header */}
       <div>
         <Link
           href="/wishlist"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition-colors mb-3"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-blue-600 transition-colors mb-3"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>กลับไปยังแบบฟอร์มเสนอสั่งซื้อ</span>
@@ -64,11 +61,11 @@ export default function WishlistDashboardPage() {
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
-              <ClipboardList className="w-6 h-6 text-indigo-600" />
-              แดชบอร์ดวิเคราะห์การจัดซื้อหนังสือ (สำหรับฝ่ายห้องสมุด)
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2.5">
+              <ClipboardList className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 shrink-0" />
+              <span>แดชบอร์ดวิเคราะห์การจัดซื้อหนังสือ (สำหรับฝ่ายห้องสมุด)</span>
             </h1>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-500 mt-1 font-normal">
               ฐานข้อมูลวิเคราะห์รายการหนังสือที่ควรสั่งซื้อเพิ่ม พร้อมระบบอนุมัติงบประมาณรายกลุ่มสาระการเรียนรู้
             </p>
           </div>
@@ -76,15 +73,15 @@ export default function WishlistDashboardPage() {
           <div className="flex items-center gap-2.5 flex-wrap">
             <button
               onClick={() => window.print()}
-              className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-colors flex items-center gap-1.5 border border-slate-200"
+              className="px-3.5 py-2 bg-sky-50 hover:bg-sky-100 text-blue-700 rounded-xl text-xs font-semibold transition-colors flex items-center gap-1.5 border border-sky-200 whitespace-nowrap"
             >
-              <Printer className="w-4 h-4 text-slate-500" />
+              <Printer className="w-4 h-4 text-blue-600" />
               <span>พิมพ์รายงาน</span>
             </button>
 
             <button
               onClick={handleExportReport}
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-200 transition-all flex items-center gap-1.5"
+              className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-500/20 transition-all flex items-center gap-1.5 whitespace-nowrap hover:scale-105 active:scale-95"
             >
               <Download className="w-4 h-4" />
               <span>ส่งออก CSV รายงานจัดซื้อ</span>
@@ -92,7 +89,7 @@ export default function WishlistDashboardPage() {
 
             <Link
               href="/wishlist"
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-200 transition-all flex items-center gap-1.5"
+              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center gap-1.5 whitespace-nowrap hover:scale-105 active:scale-95"
             >
               <Plus className="w-4 h-4" />
               <span>เพิ่มคำขอใหม่</span>

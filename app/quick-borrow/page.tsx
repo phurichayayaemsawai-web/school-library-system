@@ -14,7 +14,7 @@ import {
   CheckCircle2, 
   ArrowRight, 
   Search,
-  Heart
+  Bookmark
 } from 'lucide-react';
 
 export default function QuickBorrowPage() {
@@ -108,39 +108,39 @@ export default function QuickBorrowPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
       <Toast toast={toast} onClose={() => setToast(null)} />
 
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-pink-500 via-rose-400 to-pink-400 rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-pink-200/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-pink-200">
+      <div className="bg-gradient-to-r from-blue-700 via-blue-600 to-sky-500 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-blue-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-blue-400/30">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-bold text-white mb-1 shadow-2xs">
-            <Heart className="w-3.5 h-3.5 text-pink-100 fill-pink-100" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-semibold text-white mb-1 shadow-2xs whitespace-nowrap">
+            <Zap className="w-3.5 h-3.5 text-amber-300 fill-amber-300 shrink-0" />
             <span>Fast Borrow Kiosk</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+          <h1 className="text-xl sm:text-3xl font-black tracking-tight">
             ระบบยืมหนังสือด่วนสำหรับนักเรียน
           </h1>
-          <p className="text-xs sm:text-sm text-pink-50 font-medium">
+          <p className="text-xs sm:text-sm text-sky-100/90 font-normal">
             ระบบการจัดการการยืมคืนหนังสือของห้องสมุดหมวดภาษาไทย
           </p>
         </div>
 
-        <div className="bg-white/20 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/30 text-center flex-shrink-0">
-          <span className="text-[11px] text-pink-100 block">ระยะเวลายืมตามระเบียบ</span>
+        <div className="bg-white/15 backdrop-blur-md px-4 py-3 rounded-xl sm:rounded-2xl border border-white/25 text-center flex-shrink-0 self-stretch sm:self-auto">
+          <span className="text-[11px] text-sky-100 block whitespace-nowrap">ระยะเวลายืมตามระเบียบ</span>
           <span className="text-lg font-black text-white">{settings.studentBorrowDays} วัน</span>
         </div>
       </div>
 
       {/* Success Notification Banner from last borrow */}
       {lastBorrowed && (
-        <div className="p-5 bg-emerald-50 border-2 border-emerald-400 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in zoom-in-95">
+        <div className="p-4 sm:p-5 bg-emerald-50 border-2 border-emerald-400 rounded-2xl sm:rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in zoom-in-95">
           <div className="flex items-start gap-3">
-            <div className="p-2.5 bg-emerald-600 text-white rounded-2xl">
-              <CheckCircle2 className="w-6 h-6" />
+            <div className="p-2.5 bg-emerald-600 text-white rounded-xl sm:rounded-2xl shrink-0">
+              <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-emerald-950">
+              <h3 className="text-xs sm:text-sm font-bold text-emerald-950">
                 ยืมหนังสือสำเร็จแล้ว! ข้อมูลขึ้นในระบบเรียบร้อย
               </h3>
               <p className="text-xs text-emerald-800 mt-0.5">
@@ -154,7 +154,7 @@ export default function QuickBorrowPage() {
 
           <Link
             href="/borrow-return"
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm whitespace-nowrap"
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm whitespace-nowrap self-end sm:self-auto"
           >
             <span>ดูรายการในระบบยืม-คืน</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -163,18 +163,18 @@ export default function QuickBorrowPage() {
       )}
 
       {/* Main Borrow Form */}
-      <form onSubmit={handleQuickBorrow} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form onSubmit={handleQuickBorrow} className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {/* Left: Student Info */}
-        <div className="bg-white rounded-3xl p-6 border border-pink-100 shadow-sm space-y-4">
-          <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2 border-b border-pink-50 pb-3">
-            <GraduationCap className="w-4 h-4 text-pink-500" />
-            1. ข้อมูลนักเรียนผู้ยืม
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-sky-100 shadow-sm space-y-4">
+          <h3 className="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-2 border-b border-sky-50 pb-3">
+            <GraduationCap className="w-4 h-4 text-blue-600 shrink-0" />
+            <span>1. ข้อมูลนักเรียนผู้ยืม</span>
           </h3>
 
           <div className="space-y-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                เลขประจำตัวนักเรียน <span className="text-pink-600">*</span>
+              <label className="block text-xs font-medium text-slate-700 mb-1">
+                เลขประจำตัวนักเรียน <span className="text-blue-600">*</span>
               </label>
               <div className="relative">
                 <Hash className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -184,14 +184,14 @@ export default function QuickBorrowPage() {
                   placeholder="เช่น 54201"
                   value={studentId}
                   onChange={(e) => setStudentId(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2.5 bg-pink-50/40 border border-pink-200 rounded-2xl text-xs font-mono font-bold focus:ring-2 focus:ring-pink-400 focus:bg-white focus:outline-none"
+                  className="w-full pl-9 pr-3 py-2.5 bg-sky-50/40 border border-sky-200 rounded-xl text-xs font-mono font-bold focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                ชื่อ-นามสกุล นักเรียน <span className="text-pink-600">*</span>
+              <label className="block text-xs font-medium text-slate-700 mb-1">
+                ชื่อ-นามสกุล นักเรียน <span className="text-blue-600">*</span>
               </label>
               <input
                 type="text"
@@ -199,17 +199,17 @@ export default function QuickBorrowPage() {
                 placeholder="เช่น ด.ช. ธนภัทร สุขเกษม"
                 value={studentName}
                 onChange={(e) => setStudentName(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-pink-50/40 border border-pink-200 rounded-2xl text-xs font-medium focus:ring-2 focus:ring-pink-400 focus:bg-white focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-sky-50/40 border border-sky-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">ระดับชั้น</label>
+                <label className="block text-xs font-medium text-slate-700 mb-1 whitespace-nowrap">ระดับชั้น</label>
                 <select
                   value={grade}
                   onChange={(e) => setGrade(e.target.value)}
-                  className="w-full px-2.5 py-2.5 bg-pink-50/40 border border-pink-200 rounded-2xl text-xs font-medium focus:ring-2 focus:ring-pink-400 focus:bg-white focus:outline-none cursor-pointer"
+                  className="w-full px-2.5 py-2.5 bg-sky-50/40 border border-sky-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none cursor-pointer"
                 >
                   {STUDENT_GRADES.map((g) => (
                     <option key={g} value={g}>{g}</option>
@@ -218,36 +218,36 @@ export default function QuickBorrowPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">ห้องเรียน</label>
+                <label className="block text-xs font-medium text-slate-700 mb-1 whitespace-nowrap">ห้องเรียน</label>
                 <input
                   type="text"
                   placeholder="เช่น 1, 2"
                   value={room}
                   onChange={(e) => setRoom(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-pink-50/40 border border-pink-200 rounded-2xl text-xs text-center font-bold focus:ring-2 focus:ring-pink-400 focus:bg-white focus:outline-none"
+                  className="w-full px-3 py-2.5 bg-sky-50/40 border border-sky-200 rounded-xl text-xs text-center font-bold focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">เบอร์โทรศัพท์ (ถ้ามี)</label>
+              <label className="block text-xs font-medium text-slate-700 mb-1 whitespace-nowrap">เบอร์โทรศัพท์ (ถ้ามี)</label>
               <input
                 type="tel"
                 placeholder="08x-xxx-xxxx"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-pink-50/40 border border-pink-200 rounded-2xl text-xs focus:ring-2 focus:ring-pink-400 focus:bg-white focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-sky-50/40 border border-sky-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
               />
             </div>
           </div>
         </div>
 
         {/* Right: Book Selection */}
-        <div className="bg-white rounded-3xl p-6 border border-pink-100 shadow-sm space-y-4 flex flex-col justify-between">
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-sky-100 shadow-sm space-y-4 flex flex-col justify-between">
           <div className="space-y-3">
-            <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2 border-b border-pink-50 pb-3">
-              <BookOpen className="w-4 h-4 text-pink-500" />
-              2. เลือกหนังสือที่ต้องการยืม
+            <h3 className="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-2 border-b border-sky-50 pb-3">
+              <BookOpen className="w-4 h-4 text-blue-600 shrink-0" />
+              <span>2. เลือกหนังสือที่ต้องการยืม</span>
             </h3>
 
             {/* Book search input */}
@@ -258,16 +258,16 @@ export default function QuickBorrowPage() {
                 placeholder="ค้นหาชื่อหนังสือ หรือรหัสหนังสือ..."
                 value={searchBookQuery}
                 onChange={(e) => setSearchBookQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 bg-pink-50/30 border border-pink-200 rounded-2xl text-xs focus:ring-2 focus:ring-pink-400 focus:bg-white focus:outline-none"
+                className="w-full pl-9 pr-3 py-2 bg-sky-50/30 border border-sky-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
               />
             </div>
 
             {/* Available Books List */}
             {availableBooks.length === 0 ? (
-              <div className="p-8 text-center bg-pink-50/30 rounded-2xl border border-dashed border-pink-200 text-slate-400 text-xs space-y-2">
-                <BookOpen className="w-8 h-8 text-pink-300 mx-auto" />
+              <div className="p-8 text-center bg-sky-50/30 rounded-2xl border border-dashed border-sky-200 text-slate-400 text-xs space-y-2">
+                <BookOpen className="w-8 h-8 text-sky-400 mx-auto" />
                 <p className="font-bold text-slate-600">ยังไม่มีหนังสือที่พร้อมให้ยืมในคลัง</p>
-                <Link href="/books/new" className="text-pink-600 font-bold hover:underline inline-block text-[11px]">
+                <Link href="/books/new" className="text-blue-600 font-bold hover:underline inline-block text-[11px]">
                   + ให้คุณครูเพิ่มหนังสือใหม่เข้าระบบ
                 </Link>
               </div>
@@ -277,10 +277,10 @@ export default function QuickBorrowPage() {
                   <div
                     key={book.id}
                     onClick={() => setSelectedBookId(book.id)}
-                    className={`p-3 rounded-2xl border cursor-pointer transition-all flex items-center gap-3 ${
+                    className={`p-3 rounded-xl sm:rounded-2xl border cursor-pointer transition-all flex items-center gap-3 ${
                       selectedBookId === book.id
-                        ? 'border-pink-500 bg-pink-50/80 ring-2 ring-pink-400/20 shadow-xs'
-                        : 'border-pink-100 bg-white hover:bg-pink-50/40'
+                        ? 'border-blue-500 bg-blue-50/80 ring-2 ring-blue-400/20 shadow-xs'
+                        : 'border-sky-100 bg-white hover:bg-sky-50/40'
                     }`}
                   >
                     <div className="w-8 h-11 bg-slate-200 rounded-lg overflow-hidden flex-shrink-0">
@@ -288,7 +288,7 @@ export default function QuickBorrowPage() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1">
-                        <span className="text-[10px] font-mono font-bold text-pink-700 bg-pink-100 px-1.5 py-0.2 rounded">
+                        <span className="text-[10px] font-mono font-bold text-blue-700 bg-blue-100 px-1.5 py-0.2 rounded whitespace-nowrap">
                           {book.id}
                         </span>
                         <span className="text-[10px] text-slate-400 truncate">{book.category}</span>
@@ -296,8 +296,8 @@ export default function QuickBorrowPage() {
                       <h4 className="text-xs font-bold text-slate-800 truncate mt-0.5">{book.title}</h4>
                       <p className="text-[11px] text-slate-500 truncate">{book.author}</p>
                     </div>
-                    <div className="w-5 h-5 rounded-full border border-pink-300 flex items-center justify-center flex-shrink-0">
-                      {selectedBookId === book.id && <div className="w-3 h-3 rounded-full bg-pink-500" />}
+                    <div className="w-5 h-5 rounded-full border border-sky-300 flex items-center justify-center flex-shrink-0">
+                      {selectedBookId === book.id && <div className="w-3 h-3 rounded-full bg-blue-600" />}
                     </div>
                   </div>
                 ))}
@@ -306,13 +306,13 @@ export default function QuickBorrowPage() {
           </div>
 
           {/* Submit Button */}
-          <div className="pt-3 border-t border-pink-50">
+          <div className="pt-3 border-t border-sky-50">
             <button
               type="submit"
               disabled={availableBooks.length === 0}
-              className="w-full py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold rounded-2xl text-xs shadow-lg shadow-pink-200 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white font-bold rounded-xl sm:rounded-2xl text-xs sm:text-sm shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-95"
             >
-              <Heart className="w-4 h-4 text-pink-100 fill-pink-100" />
+              <Zap className="w-4 h-4 text-amber-300 fill-amber-300 shrink-0" />
               <span>กดยืนยันการยืมทันที (Fast Borrow)</span>
             </button>
           </div>

@@ -51,20 +51,20 @@ export default function BooksPage() {
       <Toast toast={toast} onClose={() => setToast(null)} />
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
-            <BookOpen className="w-6 h-6 text-indigo-600" />
-            แคตตาล็อกหนังสือห้องสมุด
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2.5">
+            <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 shrink-0" />
+            <span>แคตตาล็อกหนังสือห้องสมุด</span>
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 mt-1 font-normal">
             ค้นหา ตรวจสอบสถานะการยืม และทำรายการยืมหนังสือออนไลน์
           </p>
         </div>
 
         <Link
           href="/books/new"
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-200 transition-all self-start sm:self-auto"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all self-start sm:self-auto whitespace-nowrap hover:scale-105 active:scale-95"
         >
           <PlusCircle className="w-4 h-4" />
           <span>เพิ่มหนังสือใหม่</span>
@@ -84,8 +84,8 @@ export default function BooksPage() {
 
       {/* Book Grid */}
       {filteredBooks.length === 0 ? (
-        <div className="bg-white rounded-3xl p-16 text-center border border-slate-200 shadow-sm space-y-3">
-          <BookOpen className="w-12 h-12 text-slate-300 mx-auto" />
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-10 sm:p-16 text-center border border-sky-100 shadow-sm space-y-3">
+          <BookOpen className="w-12 h-12 text-sky-300 mx-auto" />
           <h3 className="font-bold text-slate-700 text-base">ไม่พบหนังสือที่ตรงกับเงื่อนไขการค้นหา</h3>
           <p className="text-xs text-slate-400 max-w-sm mx-auto">
             ลองปรับเปลี่ยนคำค้นหา เปลี่ยนหมวดหมู่ หรือกดปุ่มล้างตัวกรองด้านบน
@@ -96,13 +96,13 @@ export default function BooksPage() {
               setSelectedCategory('ALL');
               setStatusFilter('ALL');
             }}
-            className="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-xl text-xs font-semibold hover:bg-indigo-100 transition-colors"
+            className="px-4 py-2 bg-sky-50 text-blue-700 rounded-xl text-xs font-semibold hover:bg-sky-100 transition-colors"
           >
             ล้างตัวกรองทั้งหมด
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
           {filteredBooks.map((book) => (
             <BookCard
               key={book.id}

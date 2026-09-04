@@ -7,7 +7,7 @@ import { TransactionTable } from '@/components/borrow/TransactionTable';
 import { ReturnModal } from '@/components/borrow/ReturnModal';
 import { Toast, ToastMessage } from '@/components/ui/Toast';
 import { BorrowTransaction } from '@/types';
-import { History, ArrowLeft, Download, FileSpreadsheet, CheckCircle2 } from 'lucide-react';
+import { History, ArrowLeft, Download } from 'lucide-react';
 
 export default function HistoryPage() {
   const { transactions } = useLibrary();
@@ -53,7 +53,7 @@ export default function HistoryPage() {
       <div>
         <Link
           href="/borrow-return"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition-colors mb-3"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-blue-600 transition-colors mb-3"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>กลับไปยังหน้าระบบยืม-คืน</span>
@@ -61,18 +61,18 @@ export default function HistoryPage() {
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
-              <History className="w-6 h-6 text-indigo-600" />
-              ประวัติการยืม - คืนหนังสือทั้งหมด
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2.5">
+              <History className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 shrink-0" />
+              <span>ประวัติการยืม - คืนหนังสือทั้งหมด</span>
             </h1>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-500 mt-1 font-normal">
               รวมประวัติการทำธุรกรรมยืมคืนหนังสือของนักเรียนและครูทุกรายการ
             </p>
           </div>
 
           <button
             onClick={handleExportCSV}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-200 transition-all self-start sm:self-auto"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-500/20 transition-all self-start sm:self-auto whitespace-nowrap hover:scale-105 active:scale-95"
           >
             <Download className="w-4 h-4" />
             <span>ส่งออกข้อมูล (Export CSV)</span>
@@ -81,18 +81,18 @@ export default function HistoryPage() {
       </div>
 
       {/* Summary info banner */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs">
-          <p className="text-xs text-slate-500">บันทึกธุรกรรมทั้งหมด</p>
-          <p className="text-2xl font-bold text-slate-800 mt-1">{transactions.length} รายการ</p>
+      <div className="grid grid-cols-3 gap-3 sm:gap-4">
+        <div className="bg-white rounded-xl sm:rounded-2xl p-4 border border-sky-100 shadow-2xs">
+          <p className="text-xs text-slate-500 truncate whitespace-nowrap">บันทึกธุรกรรมทั้งหมด</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-800 mt-1 truncate">{transactions.length} รายการ</p>
         </div>
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs">
-          <p className="text-xs text-slate-500">คืนสมบูรณ์แล้ว</p>
-          <p className="text-2xl font-bold text-emerald-600 mt-1">{returnedCount} รายการ</p>
+        <div className="bg-white rounded-xl sm:rounded-2xl p-4 border border-sky-100 shadow-2xs">
+          <p className="text-xs text-slate-500 truncate whitespace-nowrap">คืนสมบูรณ์แล้ว</p>
+          <p className="text-xl sm:text-2xl font-black text-emerald-600 mt-1 truncate">{returnedCount} รายการ</p>
         </div>
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs">
-          <p className="text-xs text-slate-500">ยังอยู่ระหว่างการยืม</p>
-          <p className="text-2xl font-bold text-amber-600 mt-1">{activeCount} รายการ</p>
+        <div className="bg-white rounded-xl sm:rounded-2xl p-4 border border-sky-100 shadow-2xs">
+          <p className="text-xs text-slate-500 truncate whitespace-nowrap">ยังอยู่ระหว่างการยืม</p>
+          <p className="text-xl sm:text-2xl font-black text-amber-600 mt-1 truncate">{activeCount} รายการ</p>
         </div>
       </div>
 

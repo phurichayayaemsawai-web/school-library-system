@@ -10,36 +10,37 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          50: '#fdf2f8',
-          100: '#fce7f3',
-          200: '#fbcfe8',
-          300: '#f9a8d4',
-          400: '#f472b6',
-          500: '#ec4899',
-          600: '#db2777',
-          700: '#be185d',
-          800: '#9d174d',
-          900: '#831843',
-          950: '#500724',
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
+          950: '#082f49',
         },
-        cute: {
-          pink: '#f472b6',
-          rose: '#fb7185',
-          blush: '#fff1f2',
+        brand: {
+          navy: '#0f172a',
+          blue: '#1d4ed8',
+          sky: '#0284c7',
+          cyan: '#06b6d4',
+          light: '#f0f9ff',
           card: '#ffffff',
-          soft: '#fdf2f8',
-          accent: '#db2777'
+          accent: '#2563eb'
         }
       },
       fontFamily: {
         sans: ['Prompt', 'Sarabun', 'Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        '2xs': '0 1px 2px 0 rgba(244, 114, 182, 0.05)',
-        'xs': '0 1px 3px 0 rgba(244, 114, 182, 0.1)',
-        'soft': '0 4px 20px -2px rgba(236, 72, 153, 0.08)',
-        'card': '0 10px 25px -5px rgba(244, 114, 182, 0.1), 0 8px 10px -6px rgba(244, 114, 182, 0.05)',
-        'elevated': '0 20px 25px -5px rgba(236, 72, 153, 0.15), 0 8px 10px -6px rgba(236, 72, 153, 0.1)',
+        '2xs': '0 1px 2px 0 rgba(14, 165, 233, 0.05)',
+        'xs': '0 1px 3px 0 rgba(14, 165, 233, 0.1)',
+        'soft': '0 4px 20px -2px rgba(2, 132, 199, 0.08)',
+        'card': '0 10px 25px -5px rgba(2, 132, 199, 0.08), 0 8px 10px -6px rgba(2, 132, 199, 0.04)',
+        'elevated': '0 20px 25px -5px rgba(2, 132, 199, 0.12), 0 8px 10px -6px rgba(2, 132, 199, 0.08)',
       },
       backdropBlur: {
         'xs': '2px',

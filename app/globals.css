@@ -5,30 +5,30 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 76, 29, 61;
+  --foreground-rgb: 15, 23, 42;
 }
 
 body {
-  color: #4a1d34;
-  background: linear-gradient(135deg, #fff5f8 0%, #ffffff 50%, #fdf2f8 100%);
+  color: #0f172a;
+  background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 40%, #e0f2fe 100%);
   font-family: 'Prompt', 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
   min-height: 100vh;
 }
 
-/* Cute pink custom scrollbars */
+/* Modern blue custom scrollbars */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #fdf2f8;
+  background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #f472b6;
+  background: #38bdf8;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #ec4899;
+  background: #0284c7;
 }
 
 @layer utilities {
@@ -38,8 +38,8 @@ body {
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(251, 207, 232, 0.6);
+  border: 1px solid rgba(186, 230, 253, 0.7);
 }
