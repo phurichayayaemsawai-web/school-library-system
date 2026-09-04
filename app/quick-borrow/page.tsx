@@ -119,10 +119,10 @@ export default function QuickBorrowPage() {
             <span>Fast Borrow Kiosk</span>
           </div>
           <h1 className="text-xl sm:text-3xl font-black tracking-tight">
-            ระบบยืมหนังสือด่วนสำหรับนักเรียน
+            ระบบยืมหนังสือ
           </h1>
           <p className="text-xs sm:text-sm text-sky-100/90 font-normal">
-            ระบบการจัดการการยืมคืนหนังสือของห้องสมุดหมวดภาษาไทย
+            ค้นหาและบันทึกการยืมหนังสือของห้องสมุดหมวดภาษาไทย
           </p>
         </div>
 

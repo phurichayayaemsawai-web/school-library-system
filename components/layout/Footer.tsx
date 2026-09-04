@@ -44,13 +44,13 @@ export const Footer: React.FC = () => {
             <h4 className="text-white font-semibold text-xs tracking-wider uppercase">เมนูด่วน</h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <Link href="/borrow-return" className="hover:text-sky-400 transition-colors">
-                  เคาน์เตอร์ครูบันทึกการยืม (ใส่รหัสหนังสือ)
+                <Link href="/quick-borrow" className="hover:text-sky-400 transition-colors">
+                  ยืมหนังสือ
                 </Link>
               </li>
               <li>
-                <Link href="/quick-borrow" className="hover:text-sky-400 transition-colors">
-                  นักเรียนยืมหนังสือด่วน
+                <Link href="/borrow-return" className="hover:text-sky-400 transition-colors">
+                  เคาน์เตอร์บันทึกการยืม-คืน
                 </Link>
               </li>
               <li>
@@ -59,13 +59,13 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/admin" className="hover:text-sky-400 transition-colors">
-                  ระบบแอดมินสำหรับครู / ตั้งค่าเวลา
+                <Link href="/dashboard" className="hover:text-sky-400 transition-colors">
+                  สถิติภาพรวมห้องสมุด
                 </Link>
               </li>
               <li>
-                <Link href="/wishlist" className="hover:text-sky-400 transition-colors">
-                  แบบฟอร์มครูเสนอสั่งซื้อหนังสือใหม่
+                <Link href="/admin" className="hover:text-sky-400 transition-colors">
+                  ระบบแอดมิน / ตั้งค่าระบบ
                 </Link>
               </li>
             </ul>
@@ -83,7 +83,7 @@ export const Footer: React.FC = () => {
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors border border-slate-700 w-fit"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-sky-400" />
-                <span>เข้าสู่ระบบแอดมิน (PIN: 1234)</span>
+                <span>เข้าสู่ระบบแอดมิน (thaibj3)</span>
               </Link>
             </div>
           </div>

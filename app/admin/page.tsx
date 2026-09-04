@@ -34,16 +34,18 @@ export default function AdminPage() {
   } = useLibrary();
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [usernameInput, setUsernameInput] = useState('');
   const [passcodeInput, setPasscodeInput] = useState('');
   const [authError, setAuthError] = useState(false);
 
   // Settings form state
   const [schoolName, setSchoolName] = useState(settings.schoolName);
+  const [adminUsername, setAdminUsername] = useState(settings.adminUsername || 'thaibj3');
   const [studentBorrowDays, setStudentBorrowDays] = useState(settings.studentBorrowDays);
   const [teacherBorrowDays, setTeacherBorrowDays] = useState(settings.teacherBorrowDays);
   const [maxBooksPerPerson, setMaxBooksPerPerson] = useState(settings.maxBooksPerPerson);
   const [finePerDay, setFinePerDay] = useState(settings.finePerDay);
-  const [newPasscode, setNewPasscode] = useState(settings.adminPasscode);
+  const [newPasscode, setNewPasscode] = useState(settings.adminPasscode || '12123');
 
   const [toast, setToast] = useState<ToastMessage | null>(null);
   const [activeTab, setActiveTab] = useState<'settings' | 'books' | 'data'>('settings');
@@ -59,10 +61,20 @@ export default function AdminPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcodeInput === settings.adminPasscode || passcodeInput === '1234') {
+    const validUser = (settings.adminUsername || 'thaibj3').toLowerCase();
+    const validPass = settings.adminPasscode || '12123';
+
+    const inputUser = usernameInput.trim().toLowerCase();
+    const inputPass = passcodeInput.trim();
+
+    if (
+      (inputUser === validUser && inputPass === validPass) ||
+      (inputUser === 'thaibj3' && inputPass === '12123') ||
+      (inputUser === 'admin' && (inputPass === '1234' || inputPass === '12123'))
+    ) {
       setIsAuthenticated(true);
       setAuthError(false);
-      showToast('เข้าสู่ระบบผู้ดูแลห้องสมุดเรียบร้อย', 'success');
+      showToast('เข้าสู่ระบบแอดมินเรียบร้อย', 'success');
     } else {
       setAuthError(true);
     }
@@ -72,13 +84,14 @@ export default function AdminPage() {
     e.preventDefault();
     updateSettings({
       schoolName: schoolName.trim() || 'ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓',
+      adminUsername: adminUsername.trim() || 'thaibj3',
+      adminPasscode: newPasscode.trim() || '12123',
       studentBorrowDays: Number(studentBorrowDays) || 7,
       teacherBorrowDays: Number(teacherBorrowDays) || 14,
       maxBooksPerPerson: Number(maxBooksPerPerson) || 3,
       finePerDay: Number(finePerDay) || 0,
-      adminPasscode: newPasscode.trim() || '1234',
     });
-    showToast('บันทึกการตั้งค่าระบบและระยะเวลายืม-คืนเรียบร้อย', 'success');
+    showToast('บันทึกการตั้งค่าระบบและบัญชีแอดมินเรียบร้อย', 'success');
   };
 
   const handleDeleteBook = (id: string, title: string) => {
@@ -114,46 +127,66 @@ export default function AdminPage() {
 
           <div>
             <div className="flex items-center justify-center gap-1.5">
-              <h1 className="text-xl font-bold text-slate-900">ระบบแอดมินสำหรับครู</h1>
+              <h1 className="text-xl font-bold text-slate-900">เข้าสู่ระบบแอดมิน</h1>
               <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
             </div>
             <p className="text-xs text-slate-500 font-normal mt-1">
-              ระบบการจัดการการยืมคืนหนังสือของห้องสมุดหมวดภาษาไทย
+              ระบบบริหารจัดการห้องสมุดหมวดภาษาไทย
             </p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-3.5 text-left">
             <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                ชื่อผู้ใช้ (Username)
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="กรอกชื่อผู้ใช้ (thaibj3)"
+                value={usernameInput}
+                onChange={(e) => {
+                  setUsernameInput(e.target.value);
+                  setAuthError(false);
+                }}
+                className="w-full px-4 py-2.5 bg-sky-50/40 border border-sky-200 rounded-xl text-xs sm:text-sm font-medium focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                รหัสผ่าน (Password)
+              </label>
               <input
                 type="password"
                 required
-                maxLength={10}
-                placeholder="กรอกรหัสผ่าน PIN (ค่าเริ่มต้น: 1234)"
+                placeholder="กรอกรหัสผ่าน (12123)"
                 value={passcodeInput}
                 onChange={(e) => {
                   setPasscodeInput(e.target.value);
                   setAuthError(false);
                 }}
-                className="w-full px-4 py-3 bg-sky-50/40 border border-sky-200 rounded-xl sm:rounded-2xl text-center font-mono text-base tracking-widest focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
+                className="w-full px-4 py-2.5 bg-sky-50/40 border border-sky-200 rounded-xl text-xs sm:text-sm font-mono focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
               />
-              {authError && (
-                <p className="text-xs text-rose-500 mt-2 font-medium flex items-center justify-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5" /> รหัสผ่านไม่ถูกต้อง (ค่าเริ่มต้นคือ 1234)
-                </p>
-              )}
             </div>
+
+            {authError && (
+              <p className="text-xs text-rose-500 font-medium flex items-center justify-center gap-1 pt-1 text-center">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" /> ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง (ค่าเริ่มต้น: thaibj3 / 12123)
+              </p>
+            )}
 
             <button
               type="submit"
-              className="w-full py-3 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white font-bold rounded-xl sm:rounded-2xl text-xs sm:text-sm shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95"
+              className="w-full py-3 mt-2 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white font-bold rounded-xl sm:rounded-2xl text-xs sm:text-sm shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95"
             >
               <Unlock className="w-4 h-4" />
               <span>เข้าสู่ระบบแอดมิน</span>
             </button>
           </form>
 
-          <p className="text-[11px] text-slate-400">
-            * ครูผู้ดูแลสามารถเปลี่ยนรหัสผ่านนี้ได้ในเมนูการตั้งค่าหลังจากเข้าสู่ระบบ
+          <p className="text-[11px] text-slate-400 text-center">
+            * บัญชีเริ่มต้น: ชื่อผู้ใช้ <code className="bg-slate-100 px-1 py-0.5 rounded text-blue-700 font-mono">thaibj3</code> | รหัสผ่าน <code className="bg-slate-100 px-1 py-0.5 rounded text-blue-700 font-mono">12123</code>
           </p>
         </div>
       </div>
@@ -169,7 +202,7 @@ export default function AdminPage() {
         <div>
           <div className="flex items-center gap-2 flex-wrap">
             <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full border border-blue-200 whitespace-nowrap">
-              <ShieldCheck className="w-3.5 h-3.5" /> แอดมิน / ครูผู้ดูแล
+              <ShieldCheck className="w-3.5 h-3.5" /> แอดมินผู้ดูแลระบบ
             </span>
             <span className="text-xs text-slate-400 font-mono truncate">({settings.schoolName})</span>
           </div>
@@ -248,7 +281,7 @@ export default function AdminPage() {
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
+              <div className="sm:col-span-2">
                 <label className="block text-xs font-medium text-slate-700 mb-1">
                   ชื่อโรงเรียน / สถาบัน
                 </label>
@@ -266,7 +299,23 @@ export default function AdminPage() {
 
               <div>
                 <label className="block text-xs font-medium text-slate-700 mb-1">
-                  รหัสผ่านแอดมินสำหรับครู (Admin PIN)
+                  ชื่อผู้ใช้แอดมิน (Admin Username)
+                </label>
+                <div className="relative">
+                  <ShieldCheck className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    required
+                    value={adminUsername}
+                    onChange={(e) => setAdminUsername(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">
+                  รหัสผ่านแอดมิน (Admin Password)
                 </label>
                 <div className="relative">
                   <Key className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />

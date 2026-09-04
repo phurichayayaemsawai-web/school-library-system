@@ -34,7 +34,7 @@ export const Navbar: React.FC = () => {
       icon: Library,
     },
     {
-      name: 'ยืมด่วน (นักเรียน)',
+      name: 'ยืมหนังสือ',
       href: '/quick-borrow',
       icon: Zap,
       badgeColor: 'bg-amber-500 text-white',
@@ -57,13 +57,6 @@ export const Navbar: React.FC = () => {
       name: 'ประวัติ',
       href: '/borrow-return/history',
       icon: History,
-    },
-    {
-      name: 'ครูเสนอซื้อ',
-      href: '/wishlist',
-      icon: Sparkles,
-      badge: pendingWishlistsCount > 0 ? pendingWishlistsCount : undefined,
-      badgeColor: 'bg-sky-500 text-white',
     },
     {
       name: 'สถิติ',
@@ -134,7 +127,7 @@ export const Navbar: React.FC = () => {
               className="inline-flex items-center gap-1 sm:gap-1.5 text-xs font-bold px-2.5 sm:px-3.5 py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white transition-all shadow-sm shadow-blue-300/40 whitespace-nowrap"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-sky-100 shrink-0" />
-              <span>แอดมิน / ครู</span>
+              <span>แอดมิน</span>
             </Link>
 
             <button

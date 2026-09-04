@@ -82,7 +82,13 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
 
       if (storedSettings) {
-        setSettings({ ...DEFAULT_SETTINGS, ...JSON.parse(storedSettings) });
+        const parsed = JSON.parse(storedSettings);
+        setSettings({
+          ...DEFAULT_SETTINGS,
+          ...parsed,
+          adminUsername: parsed.adminUsername || DEFAULT_SETTINGS.adminUsername,
+          adminPasscode: (parsed.adminPasscode === '1234' || !parsed.adminPasscode) ? DEFAULT_SETTINGS.adminPasscode : parsed.adminPasscode,
+        });
       } else {
         localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(DEFAULT_SETTINGS));
       }
