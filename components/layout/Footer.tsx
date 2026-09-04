@@ -83,7 +83,7 @@ export const Footer: React.FC = () => {
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors border border-slate-700 w-fit"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-sky-400" />
-                <span>เข้าสู่ระบบแอดมิน (thaibj3)</span>
+                <span>เข้าสู่ระบบแอดมิน</span>
               </Link>
             </div>
           </div>

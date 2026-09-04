@@ -143,7 +143,7 @@ export default function AdminPage() {
               <input
                 type="text"
                 required
-                placeholder="กรอกชื่อผู้ใช้ (thaibj3)"
+                placeholder="กรอกชื่อผู้ใช้"
                 value={usernameInput}
                 onChange={(e) => {
                   setUsernameInput(e.target.value);
@@ -160,7 +160,7 @@ export default function AdminPage() {
               <input
                 type="password"
                 required
-                placeholder="กรอกรหัสผ่าน (12123)"
+                placeholder="กรอกรหัสผ่าน"
                 value={passcodeInput}
                 onChange={(e) => {
                   setPasscodeInput(e.target.value);
@@ -172,7 +172,7 @@ export default function AdminPage() {
 
             {authError && (
               <p className="text-xs text-rose-500 font-medium flex items-center justify-center gap-1 pt-1 text-center">
-                <AlertCircle className="w-3.5 h-3.5 shrink-0" /> ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง (ค่าเริ่มต้น: thaibj3 / 12123)
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" /> ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง
               </p>
             )}
 
@@ -184,10 +184,6 @@ export default function AdminPage() {
               <span>เข้าสู่ระบบแอดมิน</span>
             </button>
           </form>
-
-          <p className="text-[11px] text-slate-400 text-center">
-            * บัญชีเริ่มต้น: ชื่อผู้ใช้ <code className="bg-slate-100 px-1 py-0.5 rounded text-blue-700 font-mono">thaibj3</code> | รหัสผ่าน <code className="bg-slate-100 px-1 py-0.5 rounded text-blue-700 font-mono">12123</code>
-          </p>
         </div>
       </div>
     );
