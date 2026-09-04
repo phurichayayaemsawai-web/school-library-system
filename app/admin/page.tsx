@@ -16,6 +16,9 @@ import {
   Sparkles, 
   CheckCircle2, 
   AlertCircle,
+  AlertTriangle,
+  RotateCcw,
+  Asterisk,
   School,
   Layers,
   DollarSign,
@@ -102,9 +105,10 @@ export default function AdminPage() {
   };
 
   const handleClearAll = () => {
-    if (confirm('คำเตือน: คุณต้องการล้างข้อมูลทั้งหมดในระบบให้เป็น "เว็บโล่งๆ" หรือไม่? ข้อมูลหนังสือและประวัติการยืมจะถูกลบทั้งหมด')) {
+    if (confirm('ยืนยันการรีเซ็ตระบบทั้งหมด? ข้อมูลและการตั้งค่าทั้งหมดจะถูกลบและคืนค่าเริ่มต้น')) {
       clearAllData();
-      showToast('ล้างข้อมูลระบบทั้งหมดเรียบร้อยแล้ว (เว็บโล่งพร้อมเริ่มใช้งาน)', 'info');
+      showToast('รีเซ็ตระบบทั้งหมดเรียบร้อยแล้ว', 'info');
+      setActiveTab('settings');
     }
   };
 
@@ -262,8 +266,8 @@ export default function AdminPage() {
               : 'border-transparent text-slate-500 hover:text-blue-700'
           }`}
         >
-          <Layers className="w-4 h-4 shrink-0" />
-          <span>3. การจัดการฐานข้อมูล / ล้างระบบ</span>
+          <RotateCcw className="w-4 h-4 shrink-0" />
+          <span>3. รีเซ็ตระบบทั้งหมด</span>
         </button>
       </div>
 
@@ -474,38 +478,59 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Tab 3: Data Management */}
+      {/* Tab 3: รีเซ็ตระบบทั้งหมด */}
       {activeTab === 'data' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-rose-100 shadow-sm space-y-3">
-            <h4 className="text-xs sm:text-sm font-bold text-rose-700 flex items-center gap-2">
-              <Trash2 className="w-4 h-4 shrink-0" />
-              <span>ล้างระบบให้เป็น "เว็บโล่งๆ" (Clear All Data)</span>
-            </h4>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              ลบหนังสือทั้งหมดและประวัติการยืมออก เพื่อให้เว็บเริ่มต้นใหม่อย่างสะอาด
-            </p>
-            <button
-              onClick={handleClearAll}
-              className="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold transition-colors whitespace-nowrap"
-            >
-              ล้างข้อมูลทั้งหมดในระบบทันที
-            </button>
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 border border-rose-200/80 shadow-sm max-w-2xl mx-auto space-y-6">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shrink-0 shadow-xs">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-lg sm:text-xl font-bold text-slate-900">
+                รีเซ็ตระบบทั้งหมด
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                การรีเซ็ตระบบจะลบข้อมูลและการตั้งค่าทั้งหมดที่บันทึกไว้ เพื่อคืนระบบกลับสู่ค่าเริ่มต้น
+              </p>
+            </div>
           </div>
 
-          <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-sky-100 shadow-sm space-y-3">
-            <h4 className="text-xs sm:text-sm font-bold text-blue-700 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-blue-500 shrink-0" />
-              <span>โหลดข้อมูลตัวอย่างสำหรับทดสอบ (Load Sample Data)</span>
-            </h4>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              ใส่หนังสือตัวอย่างหมวดภาษาไทย 3 เล่มเพื่อทดสอบระบบยืม-คืน
+          {/* Prominent Warning Box */}
+          <div className="p-5 bg-rose-50 border-2 border-rose-200 rounded-2xl sm:rounded-3xl space-y-3">
+            <p className="text-sm sm:text-base font-black text-rose-700 tracking-wide">
+              ข้อมูลจะถูกลบเมื่อกดรีเซ็ตระบบ
             </p>
+            
+            <div className="space-y-2 text-xs sm:text-sm text-rose-950 font-medium">
+              <div className="flex items-start gap-2">
+                <Asterisk className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                <span>การดำเนินการนี้ไม่สามารถกู้คืนข้อมูลกลับมาได้</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <Asterisk className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                <span>กรุณาตรวจสอบข้อมูลให้เรียบร้อยก่อนกด “รีเซ็ตระบบ”</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons: Green for Cancel, Red for Reset */}
+          <div className="pt-2 flex flex-col-reverse sm:flex-row items-center justify-end gap-3">
             <button
-              onClick={handleLoadDemo}
-              className="px-4 py-2 bg-sky-50 hover:bg-sky-100 text-blue-700 border border-sky-200 rounded-xl text-xs font-bold transition-colors whitespace-nowrap"
+              type="button"
+              onClick={() => setActiveTab('settings')}
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl sm:rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 whitespace-nowrap"
             >
-              โหลดข้อมูลตัวอย่างเข้าสู่ระบบ
+              <CheckCircle2 className="w-4 h-4" />
+              <span>ยกเลิก</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleClearAll}
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl sm:rounded-2xl bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white font-bold text-xs sm:text-sm shadow-md shadow-rose-600/20 transition-all flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 whitespace-nowrap"
+            >
+              <Trash2 className="w-4 h-4" />
+              <span>รีเซ็ตระบบ</span>
             </button>
           </div>
         </div>
