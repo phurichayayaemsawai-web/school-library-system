@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 
 export default function QuickBorrowPage() {
-  const { books, borrowBook, settings } = useLibrary();
+  const { books, borrowBook, settings, isAdmin } = useLibrary();
 
   // Borrower role switcher: STUDENT (5 days) vs TEACHER (10 days)
   const [borrowerType, setBorrowerType] = useState<BorrowerType>('STUDENT');
@@ -431,11 +431,27 @@ export default function QuickBorrowPage() {
 
             {/* Available Books List */}
             {availableBooks.length === 0 ? (
-              <div className="p-6 text-center bg-sky-50/30 rounded-2xl border border-dashed border-sky-200 text-slate-400 text-xs space-y-2">
-                <BookOpen className="w-8 h-8 text-sky-400 mx-auto" />
-                <p className="font-bold text-slate-600">ยังไม่มีข้อมูลของหนังสือในคลัง</p>
-                <p className="text-xs text-slate-400">ผู้ดูแลระบบจะใส่ข้อมูลของหนังสือเข้ามาในภายหลัง</p>
-              </div>
+              isAdmin ? (
+                <div className="p-6 text-center bg-sky-50/30 rounded-2xl border border-dashed border-sky-200 text-slate-500 text-xs space-y-3">
+                  <BookOpen className="w-8 h-8 text-sky-400 mx-auto" />
+                  <div className="space-y-0.5">
+                    <p className="font-bold text-slate-700">ยังไม่มีหนังสือที่พร้อมให้ยืมในระบบ</p>
+                    <p className="text-xs text-slate-400">คุณสามารถไปที่หน้าจัดการเพื่อลงทะเบียนหนังสือใหม่</p>
+                  </div>
+                  <Link
+                    href="/books/new"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-blue-600 to-sky-600 text-white rounded-xl text-xs font-bold shadow-sm transition-all hover:scale-105 active:scale-95"
+                  >
+                    <span>+ เพิ่มหนังสือใหม่</span>
+                  </Link>
+                </div>
+              ) : (
+                <div className="p-6 text-center bg-sky-50/30 rounded-2xl border border-dashed border-sky-200 text-slate-400 text-xs space-y-2">
+                  <BookOpen className="w-8 h-8 text-sky-400 mx-auto" />
+                  <p className="font-bold text-slate-600">ยังไม่มีข้อมูลของหนังสือในคลัง</p>
+                  <p className="text-xs text-slate-400">ผู้ดูแลระบบจะใส่ข้อมูลของหนังสือเข้ามาในภายหลัง</p>
+                </div>
+              )
             ) : (
               <div className="max-h-48 overflow-y-auto space-y-2 pr-1">
                 {filteredAvailableBooks.map((book) => (
