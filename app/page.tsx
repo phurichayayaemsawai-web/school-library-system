@@ -66,15 +66,15 @@ export default function HomePage() {
         <div className="relative z-10 max-w-3xl space-y-3 sm:space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-semibold text-white shadow-2xs whitespace-nowrap">
             <Bookmark className="w-3.5 h-3.5 text-sky-200 fill-sky-200 shrink-0" />
-            <span className="truncate">{settings.schoolName || '??????????????????? ????????????????????????? ?'}</span>
+            <span className="truncate">{settings.schoolName || 'ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓'}</span>
           </div>
 
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
-            ????????????-??????????
+            บันทึกการยืม-คืนหนังสือ
           </h1>
 
           <p className="text-xs sm:text-sm text-sky-100/90 font-normal leading-relaxed max-w-2xl">
-            ???????????? ???????????? ????????????????????-?????????? ?????????????????
+            ค้นหาหนังสือ ตรวจสอบสถานะ และติดตามกำหนดการยืม-คืนหนังสือ ของนักเรียนและครู
           </p>
 
           {/* Action buttons */}
@@ -84,7 +84,7 @@ export default function HomePage() {
               className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-white text-blue-700 hover:bg-sky-50 font-bold text-xs sm:text-sm shadow-lg shadow-blue-900/20 transition-all flex items-center gap-2 hover:scale-105 active:scale-95 whitespace-nowrap"
             >
               <ArrowLeftRight className="w-4 h-4 text-blue-600 shrink-0" />
-              <span>????????????????????????? (???????)</span>
+              <span>เคาน์เตอร์ครูบันทึกการยืม (ใส่รหัส)</span>
             </Link>
 
             <Link
@@ -92,7 +92,7 @@ export default function HomePage() {
               className="px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-blue-500/80 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm backdrop-blur-md border border-white/25 transition-all flex items-center gap-2 hover:scale-105 active:scale-95 whitespace-nowrap"
             >
               <Zap className="w-4 h-4 text-amber-300 fill-amber-300 shrink-0" />
-              <span>??????????????????????</span>
+              <span>นักเรียนยืมหนังสือด่วน</span>
             </Link>
 
             <Link
@@ -100,7 +100,7 @@ export default function HomePage() {
               className="px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-white/10 hover:bg-white/20 text-white font-medium text-xs sm:text-sm backdrop-blur-md border border-white/20 transition-all flex items-center gap-1.5 whitespace-nowrap"
             >
               <ShieldCheck className="w-4 h-4 text-sky-200 shrink-0" />
-              <span>?????? / ???</span>
+              <span>แอดมิน / ครู</span>
             </Link>
           </div>
         </div>
@@ -114,9 +114,9 @@ export default function HomePage() {
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-sky-100 shadow-sm hover:border-sky-200 transition-all flex items-center justify-between">
           <div className="min-w-0">
-            <p className="text-xs font-medium text-slate-500 truncate whitespace-nowrap">?????????????</p>
-            <h3 className="text-xl sm:text-2xl font-black text-blue-600 mt-1 truncate">{books.length} ????</h3>
-            <p className="text-[11px] text-slate-400 mt-0.5 truncate whitespace-nowrap">??????????? {availableBooks.length} ????</p>
+            <p className="text-xs font-medium text-slate-500 truncate whitespace-nowrap">หนังสือในคลัง</p>
+            <h3 className="text-xl sm:text-2xl font-black text-blue-600 mt-1 truncate">{books.length} เล่ม</h3>
+            <p className="text-[11px] text-slate-400 mt-0.5 truncate whitespace-nowrap">พร้อมให้ยืม {availableBooks.length} เล่ม</p>
           </div>
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 ml-2">
             <BookOpen className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -125,9 +125,9 @@ export default function HomePage() {
 
         <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-sky-100 shadow-sm hover:border-sky-200 transition-all flex items-center justify-between">
           <div className="min-w-0">
-            <p className="text-xs font-medium text-slate-500 truncate whitespace-nowrap">???????????????</p>
-            <h3 className="text-xl sm:text-2xl font-black text-amber-600 mt-1 truncate">{borrowedBooks.length} ????</h3>
-            <p className="text-[11px] text-slate-400 mt-0.5 truncate whitespace-nowrap">????????? {overdueLoans.length} ????</p>
+            <p className="text-xs font-medium text-slate-500 truncate whitespace-nowrap">กำลังถูกยืมอยู่</p>
+            <h3 className="text-xl sm:text-2xl font-black text-amber-600 mt-1 truncate">{borrowedBooks.length} เล่ม</h3>
+            <p className="text-[11px] text-slate-400 mt-0.5 truncate whitespace-nowrap">เกินกำหนด {overdueLoans.length} เล่ม</p>
           </div>
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 ml-2">
             <Clock className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -136,9 +136,9 @@ export default function HomePage() {
 
         <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-sky-100 shadow-sm hover:border-sky-200 transition-all flex items-center justify-between">
           <div className="min-w-0">
-            <p className="text-xs font-medium text-slate-500 truncate whitespace-nowrap">??????????????</p>
-            <h3 className="text-xl sm:text-2xl font-black text-sky-600 mt-1 truncate">{transactions.length} ?????</h3>
-            <p className="text-[11px] text-slate-400 mt-0.5 truncate whitespace-nowrap">?????????????????</p>
+            <p className="text-xs font-medium text-slate-500 truncate whitespace-nowrap">ยืมสะสมทั้งหมด</p>
+            <h3 className="text-xl sm:text-2xl font-black text-sky-600 mt-1 truncate">{transactions.length} ครั้ง</h3>
+            <p className="text-[11px] text-slate-400 mt-0.5 truncate whitespace-nowrap">สถิติการยืมในระบบ</p>
           </div>
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0 ml-2">
             <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -147,9 +147,9 @@ export default function HomePage() {
 
         <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-sky-100 shadow-sm hover:border-sky-200 transition-all flex items-center justify-between">
           <div className="min-w-0">
-            <p className="text-xs font-medium text-slate-500 truncate whitespace-nowrap">???????????</p>
-            <h3 className="text-xl sm:text-2xl font-black text-indigo-600 mt-1 truncate">{settings.studentBorrowDays} ???</h3>
-            <p className="text-[11px] text-slate-400 mt-0.5 truncate whitespace-nowrap">????????? {settings.teacherBorrowDays} ???</p>
+            <p className="text-xs font-medium text-slate-500 truncate whitespace-nowrap">ระยะเวลายืม</p>
+            <h3 className="text-xl sm:text-2xl font-black text-indigo-600 mt-1 truncate">{settings.studentBorrowDays} วัน</h3>
+            <p className="text-[11px] text-slate-400 mt-0.5 truncate whitespace-nowrap">ครูยืมได้ {settings.teacherBorrowDays} วัน</p>
           </div>
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 ml-2">
             <Bookmark className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -163,10 +163,10 @@ export default function HomePage() {
           <div>
             <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
               <BookCheck className="w-5 h-5 text-blue-600 shrink-0" />
-              <span>???????????????????????????</span>
+              <span>แคตตาล็อกหนังสือหมวดภาษาไทย</span>
             </h2>
             <p className="text-xs text-slate-500 font-normal mt-0.5">
-              ??????????????????????????????????????????
+              แสดงหนังสือแนะนำและหนังสือล่าสุดในห้องสมุด
             </p>
           </div>
 
@@ -175,14 +175,14 @@ export default function HomePage() {
               href="/books"
               className="text-xs font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3.5 py-2 rounded-xl transition-all whitespace-nowrap"
             >
-              ????????? ({books.length})
+              ดูทั้งหมด ({books.length})
             </Link>
             <Link
               href="/books/new"
               className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 px-3.5 py-2 rounded-xl transition-all shadow-md shadow-blue-500/20 whitespace-nowrap"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>+ ????????????????</span>
+              <span>+ เพิ่มหนังสือใหม่</span>
             </Link>
           </div>
         </div>
@@ -193,9 +193,9 @@ export default function HomePage() {
               <BookOpen className="w-8 h-8 text-blue-500" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-800 text-base">??????????????? - ???????????????????????????</h3>
+              <h3 className="font-bold text-slate-800 text-base">ระบบพร้อมใช้งาน — ยังไม่มีข้อมูลหนังสือในคลัง</h3>
               <p className="text-xs text-slate-500 max-w-md mx-auto mt-1">
-                ?????????????????????????????????????????????????????????????????????????
+                คุณครูสามารถเริ่มต้นใส่รหัสหนังสือและข้อมูลหนังสือเล่มแรกเข้าระบบได้ทันที
               </p>
             </div>
             <div className="flex flex-wrap justify-center gap-3 pt-2">
@@ -204,13 +204,13 @@ export default function HomePage() {
                 className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 text-white rounded-xl sm:rounded-2xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center gap-1.5"
               >
                 <Plus className="w-4 h-4" />
-                <span>??????????????????? (????????????????)</span>
+                <span>เพิ่มหนังสือเล่มแรก (กำหนดรหัสหนังสือ)</span>
               </Link>
               <Link
                 href="/admin"
                 className="px-4 py-2.5 bg-sky-50 hover:bg-sky-100 text-blue-700 rounded-xl sm:rounded-2xl text-xs font-semibold transition-all"
               >
-                ??????????????????-???
+                ตั้งค่าระยะเวลายืม-คืน
               </Link>
             </div>
           </div>
