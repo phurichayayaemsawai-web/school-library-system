@@ -45,8 +45,11 @@ export interface BorrowTransaction {
   bookCategory: string;
   borrower: Borrower;
   borrowDate: string; // YYYY-MM-DD
+  borrowTime?: string; // HH:mm เช่น 14:30
   dueDate: string;    // YYYY-MM-DD
+  dueTime?: string;   // เช่น 16:30 น.
   returnDate?: string; // YYYY-MM-DD
+  returnTime?: string; // HH:mm
   status: TransactionStatus;
   notes?: string;
 }

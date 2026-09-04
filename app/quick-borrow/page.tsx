@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLibrary } from '@/context/LibraryContext';
 import { Toast, ToastMessage } from '@/components/ui/Toast';
 import { STUDENT_GRADES, SCHOOL_DEPARTMENTS, BorrowerType } from '@/types';
-import { formatThaiDate, addDays, getTodayString } from '@/lib/utils';
+import { formatThaiDate, addDays, getTodayString, getCurrentTimeString } from '@/lib/utils';
 import { 
   BookOpen, 
   GraduationCap, 
@@ -17,7 +17,10 @@ import {
   UserCheck,
   Phone,
   Building2,
-  Check
+  Check,
+  Clock,
+  Calendar,
+  AlertTriangle
 } from 'lucide-react';
 
 export default function QuickBorrowPage() {
@@ -25,6 +28,16 @@ export default function QuickBorrowPage() {
 
   // Borrower role switcher: STUDENT (5 days) vs TEACHER (10 days)
   const [borrowerType, setBorrowerType] = useState<BorrowerType>('STUDENT');
+
+  // Live time ticker
+  const [currentTime, setCurrentTime] = useState<string>(getCurrentTimeString());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(getCurrentTimeString());
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Student form fields
   const [studentId, setStudentId] = useState('');
@@ -46,6 +59,8 @@ export default function QuickBorrowPage() {
   const [lastBorrowed, setLastBorrowed] = useState<{
     bookTitle: string;
     borrowerName: string;
+    borrowDate: string;
+    borrowTime: string;
     dueDate: string;
     trxId: string;
     days: number;
@@ -66,6 +81,10 @@ export default function QuickBorrowPage() {
 
   // Selected book object for Live Cover Preview
   const selectedBook = books.find((b) => b.id === selectedBookId);
+
+  const today = getTodayString();
+  const loanDays = borrowerType === 'STUDENT' ? (settings.studentBorrowDays || 5) : (settings.teacherBorrowDays || 10);
+  const calculatedDueDate = addDays(new Date(today), loanDays);
 
   const showToast = (title: string, type: 'success' | 'error' | 'info' = 'success', description?: string) => {
     setToast({
@@ -96,9 +115,7 @@ export default function QuickBorrowPage() {
       return;
     }
 
-    const today = getTodayString();
-    const loanDays = borrowerType === 'STUDENT' ? (settings.studentBorrowDays || 5) : (settings.teacherBorrowDays || 10);
-    const calculatedDueDate = addDays(new Date(today), loanDays);
+    const borrowTimeNow = getCurrentTimeString();
 
     const borrowerData = borrowerType === 'STUDENT'
       ? {
@@ -120,7 +137,9 @@ export default function QuickBorrowPage() {
       bookId: selectedBook.id,
       borrower: borrowerData,
       borrowDate: today,
+      borrowTime: borrowTimeNow,
       dueDate: calculatedDueDate,
+      dueTime: '16:30 น.',
       notes: `ยืมผ่านหน้าทำรายการยืมหนังสือ (${borrowerType === 'STUDENT' ? 'นักเรียน 5 วัน' : 'ครู 10 วัน'})`,
     });
 
@@ -128,12 +147,18 @@ export default function QuickBorrowPage() {
       setLastBorrowed({
         bookTitle: selectedBook.title,
         borrowerName: borrowerType === 'STUDENT' ? studentName.trim() : teacherName.trim(),
+        borrowDate: today,
+        borrowTime: borrowTimeNow,
         dueDate: calculatedDueDate,
         trxId: result.transaction.id,
         days: loanDays,
       });
 
-      showToast(result.message, 'success', `กำหนดส่งคืนภายในวันที่ ${formatThaiDate(calculatedDueDate)} (${loanDays} วัน)`);
+      showToast(
+        result.message, 
+        'success', 
+        `ยืมวันที่ ${formatThaiDate(today)} (${borrowTimeNow} น.) • กำหนดส่งคืนภายในวันที่ ${formatThaiDate(calculatedDueDate)} ก่อนเวลา 16:30 น.`
+      );
 
       // Reset book selection
       setSelectedBookId('');
@@ -144,7 +169,7 @@ export default function QuickBorrowPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
+    <div className="max-w-4xl mx-auto space-y-5 sm:space-y-6">
       <Toast toast={toast} onClose={() => setToast(null)} />
 
       {/* Header Banner */}
@@ -168,6 +193,45 @@ export default function QuickBorrowPage() {
         </div>
       </div>
 
+      {/* Real-time Borrow & Due Time Information Card */}
+      <div className="bg-gradient-to-r from-blue-50/90 via-sky-50/90 to-indigo-50/90 border-2 border-blue-300 rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-sm space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          {/* 1. วันที่ยืมและเวลาปัจจุบัน */}
+          <div className="flex items-center gap-3 bg-white/90 backdrop-blur-xs p-3.5 rounded-xl sm:rounded-2xl border border-blue-100 shadow-2xs">
+            <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+              <Clock className="w-5 h-5" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[11px] font-semibold text-slate-500 block truncate">วันที่ยืม & เวลาปัจจุบันที่ทำรายการ</span>
+              <p className="text-xs sm:text-sm font-bold text-slate-900 truncate">
+                {formatThaiDate(today)} <span className="text-blue-600 font-mono font-black ml-1">เวลา {currentTime} น.</span>
+              </p>
+            </div>
+          </div>
+
+          {/* 2. กำหนดส่งคืนและเวลาปิดรับ */}
+          <div className="flex items-center gap-3 bg-white/90 backdrop-blur-xs p-3.5 rounded-xl sm:rounded-2xl border border-indigo-100 shadow-2xs">
+            <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+              <Calendar className="w-5 h-5" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[11px] font-semibold text-slate-500 block truncate">
+                กำหนดส่งคืน ({borrowerType === 'STUDENT' ? 'นักเรียน 5 วัน' : 'ครู 10 วัน'})
+              </span>
+              <p className="text-xs sm:text-sm font-bold text-indigo-950 truncate">
+                ภายในวันที่ <strong className="text-indigo-600 font-black">{formatThaiDate(calculatedDueDate)}</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Highlighted Warning condition bar */}
+        <div className="flex items-center gap-2 bg-amber-100/90 text-amber-950 px-3.5 py-2.5 rounded-xl sm:rounded-2xl border border-amber-300 text-xs font-bold">
+          <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0" />
+          <span>⏰ ข้อกำหนดการส่งคืน: <strong>ต้องคืนภายในวันที่กำหนดก่อนเวลา 16:30 น.</strong> ณ ห้องสมุดหมวดภาษาไทย</span>
+        </div>
+      </div>
+
       {/* Success Notification Banner from last borrow */}
       {lastBorrowed && (
         <div className="p-4 sm:p-5 bg-emerald-50 border-2 border-emerald-400 rounded-2xl sm:rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in zoom-in-95">
@@ -175,15 +239,18 @@ export default function QuickBorrowPage() {
             <div className="p-2.5 bg-emerald-600 text-white rounded-xl sm:rounded-2xl shrink-0">
               <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <div>
+            <div className="space-y-0.5">
               <h3 className="text-xs sm:text-sm font-bold text-emerald-950">
                 ทำรายการยืมหนังสือสำเร็จเรียบร้อย!
               </h3>
-              <p className="text-xs text-emerald-800 mt-0.5">
+              <p className="text-xs text-emerald-800">
                 ผู้ยืม: <strong>{lastBorrowed.borrowerName}</strong> | หนังสือ: <strong>"{lastBorrowed.bookTitle}"</strong>
               </p>
-              <p className="text-xs text-emerald-700 mt-0.5 font-medium">
-                📅 กำหนดส่งคืน: <strong>{formatThaiDate(lastBorrowed.dueDate)}</strong> (ระยะเวลา {lastBorrowed.days} วัน | รหัส: {lastBorrowed.trxId})
+              <p className="text-xs text-emerald-700 font-medium">
+                📅 วันที่ยืม: <strong>{formatThaiDate(lastBorrowed.borrowDate)}</strong> เวลา <strong>{lastBorrowed.borrowTime} น.</strong>
+              </p>
+              <p className="text-xs text-emerald-950 font-bold">
+                ⏰ กำหนดส่งคืน: <strong>{formatThaiDate(lastBorrowed.dueDate)} ก่อนเวลา 16:30 น.</strong> (ระยะเวลา {lastBorrowed.days} วัน | รหัส: {lastBorrowed.trxId})
               </p>
             </div>
           </div>
@@ -493,8 +560,19 @@ export default function QuickBorrowPage() {
             )}
           </div>
 
-          {/* Submit Button */}
-          <div className="pt-3 border-t border-sky-50">
+          {/* Submit Button & Due Date Reminder */}
+          <div className="pt-3 border-t border-sky-50 space-y-2.5">
+            <div className="p-2.5 bg-blue-50/80 border border-blue-200 rounded-xl text-[11px] text-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 font-medium">
+              <span className="flex items-center gap-1">
+                <Calendar className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                <span>ยืม: <strong>{formatThaiDate(today)}</strong> ({currentTime} น.)</span>
+              </span>
+              <span className="text-blue-900 font-bold flex items-center gap-1">
+                <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                <span>ส่งคืน: <strong>{formatThaiDate(calculatedDueDate)}</strong> (ก่อน 16:30 น.)</span>
+              </span>
+            </div>
+
             <button
               type="submit"
               disabled={availableBooks.length === 0 || !selectedBookId}

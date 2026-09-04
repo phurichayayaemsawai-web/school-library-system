@@ -20,6 +20,20 @@ export function formatThaiDate(dateString?: string): string {
   }
 }
 
+export function getCurrentTimeString(): string {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  return `${hours}:${minutes}`;
+}
+
+export function formatThaiDateTime(dateString?: string, timeString?: string): string {
+  if (!dateString) return '-';
+  const dateFormatted = formatThaiDate(dateString);
+  const timeFormatted = timeString ? ` เวลา ${timeString} น.` : '';
+  return `${dateFormatted}${timeFormatted}`;
+}
+
 export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('th-TH', {
     style: 'currency',

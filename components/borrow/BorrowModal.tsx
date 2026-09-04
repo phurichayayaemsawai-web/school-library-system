@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Book, Borrower, BorrowerType, SCHOOL_DEPARTMENTS, STUDENT_GRADES } from '@/types';
 import { useLibrary } from '@/context/LibraryContext';
-import { getTodayString, addDays } from '@/lib/utils';
+import { getTodayString, addDays, getCurrentTimeString } from '@/lib/utils';
 import { X, BookOpen, GraduationCap, UserCheck, Calendar, Hash, School, AlertCircle } from 'lucide-react';
 
 interface BorrowModalProps {
@@ -13,7 +13,7 @@ interface BorrowModalProps {
 }
 
 export const BorrowModal: React.FC<BorrowModalProps> = ({ book, onClose, onSuccess }) => {
-  const { borrowBook, books } = useLibrary();
+  const { borrowBook, books, settings } = useLibrary();
 
   const [selectedBookId, setSelectedBookId] = useState<string>(book?.id || '');
   const [borrowerType, setBorrowerType] = useState<BorrowerType>('STUDENT');
@@ -32,7 +32,7 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({ book, onClose, onSucce
 
   // Dates & notes
   const [borrowDate, setBorrowDate] = useState<string>(getTodayString());
-  const [dueDate, setDueDate] = useState<string>(addDays(new Date(), 7));
+  const [dueDate, setDueDate] = useState<string>(addDays(new Date(), settings.studentBorrowDays || 5));
   const [notes, setNotes] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -42,15 +42,12 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({ book, onClose, onSucce
     }
   }, [book]);
 
-  // Adjust default due date when borrower type changes (Students: 7 days, Teachers: 14 days)
+  // Adjust default due date when borrower type changes (Students: 5 days, Teachers: 10 days)
   useEffect(() => {
     const today = new Date(borrowDate || getTodayString());
-    if (borrowerType === 'TEACHER') {
-      setDueDate(addDays(today, 14));
-    } else {
-      setDueDate(addDays(today, 7));
-    }
-  }, [borrowerType, borrowDate]);
+    const days = borrowerType === 'STUDENT' ? (settings.studentBorrowDays || 5) : (settings.teacherBorrowDays || 10);
+    setDueDate(addDays(today, days));
+  }, [borrowerType, borrowDate, settings]);
 
   if (!book && !selectedBookId) return null;
 
@@ -98,11 +95,14 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({ book, onClose, onSucce
       };
     }
 
+    const borrowTimeNow = getCurrentTimeString();
     const result = borrowBook({
       bookId: currentBook.id,
       borrower: borrowerData,
       borrowDate,
+      borrowTime: borrowTimeNow,
       dueDate,
+      dueTime: '16:30 น.',
       notes: notes.trim(),
     });
 
@@ -361,9 +361,9 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({ book, onClose, onSucce
 
             <div>
               <label className="block text-[11px] font-semibold text-slate-600 mb-1 whitespace-nowrap">
-                กำหนดวันส่งคืน <span className="text-red-500">*</span>
+                กำหนดวันส่งคืน (ก่อน 16:30 น.) <span className="text-red-500">*</span>
                 <span className="text-[10px] text-blue-600 ml-1">
-                  ({borrowerType === 'TEACHER' ? '14 วัน' : '7 วัน'})
+                  ({borrowerType === 'TEACHER' ? `${settings.teacherBorrowDays || 10} วัน` : `${settings.studentBorrowDays || 5} วัน`})
                 </span>
               </label>
               <div className="relative">

@@ -3,13 +3,15 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Book, BorrowTransaction, BookWishlist, Borrower, WishlistStatus, LibrarySettings, DEFAULT_SETTINGS } from '@/types';
 import { INITIAL_BOOKS, INITIAL_TRANSACTIONS, INITIAL_WISHLISTS } from '@/lib/mockData';
-import { getTodayString, isOverdue, addDays } from '@/lib/utils';
+import { getTodayString, isOverdue, addDays, getCurrentTimeString } from '@/lib/utils';
 
 interface BorrowParams {
   bookId: string;
   borrower: Borrower;
   borrowDate?: string;
+  borrowTime?: string;
   dueDate?: string;
+  dueTime?: string;
   notes?: string;
 }
 
@@ -207,10 +209,12 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
 
     const borrowDate = params.borrowDate || getTodayString();
+    const borrowTime = params.borrowTime || getCurrentTimeString();
     
     // Calculate due date based on user type and configured settings
     const durationDays = params.borrower.type === 'STUDENT' ? settings.studentBorrowDays : settings.teacherBorrowDays;
     const dueDate = params.dueDate || addDays(new Date(borrowDate), durationDays);
+    const dueTime = params.dueTime || '16:30 น.';
 
     const newTransactionId = `TRX-${new Date().getFullYear()}-${String(transactions.length + 1).padStart(3, '0')}`;
     const newTransaction: BorrowTransaction = {
@@ -221,7 +225,9 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       bookCategory: book.category,
       borrower: params.borrower,
       borrowDate,
+      borrowTime,
       dueDate,
+      dueTime,
       status: isOverdue(dueDate) ? 'OVERDUE' : 'ACTIVE',
       notes: params.notes,
     };
@@ -254,10 +260,11 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
 
     const actualReturnDate = returnDate || getTodayString();
+    const actualReturnTime = getCurrentTimeString();
 
     const updatedTransactions = transactions.map((t) =>
       t.id === transactionId
-        ? { ...t, returnDate: actualReturnDate, status: 'RETURNED' as const }
+        ? { ...t, returnDate: actualReturnDate, returnTime: actualReturnTime, status: 'RETURNED' as const }
         : t
     );
 

@@ -122,12 +122,14 @@ export const ReturnModal: React.FC<ReturnModalProps> = ({ transaction, onClose, 
 
             <div className="flex items-center justify-between text-slate-500 pt-1 border-t border-slate-200/60">
               <span className="whitespace-nowrap">วันที่ยืม:</span>
-              <span className="text-slate-700 font-medium whitespace-nowrap">{formatThaiDate(transaction.borrowDate)}</span>
+              <span className="text-slate-700 font-medium whitespace-nowrap">
+                {formatThaiDate(transaction.borrowDate)} {transaction.borrowTime ? `(${transaction.borrowTime} น.)` : ''}
+              </span>
             </div>
             <div className="flex items-center justify-between text-slate-500">
               <span className="whitespace-nowrap">กำหนดส่งคืน:</span>
               <span className={`font-bold whitespace-nowrap ${isLate ? 'text-red-600' : 'text-slate-700'}`}>
-                {formatThaiDate(transaction.dueDate)}
+                {formatThaiDate(transaction.dueDate)} <span className="text-amber-700 font-semibold text-[11px]">(ก่อน 16:30 น.)</span>
               </span>
             </div>
           </div>

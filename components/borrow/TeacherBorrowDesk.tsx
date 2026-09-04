@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLibrary } from '@/context/LibraryContext';
 import { Book, BorrowerType, STUDENT_GRADES, SCHOOL_DEPARTMENTS } from '@/types';
-import { formatThaiDate, getTodayString, addDays } from '@/lib/utils';
+import { formatThaiDate, getTodayString, addDays, getCurrentTimeString } from '@/lib/utils';
 import { 
   Scan, 
   BookOpen, 
@@ -15,7 +15,8 @@ import {
   Calendar, 
   Hash, 
   PlusCircle,
-  Clock
+  Clock,
+  AlertTriangle
 } from 'lucide-react';
 
 interface TeacherBorrowDeskProps {
@@ -28,6 +29,16 @@ export const TeacherBorrowDesk: React.FC<TeacherBorrowDeskProps> = ({ onSuccess 
   // Book search / barcode input
   const [bookIdInput, setBookIdInput] = useState('');
   const [matchedBook, setMatchedBook] = useState<Book | null>(null);
+
+  // Live time ticker
+  const [currentTime, setCurrentTime] = useState<string>(getCurrentTimeString());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(getCurrentTimeString());
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Borrower info
   const [borrowerType, setBorrowerType] = useState<BorrowerType>('STUDENT');
@@ -49,7 +60,10 @@ export const TeacherBorrowDesk: React.FC<TeacherBorrowDeskProps> = ({ onSuccess 
   const [successInfo, setSuccessInfo] = useState<{
     bookTitle: string;
     borrowerName: string;
+    borrowDate: string;
+    borrowTime: string;
     dueDate: string;
+    dueTime: string;
   } | null>(null);
 
   // Auto-calculate default due date based on user type & settings
@@ -121,11 +135,14 @@ export const TeacherBorrowDesk: React.FC<TeacherBorrowDeskProps> = ({ onSuccess 
       };
     }
 
+    const borrowTimeNow = getCurrentTimeString();
     const res = borrowBook({
       bookId: matchedBook.id,
       borrower: borrowerData,
       borrowDate,
+      borrowTime: borrowTimeNow,
       dueDate,
+      dueTime: '16:30 น.',
       notes: notes.trim(),
     });
 
@@ -133,7 +150,10 @@ export const TeacherBorrowDesk: React.FC<TeacherBorrowDeskProps> = ({ onSuccess 
       setSuccessInfo({
         bookTitle: matchedBook.title,
         borrowerName: borrowerData.name,
+        borrowDate: borrowDate,
+        borrowTime: borrowTimeNow,
         dueDate: dueDate,
+        dueTime: '16:30 น.',
       });
 
       if (onSuccess) onSuccess(res.message);
@@ -185,8 +205,11 @@ export const TeacherBorrowDesk: React.FC<TeacherBorrowDeskProps> = ({ onSuccess 
         <div className="p-3.5 sm:p-4 bg-emerald-50 border border-emerald-300 rounded-2xl flex items-center justify-between gap-3 animate-in fade-in">
           <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
             <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-            <div className="text-xs text-emerald-900 truncate">
-              <span className="font-bold">บันทึกการยืมสำเร็จ!</span> หนังสือ <strong>"{successInfo.bookTitle}"</strong> ให้แก่ <strong>{successInfo.borrowerName}</strong> (กำหนดส่ง: {formatThaiDate(successInfo.dueDate)})
+            <div className="text-xs text-emerald-900">
+              <span className="font-bold">บันทึกการยืมสำเร็จ!</span> หนังสือ <strong>"{successInfo.bookTitle}"</strong> ให้แก่ <strong>{successInfo.borrowerName}</strong> 
+              <span className="block sm:inline sm:ml-1 text-emerald-800">
+                (ยืมเมื่อ: {formatThaiDate(successInfo.borrowDate)} {successInfo.borrowTime} น. • กำหนดส่ง: <strong>{formatThaiDate(successInfo.dueDate)} ก่อนเวลา 16:30 น.</strong>)
+              </span>
             </div>
           </div>
           <button
@@ -421,20 +444,34 @@ export const TeacherBorrowDesk: React.FC<TeacherBorrowDeskProps> = ({ onSuccess 
         </div>
 
         {/* Step 3: Due date preview & Submit */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 pt-4 border-t border-sky-100">
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs text-slate-600">
-            <Calendar className="w-4 h-4 text-blue-600 shrink-0" />
-            <span className="whitespace-nowrap">วันที่ยืม: <strong>{formatThaiDate(borrowDate)}</strong></span>
-            <span className="whitespace-nowrap">• กำหนดส่งคืน: <strong className="text-blue-700">{formatThaiDate(dueDate)}</strong> ({borrowerType === 'STUDENT' ? settings.studentBorrowDays : settings.teacherBorrowDays} วัน)</span>
+        <div className="space-y-3 pt-4 border-t border-sky-100">
+          <div className="p-3 bg-sky-50/70 border border-sky-200 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-700">
+              <div className="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-lg border border-sky-100 shadow-2xs">
+                <Clock className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                <span>วันที่ยืม: <strong>{formatThaiDate(borrowDate)}</strong> <span className="text-blue-600 font-bold font-mono">({currentTime} น.)</span></span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-lg border border-sky-100 shadow-2xs">
+                <Calendar className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                <span>กำหนดส่งคืน: <strong className="text-blue-700">{formatThaiDate(dueDate)}</strong> <span className="text-amber-700 font-bold font-mono">ก่อน 16:30 น.</span> ({borrowerType === 'STUDENT' ? settings.studentBorrowDays : settings.teacherBorrowDays} วัน)</span>
+              </div>
+            </div>
+
+            <div className="text-[11px] text-amber-800 font-bold bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 inline-flex items-center gap-1 whitespace-nowrap self-start md:self-auto">
+              <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+              <span>⏰ ต้องคืนภายในวันที่กำหนดก่อนเวลา 16:30 น.</span>
+            </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white rounded-xl sm:rounded-2xl text-xs font-bold shadow-md shadow-blue-200/80 transition-all flex items-center justify-center gap-2 whitespace-nowrap"
-          >
-            <CheckCircle2 className="w-4 h-4" />
-            <span>บันทึกการยืมหนังสือเข้าระบบ</span>
-          </button>
+          <div className="flex items-center justify-end">
+            <button
+              type="submit"
+              className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white rounded-xl sm:rounded-2xl text-xs font-bold shadow-md shadow-blue-200/80 transition-all flex items-center justify-center gap-2 whitespace-nowrap hover:scale-[1.02] active:scale-95"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              <span>บันทึกการยืมหนังสือเข้าระบบ</span>
+            </button>
+          </div>
         </div>
       </form>
     </div>

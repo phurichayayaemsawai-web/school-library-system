@@ -248,7 +248,18 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
 
                     {/* Borrow Date */}
                     <td className="py-3 px-3.5 text-slate-600 whitespace-nowrap text-xs">
-                      {formatThaiDate(trx.borrowDate)}
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-1.5">
+                          <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <span className="text-slate-700 font-medium">{formatThaiDate(trx.borrowDate)}</span>
+                        </div>
+                        {trx.borrowTime && (
+                          <div className="flex items-center gap-1 text-[10px] text-slate-500 font-mono">
+                            <Clock className="w-2.5 h-2.5 text-slate-400 shrink-0" />
+                            <span>เวลา {trx.borrowTime} น.</span>
+                          </div>
+                        )}
+                      </div>
                     </td>
 
                     {/* Due Date & Return Date */}
@@ -261,13 +272,19 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
                           </span>
                         </div>
 
-                        {trx.returnDate ? (
-                          <p className="text-[10px] sm:text-[11px] text-emerald-600 font-semibold flex items-center gap-1 whitespace-nowrap">
-                            <CheckCircle2 className="w-3 h-3 shrink-0" /> คืนเมื่อ: {formatThaiDate(trx.returnDate)}
-                          </p>
+                        {!trx.returnDate ? (
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200 flex items-center gap-1">
+                              <Clock className="w-2.5 h-2.5 text-amber-600 shrink-0" />
+                              <span>ก่อน 16:30 น.</span>
+                            </span>
+                            <span className={`text-[10px] font-medium whitespace-nowrap ${daysRemain < 0 ? 'text-red-500 font-bold' : daysRemain <= 2 ? 'text-amber-600' : 'text-slate-400'}`}>
+                              {daysRemain < 0 ? `เลยกำหนด ${Math.abs(daysRemain)} วัน` : `เหลืออีก ${daysRemain} วัน`}
+                            </span>
+                          </div>
                         ) : (
-                          <p className={`text-[10px] font-medium whitespace-nowrap ${daysRemain < 0 ? 'text-red-500 font-bold' : daysRemain <= 2 ? 'text-amber-600' : 'text-slate-400'}`}>
-                            {daysRemain < 0 ? `เลยกำหนด ${Math.abs(daysRemain)} วัน` : `เหลืออีก ${daysRemain} วัน`}
+                          <p className="text-[10px] sm:text-[11px] text-emerald-600 font-semibold flex items-center gap-1 whitespace-nowrap">
+                            <CheckCircle2 className="w-3 h-3 shrink-0" /> คืนเมื่อ: {formatThaiDate(trx.returnDate)} {trx.returnTime ? `(${trx.returnTime} น.)` : ''}
                           </p>
                         )}
                       </div>
