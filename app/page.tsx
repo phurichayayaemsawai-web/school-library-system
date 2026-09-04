@@ -148,15 +148,6 @@ export default function HomePage() {
             >
               ดูทั้งหมด ({books.length})
             </Link>
-            {isAdmin && (
-              <Link
-                href="/books/new"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 px-3.5 py-2 rounded-xl transition-all shadow-md shadow-blue-500/20 whitespace-nowrap"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>+ เพิ่มหนังสือใหม่</span>
-              </Link>
-            )}
           </div>
         </div>
 
@@ -170,26 +161,9 @@ export default function HomePage() {
                 ยังไม่มีข้อมูลของหนังสือในคลัง
               </h3>
               <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
-                คุณครูจะใส่รหัสหนังสือและข้อมูลของหนังสือเข้าไปภายหลัง
+                ผู้ดูแลระบบจะใส่ข้อมูลของหนังสือเข้ามาในภายหลัง
               </p>
             </div>
-            {isAdmin && (
-              <div className="flex flex-wrap justify-center gap-3 pt-2">
-                <Link
-                  href="/books/new"
-                  className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 text-white rounded-xl sm:rounded-2xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center gap-1.5"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>เพิ่มหนังสือเล่มแรก (กำหนดรหัสหนังสือ)</span>
-                </Link>
-                <Link
-                  href="/admin"
-                  className="px-4 py-2.5 bg-sky-50 hover:bg-sky-100 text-blue-700 rounded-xl sm:rounded-2xl text-xs font-semibold transition-all"
-                >
-                  ตั้งค่าระยะเวลายืม-คืน
-                </Link>
-              </div>
-            )}
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">

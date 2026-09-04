@@ -95,26 +95,9 @@ export default function BooksPage() {
               ยังไม่มีข้อมูลของหนังสือในคลัง
             </h3>
             <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
-              คุณครูจะใส่รหัสหนังสือและข้อมูลของหนังสือเข้าไปภายหลัง
+              ผู้ดูแลระบบจะใส่ข้อมูลของหนังสือเข้ามาในภายหลัง
             </p>
           </div>
-          {isAdmin && (
-            <div className="flex flex-wrap justify-center gap-3 pt-2">
-              <Link
-                href="/books/new"
-                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 text-white rounded-xl sm:rounded-2xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center gap-1.5"
-              >
-                <PlusCircle className="w-4 h-4" />
-                <span>เพิ่มหนังสือเล่มแรก (กำหนดรหัสหนังสือ)</span>
-              </Link>
-              <Link
-                href="/admin"
-                className="px-4 py-2.5 bg-sky-50 hover:bg-sky-100 text-blue-700 rounded-xl sm:rounded-2xl text-xs font-semibold transition-all"
-              >
-                ตั้งค่าระยะเวลายืม-คืน
-              </Link>
-            </div>
-          )}
         </div>
       ) : filteredBooks.length === 0 ? (
         <div className="bg-white rounded-2xl sm:rounded-3xl p-10 sm:p-16 text-center border border-sky-100 shadow-sm space-y-3">

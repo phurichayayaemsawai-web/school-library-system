@@ -434,7 +434,7 @@ export default function QuickBorrowPage() {
               <div className="p-6 text-center bg-sky-50/30 rounded-2xl border border-dashed border-sky-200 text-slate-400 text-xs space-y-2">
                 <BookOpen className="w-8 h-8 text-sky-400 mx-auto" />
                 <p className="font-bold text-slate-600">ยังไม่มีข้อมูลของหนังสือในคลัง</p>
-                <p className="text-xs text-slate-400">คุณครูจะใส่รหัสหนังสือและข้อมูลของหนังสือเข้าไปภายหลัง</p>
+                <p className="text-xs text-slate-400">ผู้ดูแลระบบจะใส่ข้อมูลของหนังสือเข้ามาในภายหลัง</p>
               </div>
             ) : (
               <div className="max-h-48 overflow-y-auto space-y-2 pr-1">
