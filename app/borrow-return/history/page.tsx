@@ -7,12 +7,32 @@ import { TransactionTable } from '@/components/borrow/TransactionTable';
 import { ReturnModal } from '@/components/borrow/ReturnModal';
 import { Toast, ToastMessage } from '@/components/ui/Toast';
 import { BorrowTransaction } from '@/types';
-import { History, ArrowLeft, Download } from 'lucide-react';
+import { History, ArrowLeft, Download, ShieldAlert } from 'lucide-react';
 
 export default function HistoryPage() {
-  const { transactions } = useLibrary();
+  const { transactions, isAdmin } = useLibrary();
   const [selectedTrxForReturn, setSelectedTrxForReturn] = useState<BorrowTransaction | null>(null);
   const [toast, setToast] = useState<ToastMessage | null>(null);
+
+  if (!isAdmin) {
+    return (
+      <div className="max-w-md mx-auto py-12 text-center space-y-4">
+        <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center mx-auto">
+          <ShieldAlert className="w-8 h-8" />
+        </div>
+        <h2 className="text-lg font-bold text-slate-900">หน้านี้สำหรับแอดมินหรือครูบรรณารักษ์เท่านั้น</h2>
+        <p className="text-xs text-slate-500">
+          กรุณาเข้าสู่ระบบแอดมินเพื่อดูประวัติการทำธุรกรรมยืม-คืนทั้งหมด
+        </p>
+        <Link
+          href="/admin"
+          className="inline-block px-5 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 text-white font-bold rounded-xl text-xs shadow-md shadow-blue-500/20 hover:scale-105 transition-all"
+        >
+          เข้าสู่ระบบแอดมิน
+        </Link>
+      </div>
+    );
+  }
 
   const returnedCount = transactions.filter((t) => t.status === 'RETURNED').length;
   const activeCount = transactions.filter((t) => t.status === 'ACTIVE' || t.status === 'OVERDUE').length;

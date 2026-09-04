@@ -33,10 +33,12 @@ export default function AdminPage() {
     updateSettings, 
     deleteBook, 
     loadSampleData, 
-    clearAllData 
+    clearAllData,
+    isAdmin,
+    loginAdmin,
+    logoutAdmin
   } = useLibrary();
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [usernameInput, setUsernameInput] = useState('');
   const [passcodeInput, setPasscodeInput] = useState('');
   const [authError, setAuthError] = useState(false);
@@ -75,7 +77,7 @@ export default function AdminPage() {
       (inputUser === 'thaibj3' && inputPass === '12123') ||
       (inputUser === 'admin' && (inputPass === '1234' || inputPass === '12123'))
     ) {
-      setIsAuthenticated(true);
+      loginAdmin();
       setAuthError(false);
       showToast('เข้าสู่ระบบแอดมินเรียบร้อย', 'success');
     } else {
@@ -119,7 +121,7 @@ export default function AdminPage() {
     }
   };
 
-  if (!isAuthenticated) {
+  if (!isAdmin) {
     return (
       <div className="max-w-md mx-auto py-8 sm:py-12 space-y-6">
         <Toast toast={toast} onClose={() => setToast(null)} />
@@ -224,7 +226,7 @@ export default function AdminPage() {
           </Link>
 
           <button
-            onClick={() => setIsAuthenticated(false)}
+            onClick={logoutAdmin}
             className="px-3.5 py-2 bg-sky-50 hover:bg-sky-100 text-blue-700 rounded-xl sm:rounded-2xl text-xs font-semibold transition-colors border border-sky-200 whitespace-nowrap"
           >
             ออกจากระบบ

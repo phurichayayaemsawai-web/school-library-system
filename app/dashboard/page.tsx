@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 
 export default function LibraryDashboardPage() {
-  const { books, transactions, wishlists } = useLibrary();
+  const { books, transactions, wishlists, isAdmin } = useLibrary();
 
   const availableBooks = books.filter((b) => b.status === 'AVAILABLE');
   const borrowedBooks = books.filter((b) => b.status === 'BORROWED');
@@ -56,11 +56,11 @@ export default function LibraryDashboardPage() {
 
         <div className="flex items-center gap-2">
           <Link
-            href="/borrow-return"
+            href={isAdmin ? "/borrow-return" : "/quick-borrow"}
             className="px-4 py-2 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center gap-1.5 whitespace-nowrap hover:scale-105 active:scale-95"
           >
             <ArrowLeftRight className="w-4 h-4" />
-            <span>ไปที่ระบบยืม-คืน</span>
+            <span>{isAdmin ? "ไปที่ระบบยืม-คืน" : "ทำรายการยืมหนังสือ"}</span>
           </Link>
         </div>
       </div>
@@ -229,35 +229,49 @@ export default function LibraryDashboardPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-2.5 pt-4">
-            <Link
-              href="/books/new"
-              className="p-3 bg-white hover:bg-sky-50 border border-sky-100 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between whitespace-nowrap"
-            >
-              <span>+ เพิ่มหนังสือใหม่</span>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
-            </Link>
+            {isAdmin ? (
+              <>
+                <Link
+                  href="/books/new"
+                  className="p-3 bg-white hover:bg-sky-50 border border-sky-100 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between whitespace-nowrap"
+                >
+                  <span>+ เพิ่มหนังสือใหม่</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                </Link>
+
+                <Link
+                  href="/borrow-return"
+                  className="p-3 bg-white hover:bg-sky-50 border border-sky-100 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between whitespace-nowrap"
+                >
+                  <span>ทำรายการยืม-คืน</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/quick-borrow"
+                  className="p-3 bg-white hover:bg-sky-50 border border-sky-100 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between whitespace-nowrap"
+                >
+                  <span>ยืมหนังสือ</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                </Link>
+
+                <Link
+                  href="/books"
+                  className="p-3 bg-white hover:bg-sky-50 border border-sky-100 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between whitespace-nowrap"
+                >
+                  <span>แคตตาล็อกหนังสือ</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                </Link>
+              </>
+            )}
 
             <Link
-              href="/borrow-return"
-              className="p-3 bg-white hover:bg-sky-50 border border-sky-100 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between whitespace-nowrap"
+              href="/admin"
+              className="p-3 bg-white hover:bg-sky-50 border border-sky-100 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between col-span-2 whitespace-nowrap"
             >
-              <span>ทำรายการยืม-คืน</span>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
-            </Link>
-
-            <Link
-              href="/wishlist"
-              className="p-3 bg-white hover:bg-sky-50 border border-sky-100 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between whitespace-nowrap"
-            >
-              <span>ครูเสนอซื้อหนังสือ</span>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
-            </Link>
-
-            <Link
-              href="/wishlist/dashboard"
-              className="p-3 bg-white hover:bg-sky-50 border border-sky-100 rounded-xl text-xs font-bold text-slate-800 transition-colors flex items-center justify-between whitespace-nowrap"
-            >
-              <span>วิเคราะห์จัดซื้อ</span>
+              <span>{isAdmin ? 'ตั้งค่าระบบห้องสมุด' : 'เข้าสู่ระบบแอดมิน'}</span>
               <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
             </Link>
           </div>

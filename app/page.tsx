@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 
 export default function HomePage() {
-  const { books, transactions, settings } = useLibrary();
+  const { books, transactions, settings, isAdmin } = useLibrary();
 
   const [searchQuery] = useState('');
   const [selectedBookForView, setSelectedBookForView] = useState<Book | null>(null);
@@ -150,13 +150,15 @@ export default function HomePage() {
             >
               ดูทั้งหมด ({books.length})
             </Link>
-            <Link
-              href="/books/new"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 px-3.5 py-2 rounded-xl transition-all shadow-md shadow-blue-500/20 whitespace-nowrap"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>+ เพิ่มหนังสือใหม่</span>
-            </Link>
+            {isAdmin && (
+              <Link
+                href="/books/new"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 px-3.5 py-2 rounded-xl transition-all shadow-md shadow-blue-500/20 whitespace-nowrap"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>+ เพิ่มหนังสือใหม่</span>
+              </Link>
+            )}
           </div>
         </div>
 

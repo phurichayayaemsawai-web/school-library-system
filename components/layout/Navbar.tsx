@@ -22,22 +22,25 @@ import { cn } from '@/lib/utils';
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { books, transactions, wishlists, settings } = useLibrary();
+  const { books, transactions, settings, isAdmin, logoutAdmin } = useLibrary();
 
   const activeBorrowsCount = transactions.filter((t) => t.status === 'ACTIVE' || t.status === 'OVERDUE').length;
-  const pendingWishlistsCount = wishlists.filter((w) => w.status === 'PENDING').length;
 
-  const navItems = [
+  // Normal users only see: หน้าแรก, ยืมหนังสือ, แคตตาล็อก, สถิติ
+  // Admins see all: หน้าแรก, ยืมหนังสือ, แคตตาล็อก, รายการยืม-คืน, ประวัติ, สถิติ
+  const allNavItems = [
     {
       name: 'หน้าแรก',
       href: '/',
       icon: Library,
+      adminOnly: false,
     },
     {
       name: 'ยืมหนังสือ',
       href: '/quick-borrow',
       icon: Zap,
       badgeColor: 'bg-amber-500 text-white',
+      adminOnly: false,
     },
     {
       name: 'แคตตาล็อก',
@@ -45,6 +48,7 @@ export const Navbar: React.FC = () => {
       icon: BookOpen,
       badge: books.length > 0 ? books.length : undefined,
       badgeColor: 'bg-blue-100 text-blue-800',
+      adminOnly: false,
     },
     {
       name: 'รายการยืม-คืน',
@@ -52,18 +56,23 @@ export const Navbar: React.FC = () => {
       icon: ArrowLeftRight,
       badge: activeBorrowsCount > 0 ? activeBorrowsCount : undefined,
       badgeColor: 'bg-blue-600 text-white',
+      adminOnly: true,
     },
     {
       name: 'ประวัติ',
       href: '/borrow-return/history',
       icon: History,
+      adminOnly: true,
     },
     {
       name: 'สถิติ',
       href: '/dashboard',
       icon: LayoutDashboard,
+      adminOnly: false,
     },
   ];
+
+  const visibleNavItems = allNavItems.filter((item) => (item.adminOnly ? isAdmin : true));
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-sky-100 shadow-xs">
@@ -88,7 +97,7 @@ export const Navbar: React.FC = () => {
 
           {/* Desktop Nav Links */}
           <nav className="hidden xl:flex items-center gap-1">
-            {navItems.map((item) => {
+            {visibleNavItems.map((item) => {
               const isActive = pathname === item.href;
               const Icon = item.icon;
 
@@ -122,13 +131,32 @@ export const Navbar: React.FC = () => {
 
           {/* Right Action & Menu */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            <Link
-              href="/admin"
-              className="inline-flex items-center gap-1 sm:gap-1.5 text-xs font-bold px-2.5 sm:px-3.5 py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white transition-all shadow-sm shadow-blue-300/40 whitespace-nowrap"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 text-sky-100 shrink-0" />
-              <span>แอดมิน</span>
-            </Link>
+            {isAdmin ? (
+              <div className="flex items-center gap-1.5">
+                <Link
+                  href="/admin"
+                  className="inline-flex items-center gap-1 sm:gap-1.5 text-xs font-bold px-2.5 sm:px-3 py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white transition-all shadow-sm shadow-blue-300/40 whitespace-nowrap"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-sky-100 shrink-0" />
+                  <span>แอดมิน</span>
+                </Link>
+                <button
+                  onClick={logoutAdmin}
+                  className="text-xs text-slate-500 hover:text-rose-600 px-2 py-1.5 rounded-lg hover:bg-rose-50 transition-colors whitespace-nowrap"
+                  title="ออกจากระบบแอดมิน"
+                >
+                  ออก
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/admin"
+                className="inline-flex items-center gap-1 sm:gap-1.5 text-xs font-bold px-2.5 sm:px-3.5 py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white transition-all shadow-sm shadow-blue-300/40 whitespace-nowrap"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-sky-100 shrink-0" />
+                <span>เข้าสู่ระบบแอดมิน</span>
+              </Link>
+            )}
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -144,7 +172,7 @@ export const Navbar: React.FC = () => {
       {/* Mobile & Tablet Drawer */}
       {mobileMenuOpen && (
         <div className="xl:hidden bg-white/98 backdrop-blur-md border-b border-sky-100 px-4 pt-2 pb-4 space-y-1 shadow-lg animate-in slide-in-from-top-2 duration-200">
-          {navItems.map((item) => {
+          {visibleNavItems.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
 

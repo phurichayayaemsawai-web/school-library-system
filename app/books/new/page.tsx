@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useLibrary } from '@/context/LibraryContext';
 import { BOOK_CATEGORIES } from '@/types';
-import { BookOpen, ArrowLeft, Image as ImageIcon, MapPin, Hash, Calendar, Bookmark, CheckCircle2, Upload, Scan } from 'lucide-react';
+import { BookOpen, ArrowLeft, Image as ImageIcon, MapPin, Hash, Calendar, Bookmark, CheckCircle2, Upload, Scan, ShieldAlert } from 'lucide-react';
 
 export default function AddBookPage() {
   const router = useRouter();
-  const { addBook, books } = useLibrary();
+  const { addBook, books, isAdmin } = useLibrary();
 
   const [bookId, setBookId] = useState(`TH-${String(books.length + 1).padStart(3, '0')}`);
   const [title, setTitle] = useState('');
@@ -21,6 +21,26 @@ export default function AddBookPage() {
   const [coverUrl, setCoverUrl] = useState('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80');
   const [description, setDescription] = useState('');
   const [submitted, setSubmitted] = useState(false);
+
+  if (!isAdmin) {
+    return (
+      <div className="max-w-md mx-auto py-12 text-center space-y-4">
+        <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center mx-auto">
+          <ShieldAlert className="w-8 h-8" />
+        </div>
+        <h2 className="text-lg font-bold text-slate-900">หน้านี้สำหรับแอดมินหรือครูบรรณารักษ์เท่านั้น</h2>
+        <p className="text-xs text-slate-500">
+          กรุณาเข้าสู่ระบบแอดมินเพื่อลงทะเบียนหนังสือใหม่เข้าสู่ระบบ
+        </p>
+        <Link
+          href="/admin"
+          className="inline-block px-5 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 text-white font-bold rounded-xl text-xs shadow-md shadow-blue-500/20 hover:scale-105 transition-all"
+        >
+          เข้าสู่ระบบแอดมิน
+        </Link>
+      </div>
+    );
+  }
 
   const sampleCovers = [
     'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80',

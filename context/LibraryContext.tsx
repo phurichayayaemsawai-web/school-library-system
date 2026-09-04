@@ -30,6 +30,9 @@ interface LibraryContextType {
   loadSampleData: () => void;
   clearAllData: () => void;
   isLoaded: boolean;
+  isAdmin: boolean;
+  loginAdmin: () => void;
+  logoutAdmin: () => void;
 }
 
 const LibraryContext = createContext<LibraryContextType | undefined>(undefined);
@@ -39,6 +42,7 @@ const STORAGE_KEYS = {
   TRANSACTIONS: 'school_lib_trx_thai_v3',
   WISHLISTS: 'school_lib_wish_thai_v3',
   SETTINGS: 'school_lib_settings_thai_v3',
+  AUTH: 'school_lib_admin_auth_v3',
 };
 
 export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -46,6 +50,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [transactions, setTransactions] = useState<BorrowTransaction[]>(INITIAL_TRANSACTIONS);
   const [wishlists, setWishlists] = useState<BookWishlist[]>(INITIAL_WISHLISTS);
   const [settings, setSettings] = useState<LibrarySettings>(DEFAULT_SETTINGS);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   // Load from LocalStorage on mount
@@ -55,6 +60,11 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const storedTransactions = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
       const storedWishlists = localStorage.getItem(STORAGE_KEYS.WISHLISTS);
       const storedSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+      const storedAuth = localStorage.getItem(STORAGE_KEYS.AUTH);
+
+      if (storedAuth === 'true') {
+        setIsAdmin(true);
+      }
 
       if (storedBooks) {
         setBooks(JSON.parse(storedBooks));
@@ -98,6 +108,24 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setIsLoaded(true);
     }
   }, []);
+
+  const loginAdmin = () => {
+    setIsAdmin(true);
+    try {
+      localStorage.setItem(STORAGE_KEYS.AUTH, 'true');
+    } catch (e) {
+      console.warn('Error saving auth', e);
+    }
+  };
+
+  const logoutAdmin = () => {
+    setIsAdmin(false);
+    try {
+      localStorage.removeItem(STORAGE_KEYS.AUTH);
+    } catch (e) {
+      console.warn('Error clearing auth', e);
+    }
+  };
 
   const saveBooks = (newBooks: Book[]) => {
     setBooks(newBooks);
@@ -349,6 +377,9 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         loadSampleData,
         clearAllData,
         isLoaded,
+        isAdmin,
+        loginAdmin,
+        logoutAdmin,
       }}
     >
       {children}
