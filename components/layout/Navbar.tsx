@@ -142,10 +142,10 @@ export const Navbar: React.FC = () => {
                 </Link>
                 <button
                   onClick={logoutAdmin}
-                  className="text-xs text-slate-500 hover:text-rose-600 px-2 py-1.5 rounded-lg hover:bg-rose-50 transition-colors whitespace-nowrap"
+                  className="text-xs font-medium text-slate-500 hover:text-rose-600 px-2.5 py-1.5 rounded-xl hover:bg-rose-50 transition-colors whitespace-nowrap"
                   title="ออกจากระบบแอดมิน"
                 >
-                  ออก
+                  ออกจากระบบ
                 </button>
               </div>
             ) : (
