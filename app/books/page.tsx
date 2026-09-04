@@ -85,7 +85,38 @@ export default function BooksPage() {
       />
 
       {/* Book Grid */}
-      {filteredBooks.length === 0 ? (
+      {books.length === 0 ? (
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-10 sm:p-16 text-center border-2 border-dashed border-sky-200 shadow-sm space-y-4">
+          <div className="w-16 h-16 rounded-2xl bg-sky-50 text-blue-500 flex items-center justify-center mx-auto">
+            <BookOpen className="w-8 h-8 text-blue-500" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="font-bold text-slate-800 text-base sm:text-lg">
+              ยังไม่มีข้อมูลของหนังสือในคลัง
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
+              คุณครูจะใส่รหัสหนังสือและข้อมูลของหนังสือเข้าไปภายหลัง
+            </p>
+          </div>
+          {isAdmin && (
+            <div className="flex flex-wrap justify-center gap-3 pt-2">
+              <Link
+                href="/books/new"
+                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 text-white rounded-xl sm:rounded-2xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center gap-1.5"
+              >
+                <PlusCircle className="w-4 h-4" />
+                <span>เพิ่มหนังสือเล่มแรก (กำหนดรหัสหนังสือ)</span>
+              </Link>
+              <Link
+                href="/admin"
+                className="px-4 py-2.5 bg-sky-50 hover:bg-sky-100 text-blue-700 rounded-xl sm:rounded-2xl text-xs font-semibold transition-all"
+              >
+                ตั้งค่าระยะเวลายืม-คืน
+              </Link>
+            </div>
+          )}
+        </div>
+      ) : filteredBooks.length === 0 ? (
         <div className="bg-white rounded-2xl sm:rounded-3xl p-10 sm:p-16 text-center border border-sky-100 shadow-sm space-y-3">
           <BookOpen className="w-12 h-12 text-sky-300 mx-auto" />
           <h3 className="font-bold text-slate-700 text-base">ไม่พบหนังสือที่ตรงกับเงื่อนไขการค้นหา</h3>

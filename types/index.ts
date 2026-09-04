@@ -84,8 +84,8 @@ export interface LibrarySettings {
 
 export const DEFAULT_SETTINGS: LibrarySettings = {
   schoolName: 'ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓',
-  studentBorrowDays: 7,
-  teacherBorrowDays: 14,
+  studentBorrowDays: 5,
+  teacherBorrowDays: 10,
   maxBooksPerPerson: 3,
   finePerDay: 5,
   adminUsername: 'thaibj3',
