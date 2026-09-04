@@ -26,21 +26,21 @@ export const Navbar: React.FC = () => {
 
   const activeBorrowsCount = transactions.filter((t) => t.status === 'ACTIVE' || t.status === 'OVERDUE').length;
 
-  // Normal users only see: หน้าแรก, ยืมหนังสือ, แคตตาล็อก, สถิติ
-  // Admins see all: หน้าแรก, ยืมหนังสือ, แคตตาล็อก, รายการยืม-คืน, ประวัติ, สถิติ
+  // Normal users see: หน้าแรก, ยืมหนังสือ, แคตตาล็อก, สถิติ
+  // Admins see: หน้าแรก, แคตตาล็อก, รายการยืม-คืน, ประวัติ, สถิติ (ซ่อน 'ยืมหนังสือ')
   const allNavItems = [
     {
       name: 'หน้าแรก',
       href: '/',
       icon: Library,
-      adminOnly: false,
+      showFor: 'all' as const,
     },
     {
       name: 'ยืมหนังสือ',
       href: '/quick-borrow',
       icon: Zap,
       badgeColor: 'bg-amber-500 text-white',
-      adminOnly: false,
+      showFor: 'userOnly' as const,
     },
     {
       name: 'แคตตาล็อก',
@@ -48,7 +48,7 @@ export const Navbar: React.FC = () => {
       icon: BookOpen,
       badge: books.length > 0 ? books.length : undefined,
       badgeColor: 'bg-blue-100 text-blue-800',
-      adminOnly: false,
+      showFor: 'all' as const,
     },
     {
       name: 'รายการยืม-คืน',
@@ -56,23 +56,27 @@ export const Navbar: React.FC = () => {
       icon: ArrowLeftRight,
       badge: activeBorrowsCount > 0 ? activeBorrowsCount : undefined,
       badgeColor: 'bg-blue-600 text-white',
-      adminOnly: true,
+      showFor: 'adminOnly' as const,
     },
     {
       name: 'ประวัติ',
       href: '/borrow-return/history',
       icon: History,
-      adminOnly: true,
+      showFor: 'adminOnly' as const,
     },
     {
       name: 'สถิติ',
       href: '/dashboard',
       icon: LayoutDashboard,
-      adminOnly: false,
+      showFor: 'all' as const,
     },
   ];
 
-  const visibleNavItems = allNavItems.filter((item) => (item.adminOnly ? isAdmin : true));
+  const visibleNavItems = allNavItems.filter((item) => {
+    if (item.showFor === 'adminOnly') return isAdmin;
+    if (item.showFor === 'userOnly') return !isAdmin;
+    return true;
+  });
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-sky-100 shadow-xs">
