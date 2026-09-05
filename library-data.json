@@ -7,11 +7,11 @@
     "studentBorrowDays": 5,
     "teacherBorrowDays": 10,
     "maxBooksPerPerson": 3,
-    "finePerDay": 20,
+    "finePerDay": 25,
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "clientTimestamp": "2026-09-05T02:11:17.666Z",
-  "lastUpdated": "2026-09-05T02:10:08.475Z",
+  "clientTimestamp": "2026-09-05T02:11:26.040Z",
+  "lastUpdated": "2026-09-05T02:10:16.858Z",
   "version": "1.0"
 }
