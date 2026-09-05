@@ -24,18 +24,18 @@
       "bookCategory": "วรรณคดีและวรรณกรรมไทย",
       "borrower": {
         "type": "STUDENT",
-        "name": "น.ส. ภูริชญา แยัมไสว",
-        "studentId": "22540",
+        "name": "ถถถ",
+        "studentId": "2254=",
         "grade": "มัธยมศึกษาปีที่ 4 (ม.4)",
-        "room": "10",
+        "room": "1",
         "phone": "-"
       },
       "borrowDate": "2026-09-05",
-      "borrowTime": "09:12",
+      "borrowTime": "09:13",
       "dueDate": "2026-09-10",
       "dueTime": "16:30 น.",
       "status": "ACTIVE",
-      "notes": "ยืมผ่านหน้าทำรายการยืมหนังสือ (นักเรียน 5 วัน)"
+      "notes": ""
     }
   ],
   "wishlists": [],
@@ -48,7 +48,7 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "clientTimestamp": "2026-09-05T02:12:46.590Z",
-  "lastUpdated": "2026-09-05T02:12:48.483Z",
+  "clientTimestamp": "2026-09-05T02:13:56.613Z",
+  "lastUpdated": "2026-09-05T02:13:58.469Z",
   "version": "1.0"
 }
