@@ -1,17 +1,5 @@
 {
-  "books": [
-    {
-      "id": "TH-001",
-      "category": "?????????????????????",
-      "createdAt": "2026-09-01",
-      "isbn": "978-616-1234-01-1",
-      "author": "?.??. ???????? ??????????",
-      "status": "AVAILABLE",
-      "title": "???????????????????????",
-      "coverUrl": "https://images.unsplash.com/photo-1532012164546-f432f2e3edd3?w=600&auto=format&fit=crop&q=80",
-      "totalBorrowedCount": 0
-    }
-  ],
+  "books": [],
   "transactions": [],
   "wishlists": [],
   "settings": {
@@ -23,7 +11,7 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "clientTimestamp": "2026-09-05T01:42:56.895Z",
-  "lastUpdated": "2026-09-05T01:41:47.963Z",
+  "clientTimestamp": "2026-09-05T01:43:02.851Z",
+  "lastUpdated": "2026-09-05T01:41:53.716Z",
   "version": "1.0"
 }
