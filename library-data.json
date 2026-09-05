@@ -19,8 +19,10 @@
       "borrowTime": "18:11",
       "dueDate": "2026-09-10",
       "dueTime": "16:30 น.",
-      "status": "ACTIVE",
-      "notes": ""
+      "status": "RETURNED",
+      "notes": "",
+      "returnDate": "2026-09-05",
+      "returnTime": "18:13"
     },
     {
       "id": "TRX-2026-001",
@@ -56,7 +58,7 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "clientTimestamp": "2026-09-05T11:10:23.048Z",
-  "lastUpdated": "2026-09-05T11:10:24.886Z",
+  "clientTimestamp": "2026-09-05T11:13:44.783Z",
+  "lastUpdated": "2026-09-05T11:12:36.229Z",
   "version": "1.0"
 }
