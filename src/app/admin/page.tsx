@@ -316,12 +316,12 @@ export default function AdminPage() {
           onClick={() => setActiveTab("data")}
           className={`py-2.5 px-2 sm:px-3 text-xs sm:text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap ${
             activeTab === "data"
-              ? "bg-indigo-600 text-white shadow-sm shadow-indigo-500/20"
-              : "text-slate-600 hover:text-indigo-600 hover:bg-indigo-50"
+              ? "bg-rose-600 text-white shadow-sm shadow-rose-500/20"
+              : "text-slate-600 hover:text-rose-600 hover:bg-rose-50"
           }`}
         >
           <RotateCcw className="w-4 h-4 shrink-0" />
-          <span>4. สำรอง/คืนค่า</span>
+          <span>4. รีเซ็ตระบบ</span>
         </button>
       </div>
 
@@ -773,59 +773,9 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Tab 3: Data Management & Reset */}
+      {/* Tab 4: Reset System */}
       {activeTab === "data" && (
         <div className="space-y-6 max-w-2xl mx-auto">
-          {/* Backup and Restore */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-sky-100 shadow-sm space-y-4">
-            <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
-              <Download className="w-5 h-5 text-blue-600" />
-              <span>สำรองข้อมูล และ กู้คืนข้อมูล (Backup & Restore)</span>
-            </h3>
-            <p className="text-xs text-slate-500">
-              คุณสามารถส่งออกข้อมูลเป็นไฟล์ JSON เพื่อสำรองไว้ หรือนำเข้าไฟล์ที่สำรองไว้กลับมาได้ตลอดเวลา
-            </p>
-
-            <div className="flex flex-wrap gap-3 pt-2">
-              <button
-                type="button"
-                onClick={exportBackup}
-                className="px-4 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-2xs"
-              >
-                <Download className="w-4 h-4" />
-                <span>ส่งออกไฟล์สำรอง (Export JSON)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="px-4 py-2.5 bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-2xs"
-              >
-                <Upload className="w-4 h-4" />
-                <span>นำเข้าไฟล์สำรอง (Import JSON)</span>
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".json"
-                onChange={handleImportFile}
-                className="hidden"
-              />
-
-              <button
-                type="button"
-                onClick={() => {
-                  loadSampleData();
-                  showToast("โหลดหนังสือตัวอย่าง 5 เล่มเรียบร้อยแล้ว", "success");
-                }}
-                className="px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-2xs"
-              >
-                <CircleCheck className="w-4 h-4" />
-                <span>โหลดหนังสือตัวอย่าง (Sample Books)</span>
-              </button>
-            </div>
-          </div>
-
           {/* Reset System */}
           <div className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-rose-200/80 shadow-sm space-y-6">
             <div className="flex items-start gap-4">
