@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useLibrary } from "@/context/LibraryContext";
 import { Toast, ToastData } from "@/components/Toast";
-import { GRADE_LEVELS, TEACHER_DEPARTMENTS } from "@/constants/library";
+import { GRADE_LEVELS, ROOM_NUMBERS, TEACHER_DEPARTMENTS } from "@/constants/library";
 import { formatDate, getCurrentTime, getTodayString, addDays } from "@/lib/utils";
 import { Bookmark, Clock, Calendar, TriangleAlert, CircleCheck, ArrowRight, UserCheck, GraduationCap, Hash, Phone, Building2, BookOpen, Search, Check } from "lucide-react";
 import { Borrower } from "@/types";
@@ -24,8 +24,8 @@ export default function QuickBorrowPage() {
   // Student form state
   const [studentId, setStudentId] = useState("");
   const [studentName, setStudentName] = useState("");
-  const [grade, setGrade] = useState(GRADE_LEVELS[0]);
-  const [room, setRoom] = useState("1");
+  const [grade, setGrade] = useState("");
+  const [room, setRoom] = useState("");
   const [studentPhone, setStudentPhone] = useState("");
 
   // Teacher form state
@@ -84,6 +84,14 @@ export default function QuickBorrowPage() {
         showToast("กรุณากรอกเลขประจำตัวนักเรียนและชื่อ-นามสกุล", "error");
         return;
       }
+      if (!grade.trim()) {
+        showToast("กรุณาเลือกระดับชั้น (มัธยมศึกษาปีที่ 1 - 6)", "error");
+        return;
+      }
+      if (!room.trim()) {
+        showToast("กรุณาเลือกห้องเรียน (ห้อง 1 - 15)", "error");
+        return;
+      }
     } else {
       if (!teacherName.trim()) {
         showToast("กรุณากรอกชื่อ-นามสกุลครู / บุคลากร", "error");
@@ -103,8 +111,8 @@ export default function QuickBorrowPage() {
             type: "STUDENT",
             name: studentName.trim(),
             studentId: studentId.trim(),
-            grade,
-            room: room.trim() || "1",
+            grade: grade.trim(),
+            room: room.trim(),
             phone: studentPhone.trim() || "-",
           }
         : {
@@ -324,13 +332,19 @@ export default function QuickBorrowPage() {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="block text-xs font-medium text-slate-700 mb-1 whitespace-nowrap">
-                    ระดับชั้น
+                    ระดับชั้น <span className="text-rose-500">*</span>
                   </label>
                   <select
+                    required
                     value={grade}
                     onChange={(e) => setGrade(e.target.value)}
-                    className="w-full px-2.5 py-2.5 bg-sky-50/40 border border-sky-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none cursor-pointer"
+                    className={`w-full px-2.5 py-2.5 bg-sky-50/40 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none cursor-pointer ${
+                      !grade ? "border-amber-300 text-slate-500" : "border-sky-200 text-slate-800"
+                    }`}
                   >
+                    <option value="" disabled>
+                      -- เลือกระดับชั้น (ม.1-ม.6) --
+                    </option>
                     {GRADE_LEVELS.map((g) => (
                       <option key={g} value={g}>
                         {g}
@@ -340,15 +354,25 @@ export default function QuickBorrowPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-slate-700 mb-1 whitespace-nowrap">
-                    ห้องเรียน
+                    ห้องเรียน <span className="text-rose-500">*</span>
                   </label>
-                  <input
-                    type="text"
-                    placeholder="เช่น 1, 2"
+                  <select
+                    required
                     value={room}
                     onChange={(e) => setRoom(e.target.value)}
-                    className="w-full px-3 py-2.5 bg-sky-50/40 border border-sky-200 rounded-xl text-xs text-center font-bold placeholder:text-slate-400 focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
-                  />
+                    className={`w-full px-3 py-2.5 bg-sky-50/40 border rounded-xl text-xs font-bold text-center focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none cursor-pointer ${
+                      !room ? "border-amber-300 text-slate-500" : "border-sky-200 text-blue-700"
+                    }`}
+                  >
+                    <option value="" disabled>
+                      -- เลือกห้อง (1-15) --
+                    </option>
+                    {ROOM_NUMBERS.map((r) => (
+                      <option key={r} value={r}>
+                        ห้อง {r}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 

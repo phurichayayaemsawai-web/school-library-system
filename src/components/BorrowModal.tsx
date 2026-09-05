@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Book, Borrower } from "@/types";
 import { useLibrary } from "@/context/LibraryContext";
-import { GRADE_LEVELS, TEACHER_DEPARTMENTS } from "@/constants/library";
+import { GRADE_LEVELS, ROOM_NUMBERS, TEACHER_DEPARTMENTS } from "@/constants/library";
 import { getTodayString, getCurrentTime, addDays } from "@/lib/utils";
 import { BookOpen, X, CircleAlert, GraduationCap, UserCheck, Hash, Calendar } from "lucide-react";
 
@@ -24,8 +24,8 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({
   // Student form state
   const [studentName, setStudentName] = useState("");
   const [studentId, setStudentId] = useState("");
-  const [grade, setGrade] = useState(GRADE_LEVELS[6] || "มัธยมศึกษาปีที่ 1 (ม.1)");
-  const [room, setRoom] = useState("1");
+  const [grade, setGrade] = useState("");
+  const [room, setRoom] = useState("");
   const [studentPhone, setStudentPhone] = useState("");
 
   // Teacher form state
@@ -35,11 +35,11 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({
 
   // Date state
   const [borrowDate, setBorrowDate] = useState(getTodayString());
-  const [dueDate, setDueDate] = useState(
-    addDays(new Date(), settings.studentBorrowDays || 5)
-  );
+  const [dueDate, setDueDate] = useState("");
   const [notes, setNotes] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const currentBook = books.find((b) => b.id === (selectedBookId || book?.id)) || book;
 
   useEffect(() => {
     if (book) {
@@ -51,17 +51,15 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({
   }, [book]);
 
   useEffect(() => {
-    const bDate = new Date(borrowDate || getTodayString());
-    const days =
+    const borrowDays =
       borrowerType === "STUDENT"
         ? settings.studentBorrowDays || 5
         : settings.teacherBorrowDays || 10;
-    setDueDate(addDays(bDate, days));
+    const bDate = new Date(borrowDate || getTodayString());
+    setDueDate(addDays(bDate, borrowDays));
   }, [borrowerType, borrowDate, settings]);
 
   if (!book) return null;
-
-  const currentBook = books.find((b) => b.id === (selectedBookId || book.id)) || book;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,7 +71,7 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({
     }
 
     if (currentBook.status === "BORROWED") {
-      setErrorMessage("หนังสือเล่มนี้กำลังถูกยืมอยู่ ไม่สามารถทำรายการได้");
+      setErrorMessage("หนังสือเล่มนี้กำลังถูกยืมอยู่ ไม่สามารถยืมได้");
       return;
     }
 
@@ -83,12 +81,20 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({
         setErrorMessage("กรุณากรอกชื่อ-นามสกุล และเลขประจำตัวนักเรียน");
         return;
       }
+      if (!grade.trim()) {
+        setErrorMessage("กรุณาเลือกระดับชั้น (มัธยมศึกษาปีที่ 1 - 6)");
+        return;
+      }
+      if (!room.trim()) {
+        setErrorMessage("กรุณาเลือกห้องเรียน (ห้อง 1 - 15)");
+        return;
+      }
       borrower = {
         type: "STUDENT",
         name: studentName.trim(),
         studentId: studentId.trim(),
-        grade,
-        room: room.trim() || "1",
+        grade: grade.trim(),
+        room: room.trim(),
         phone: studentPhone.trim() || "-",
       };
     } else {
@@ -259,10 +265,16 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({
                     ระดับชั้น <span className="text-red-500">*</span>
                   </label>
                   <select
+                    required
                     value={grade}
                     onChange={(e) => setGrade(e.target.value)}
-                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer"
+                    className={`w-full px-3 py-2 bg-white border rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer ${
+                      !grade ? "border-amber-300 text-slate-500" : "border-slate-300 text-slate-800"
+                    }`}
                   >
+                    <option value="" disabled>
+                      -- เลือกระดับชั้น (ม.1-ม.6) --
+                    </option>
                     {GRADE_LEVELS.map((g) => (
                       <option key={g} value={g}>
                         {g}
@@ -273,15 +285,25 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <label className="block text-[11px] font-semibold text-slate-600 mb-1 whitespace-nowrap">
-                      ห้อง
+                      ห้อง <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      placeholder="เช่น 1, 2"
+                    <select
+                      required
                       value={room}
                       onChange={(e) => setRoom(e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    />
+                      className={`w-full px-2 py-2 bg-white border rounded-xl text-xs font-bold text-center focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer ${
+                        !room ? "border-amber-300 text-slate-500" : "border-slate-300 text-blue-700"
+                      }`}
+                    >
+                      <option value="" disabled>
+                        -- เลือกห้อง --
+                      </option>
+                      {ROOM_NUMBERS.map((r) => (
+                        <option key={r} value={r}>
+                          ห้อง {r}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="block text-[11px] font-semibold text-slate-600 mb-1 whitespace-nowrap">

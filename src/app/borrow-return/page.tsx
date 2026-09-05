@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useLibrary } from "@/context/LibraryContext";
-import { GRADE_LEVELS, TEACHER_DEPARTMENTS } from "@/constants/library";
+import { GRADE_LEVELS, ROOM_NUMBERS, TEACHER_DEPARTMENTS } from "@/constants/library";
 import { formatDate, getCurrentTime, getTodayString, addDays } from "@/lib/utils";
 import { StatCard } from "@/components/StatCard";
 import { Toast, ToastData } from "@/components/Toast";
@@ -25,8 +25,8 @@ function BorrowCounter({ onSuccess }: { onSuccess: (msg: string) => void }) {
   const [borrowerType, setBorrowerType] = useState<"STUDENT" | "TEACHER">("STUDENT");
   const [studentName, setStudentName] = useState("");
   const [studentId, setStudentId] = useState("");
-  const [grade, setGrade] = useState(GRADE_LEVELS[0]);
-  const [room, setRoom] = useState("1");
+  const [grade, setGrade] = useState("");
+  const [room, setRoom] = useState("");
   const [studentPhone, setStudentPhone] = useState("");
 
   const [teacherName, setTeacherName] = useState("");
@@ -88,12 +88,20 @@ function BorrowCounter({ onSuccess }: { onSuccess: (msg: string) => void }) {
         setErrorMsg("กรุณากรอกชื่อ-นามสกุล และเลขประจำตัวนักเรียน");
         return;
       }
+      if (!grade.trim()) {
+        setErrorMsg("กรุณาเลือกระดับชั้น (มัธยมศึกษาปีที่ 1 - 6)");
+        return;
+      }
+      if (!room.trim()) {
+        setErrorMsg("กรุณาเลือกห้องเรียน (ห้อง 1 - 15)");
+        return;
+      }
       borrower = {
         type: "STUDENT",
         name: studentName.trim(),
         studentId: studentId.trim(),
-        grade,
-        room: room.trim() || "1",
+        grade: grade.trim(),
+        room: room.trim(),
         phone: studentPhone.trim() || "-",
       };
     } else {
@@ -354,13 +362,19 @@ function BorrowCounter({ onSuccess }: { onSuccess: (msg: string) => void }) {
               </div>
               <div>
                 <label className="block text-[11px] font-semibold text-slate-600 mb-1 whitespace-nowrap">
-                  ระดับชั้น
+                  ระดับชั้น <span className="text-rose-500">*</span>
                 </label>
                 <select
+                  required
                   value={grade}
                   onChange={(e) => setGrade(e.target.value)}
-                  className="w-full px-2 py-2 bg-white border border-sky-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-400 focus:outline-none cursor-pointer"
+                  className={`w-full px-2.5 py-2 bg-white border rounded-xl text-xs font-medium focus:ring-2 focus:ring-blue-400 focus:outline-none cursor-pointer ${
+                    !grade ? "border-amber-300 text-slate-500" : "border-sky-200 text-slate-800"
+                  }`}
                 >
+                  <option value="" disabled>
+                    -- เลือกระดับชั้น (ม.1-ม.6) --
+                  </option>
                   {GRADE_LEVELS.map((g) => (
                     <option key={g} value={g}>
                       {g}
@@ -370,16 +384,26 @@ function BorrowCounter({ onSuccess }: { onSuccess: (msg: string) => void }) {
               </div>
               <div>
                 <label className="block text-[11px] font-semibold text-slate-600 mb-1 whitespace-nowrap">
-                  ห้อง / เบอร์โทร
+                  ห้อง <span className="text-rose-500">*</span> / เบอร์โทร
                 </label>
                 <div className="grid grid-cols-2 gap-1.5">
-                  <input
-                    type="text"
-                    placeholder="ห้อง 1"
+                  <select
+                    required
                     value={room}
                     onChange={(e) => setRoom(e.target.value)}
-                    className="w-full px-2 py-2 bg-white border border-sky-200 rounded-xl text-xs text-center font-bold"
-                  />
+                    className={`w-full px-1.5 py-2 bg-white border rounded-xl text-xs font-bold text-center focus:ring-2 focus:ring-blue-400 focus:outline-none cursor-pointer ${
+                      !room ? "border-amber-300 text-slate-500" : "border-sky-200 text-blue-700"
+                    }`}
+                  >
+                    <option value="" disabled>
+                      -- ห้อง --
+                    </option>
+                    {ROOM_NUMBERS.map((r) => (
+                      <option key={r} value={r}>
+                        ห้อง {r}
+                      </option>
+                    ))}
+                  </select>
                   <input
                     type="tel"
                     placeholder="08x-xxx"
