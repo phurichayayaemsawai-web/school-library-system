@@ -147,7 +147,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         if (json.provider) setSyncProvider(json.provider);
         const d = json.data;
         if (Array.isArray(d.books)) {
-          const sBooks: Book[] = d.books.length > 0 ? d.books : (stateRef.current.books.length > 0 ? stateRef.current.books : SAMPLE_BOOKS);
+          const sBooks: Book[] = d.books;
           const sTrx: Transaction[] = Array.isArray(d.transactions) ? d.transactions : [];
           const validBookIds = new Set(sBooks.map((b) => b.id));
           const filteredTrx = sTrx.filter((t) => validBookIds.has(t.bookId)).map((t) => {
@@ -205,8 +205,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         loadedBooks = JSON.parse(lBooks);
         setBooks(loadedBooks);
       } else {
-        // Preload sample books if empty on initial visit
-        setBooks(SAMPLE_BOOKS);
+        setBooks([]);
       }
 
       if (lTrx && loadedBooks.length > 0) {

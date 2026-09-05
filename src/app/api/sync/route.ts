@@ -14,7 +14,7 @@ import os from "os";
 const DATA_FILE = path.join(os.tmpdir(), "bj3_library_cache.json");
 
 let memoryStore: any = {
-  books: SAMPLE_BOOKS,
+  books: [],
   transactions: [],
   wishlists: [],
   settings: DEFAULT_SETTINGS,
@@ -42,8 +42,8 @@ function readLocalData() {
     if (fs.existsSync(DATA_FILE)) {
       const content = fs.readFileSync(DATA_FILE, "utf-8");
       const data = JSON.parse(content);
-      if (!data.books || data.books.length === 0) {
-        data.books = SAMPLE_BOOKS;
+      if (!Array.isArray(data.books)) {
+        data.books = [];
       }
       memoryStore = { ...memoryStore, ...data };
       return data;
@@ -78,12 +78,7 @@ export async function GET() {
       try {
         const cloudData = await fetchSupabaseData(supabaseConfig);
         if (cloudData) {
-          let books = cloudData.books;
-          // Auto-seed Supabase if empty on first connection
-          if (!books || books.length === 0) {
-            books = SAMPLE_BOOKS;
-            await saveSupabaseData({ books }, supabaseConfig);
-          }
+          const books = Array.isArray(cloudData.books) ? cloudData.books : [];
 
           const combinedData = {
             books,
