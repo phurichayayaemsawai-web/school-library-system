@@ -10,7 +10,7 @@
       "publishedYear": "2002",
       "location": "ชั้น1",
       "description": "ปอหนึ่ง",
-      "status": "BORROWED",
+      "status": "AVAILABLE",
       "totalBorrowedCount": 1,
       "createdAt": "2026-09-05"
     }
@@ -34,8 +34,10 @@
       "borrowTime": "18:04",
       "dueDate": "2026-09-10",
       "dueTime": "16:30 น.",
-      "status": "ACTIVE",
-      "notes": ""
+      "status": "RETURNED",
+      "notes": "",
+      "returnDate": "2026-09-05",
+      "returnTime": "18:06"
     }
   ],
   "wishlists": [],
@@ -48,7 +50,7 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "clientTimestamp": "2026-09-05T11:04:15.038Z",
-  "lastUpdated": "2026-09-05T11:03:11.311Z",
+  "clientTimestamp": "2026-09-05T11:06:03.005Z",
+  "lastUpdated": "2026-09-05T11:05:00.273Z",
   "version": "1.0"
 }
