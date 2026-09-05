@@ -56,17 +56,18 @@ const STORAGE_KEYS = {
 
 const sanitizeSettings = (raw: any): LibrarySettings => {
   if (!raw || typeof raw !== "object") return DEFAULT_SETTINGS;
-  const schoolName = typeof raw.schoolName === "string" ? raw.schoolName.trim() : "";
+  const schoolName = typeof raw.schoolName === "string" && raw.schoolName.trim() ? raw.schoolName.trim() : DEFAULT_SETTINGS.schoolName;
+  const adminUsername = typeof raw.adminUsername === "string" && raw.adminUsername.trim() ? raw.adminUsername.trim() : DEFAULT_SETTINGS.adminUsername;
+  const adminPasscode = typeof raw.adminPasscode === "string" && raw.adminPasscode.trim() ? raw.adminPasscode.trim() : DEFAULT_SETTINGS.adminPasscode;
+
   return {
-    ...DEFAULT_SETTINGS,
-    ...raw,
-    schoolName: schoolName && !schoolName.includes("?") ? schoolName : DEFAULT_SETTINGS.schoolName,
-    adminUsername: raw.adminUsername && !raw.adminUsername.includes("?") ? raw.adminUsername : DEFAULT_SETTINGS.adminUsername,
-    adminPasscode: raw.adminPasscode && !raw.adminPasscode.includes("?") && raw.adminPasscode !== "1234" ? raw.adminPasscode : DEFAULT_SETTINGS.adminPasscode,
-    studentBorrowDays: Number(raw.studentBorrowDays) || 5,
-    teacherBorrowDays: Number(raw.teacherBorrowDays) || 10,
-    maxBooksPerPerson: Number(raw.maxBooksPerPerson) || 3,
-    finePerDay: isNaN(Number(raw.finePerDay)) ? 25 : Number(raw.finePerDay),
+    schoolName,
+    adminUsername,
+    adminPasscode,
+    studentBorrowDays: Number(raw.studentBorrowDays) > 0 ? Number(raw.studentBorrowDays) : 5,
+    teacherBorrowDays: Number(raw.teacherBorrowDays) > 0 ? Number(raw.teacherBorrowDays) : 10,
+    maxBooksPerPerson: Number(raw.maxBooksPerPerson) > 0 ? Number(raw.maxBooksPerPerson) : 3,
+    finePerDay: !isNaN(Number(raw.finePerDay)) ? Number(raw.finePerDay) : 25,
     googleSheetsWebhookUrl: raw.googleSheetsWebhookUrl || undefined,
     supabaseUrl: raw.supabaseUrl || undefined,
     supabaseAnonKey: raw.supabaseAnonKey || undefined,
@@ -157,18 +158,31 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
             return t;
           });
           const sWish: Wishlist[] = Array.isArray(d.wishlists) ? d.wishlists : [];
-          const sSettings = sanitizeSettings(d.settings);
+
+          // Preserve user settings on client
+          let finalSettings = sanitizeSettings(d.settings);
+          try {
+            const savedLocalStr = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+            if (savedLocalStr) {
+              const localSaved = sanitizeSettings(JSON.parse(savedLocalStr));
+              if (json.provider === "supabase" && d.settings) {
+                finalSettings = { ...localSaved, ...finalSettings };
+              } else {
+                finalSettings = { ...finalSettings, ...localSaved };
+              }
+            }
+          } catch (e) {}
 
           setBooks(sBooks);
           setTransactions(filteredTrx);
           setWishlists(sWish);
-          setSettings(sSettings);
+          setSettings(finalSettings);
 
           try {
             localStorage.setItem(STORAGE_KEYS.BOOKS, JSON.stringify(sBooks));
             localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(filteredTrx));
             localStorage.setItem(STORAGE_KEYS.WISHLISTS, JSON.stringify(sWish));
-            localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(sSettings));
+            localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(finalSettings));
           } catch {}
 
           const now = new Date();
@@ -262,7 +276,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   const updateSettings = (newSettings: Partial<LibrarySettings>) => {
-    const merged = { ...settings, ...newSettings };
+    const merged = sanitizeSettings({ ...settings, ...newSettings });
     setSettings(merged);
     try {
       localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(merged));
