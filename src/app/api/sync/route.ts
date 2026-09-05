@@ -9,27 +9,30 @@ import {
 } from "@/lib/supabase";
 import { syncToGoogleSheets } from "@/lib/googleSheets";
 
-const DATA_FILE = path.join(process.cwd(), "data", "library.json");
+import os from "os";
+
+const DATA_FILE = path.join(os.tmpdir(), "bj3_library_cache.json");
+
+let memoryStore: any = {
+  books: SAMPLE_BOOKS,
+  transactions: [],
+  wishlists: [],
+  settings: DEFAULT_SETTINGS,
+  lastUpdated: new Date().toISOString(),
+  version: "1.0",
+};
 
 function ensureDataFile() {
-  const dir = path.dirname(DATA_FILE);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-  if (!fs.existsSync(DATA_FILE)) {
-    const initial = {
-      books: SAMPLE_BOOKS,
-      transactions: [],
-      wishlists: [],
-      settings: DEFAULT_SETTINGS,
-      lastUpdated: new Date().toISOString(),
-      version: "1.0",
-    };
-    try {
-      fs.writeFileSync(DATA_FILE, JSON.stringify(initial, null, 2), "utf-8");
-    } catch (e) {
-      console.warn("Could not write initial file to data dir (read-only environment)", e);
+  try {
+    const dir = path.dirname(DATA_FILE);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
     }
+    if (!fs.existsSync(DATA_FILE)) {
+      fs.writeFileSync(DATA_FILE, JSON.stringify(memoryStore, null, 2), "utf-8");
+    }
+  } catch (e) {
+    // Graceful fallback for read-only environments
   }
 }
 
@@ -42,28 +45,23 @@ function readLocalData() {
       if (!data.books || data.books.length === 0) {
         data.books = SAMPLE_BOOKS;
       }
+      memoryStore = { ...memoryStore, ...data };
       return data;
     }
   } catch (err) {
-    console.warn("Could not read local data file:", err);
+    // fallback to memory
   }
 
-  return {
-    books: SAMPLE_BOOKS,
-    transactions: [],
-    wishlists: [],
-    settings: DEFAULT_SETTINGS,
-    lastUpdated: new Date().toISOString(),
-    version: "1.0",
-  };
+  return memoryStore;
 }
 
 function writeLocalData(data: any) {
+  memoryStore = { ...memoryStore, ...data };
   try {
     ensureDataFile();
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf-8");
   } catch (err) {
-    console.warn("Could not write local data file (read-only environment on Vercel):", err);
+    // fallback to memory
   }
 }
 
