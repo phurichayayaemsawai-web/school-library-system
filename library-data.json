@@ -1,22 +1,28 @@
 {
-    "books":  [
-
-              ],
-    "version":  "1.0",
-    "settings":  {
-                     "schoolName":  "ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓",
-                     "adminUsername":  "thaibj3",
-                     "maxBooksPerPerson":  3,
-                     "studentBorrowDays":  5,
-                     "finePerDay":  5,
-                     "adminPasscode":  "12123",
-                     "teacherBorrowDays":  10
-                 },
-    "transactions":  [
-
-                     ],
-    "lastUpdated":  "2026-09-05T08:31:08.7834554+07:00",
-    "wishlists":  [
-
-                  ]
+  "transactions": [],
+  "books": [
+    {
+      "id": "TH-001",
+      "category": "?????????????????????",
+      "createdAt": "2026-09-01",
+      "isbn": "978-616-1234-01-1",
+      "author": "?.??. ???????? ??????????",
+      "status": "AVAILABLE",
+      "title": "???????????????????????",
+      "coverUrl": "https://images.unsplash.com/photo-1532012164546-f432f2e3edd3?w=600&auto=format&fit=crop&q=80",
+      "totalBorrowedCount": 0
+    }
+  ],
+  "wishlists": [],
+  "settings": {
+    "schoolName": "??????????????????? ????????????????????????? ?",
+    "adminUsername": "thaibj3",
+    "maxBooksPerPerson": 3,
+    "studentBorrowDays": 5,
+    "finePerDay": 5,
+    "adminPasscode": "12123",
+    "teacherBorrowDays": 10
+  },
+  "lastUpdated": "2026-09-05T01:35:00.241Z",
+  "version": "1.0"
 }
