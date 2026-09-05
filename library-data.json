@@ -10,7 +10,7 @@
       "publishedYear": "2567",
       "location": "ตู้ภาษาไทย ชั้น 1",
       "description": "ปอหนึ่ง",
-      "status": "BORROWED",
+      "status": "AVAILABLE",
       "totalBorrowedCount": 1,
       "createdAt": "2026-09-05"
     }
@@ -34,8 +34,10 @@
       "borrowTime": "09:13",
       "dueDate": "2026-09-10",
       "dueTime": "16:30 น.",
-      "status": "ACTIVE",
-      "notes": ""
+      "status": "RETURNED",
+      "notes": "",
+      "returnDate": "2026-09-05",
+      "returnTime": "09:15"
     }
   ],
   "wishlists": [],
@@ -48,7 +50,7 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "clientTimestamp": "2026-09-05T02:13:56.613Z",
-  "lastUpdated": "2026-09-05T02:13:58.469Z",
+  "clientTimestamp": "2026-09-05T02:15:16.563Z",
+  "lastUpdated": "2026-09-05T02:14:09.016Z",
   "version": "1.0"
 }
