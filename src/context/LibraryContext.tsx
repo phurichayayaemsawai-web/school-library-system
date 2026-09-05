@@ -1,4 +1,4 @@
-"use strict";
+"use client";
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from "react";
 import { Book, Transaction, Wishlist, LibrarySettings, SyncStatus, Borrower } from "@/types";
 import { DEFAULT_SETTINGS, SAMPLE_BOOKS } from "@/constants/library";

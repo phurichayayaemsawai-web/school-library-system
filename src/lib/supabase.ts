@@ -114,7 +114,7 @@ export function wishlistToRow(w: Wishlist) {
     requester_type: w.requesterType,
     status: w.status,
     priority: w.priority || "MEDIUM",
-    librarian_notes: w.librarian_notes || w.librarianNotes || "",
+    librarian_notes: w.librarianNotes || "",
     created_at: w.createdAt || new Date().toISOString(),
   };
 }
