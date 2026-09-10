@@ -24,14 +24,14 @@
       "bookCategory": "วรรณคดีและวรรณกรรมไทย",
       "borrower": {
         "type": "STUDENT",
-        "name": "ด.ช.สุดหล่อ",
-        "studentId": "56567",
-        "grade": "มัธยมศึกษาปีที่ 3",
+        "name": "นาย สุดหล่อ",
+        "studentId": "28369",
+        "grade": "มัธยมศึกษาปีที่ 2",
         "room": "14",
-        "phone": "0358579636"
+        "phone": "0927419397"
       },
       "borrowDate": "2026-09-10",
-      "borrowTime": "20:23",
+      "borrowTime": "20:25",
       "dueDate": "2026-09-15",
       "dueTime": "16:30 น.",
       "status": "ACTIVE",
@@ -48,7 +48,7 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "clientTimestamp": "2026-09-10T13:23:50.556Z",
-  "lastUpdated": "2026-09-10T13:23:50.284Z",
+  "clientTimestamp": "2026-09-10T13:25:09.285Z",
+  "lastUpdated": "2026-09-10T13:25:08.827Z",
   "version": "1.0"
 }
