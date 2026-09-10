@@ -165,8 +165,8 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // Pull data from cloud database via /api/sync with cache-busting
   const syncWithCloud = useCallback(async (force = false) => {
-    // If a local mutation happened very recently (< 3s), do not overwrite with stale GET
-    if (!force && Date.now() - lastLocalMutationTimeRef.current < 3000) {
+    // If a local mutation happened very recently (< 6s), do not overwrite with potentially stale GET
+    if (!force && Date.now() - lastLocalMutationTimeRef.current < 6000) {
       return;
     }
 
@@ -191,7 +191,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         // Cloud DB is the Single Source of Truth (SSOT)
         if (Array.isArray(cloudData.books)) {
           // Double check mutation guard
-          if (!force && Date.now() - lastLocalMutationTimeRef.current < 3000) {
+          if (!force && Date.now() - lastLocalMutationTimeRef.current < 6000) {
             return;
           }
 
