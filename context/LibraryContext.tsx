@@ -170,6 +170,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return;
     }
 
+    setIsSyncing(true);
     try {
       const res = await fetch(`/api/sync?_t=${Date.now()}`, {
         method: 'GET',
@@ -246,6 +247,8 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     } catch (err) {
       console.warn('Could not sync with cloud database:', err);
       setSyncStatus('offline');
+    } finally {
+      setIsSyncing(false);
     }
   }, []);
 
