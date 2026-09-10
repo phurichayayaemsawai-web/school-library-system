@@ -296,39 +296,6 @@ export default function AdminPage() {
       {/* Tab 1: Settings Form */}
       {activeTab === 'settings' && (
         <div className="space-y-6">
-          {/* Cloud Sync Status & Manual Sync Action */}
-          <div className="bg-gradient-to-br from-blue-50/70 via-sky-50/40 to-indigo-50/50 rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-sky-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3.5">
-              <div className="w-11 h-11 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
-                <Cloud className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-bold text-slate-800">ระบบซิงค์ข้อมูล Cloud อัตโนมัติ</h3>
-                  <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    syncStatus === 'synced' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
-                  }`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${syncStatus === 'synced' ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
-                    {syncStatus === 'synced' ? 'เชื่อมต่อแล้ว' : 'กำลังซิงค์'}
-                  </span>
-                </div>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  {lastSyncedAt ? `ซิงค์ล่าสุดเมื่อ: ${lastSyncedAt.toLocaleTimeString('th-TH')}` : 'ซิงค์แบบเรียลไทม์ทุกอุปกรณ์อัตโนมัติ'}
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleManualSync}
-              disabled={isSyncing}
-              className="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-sky-50 active:bg-sky-100 text-blue-700 border border-sky-200 rounded-xl text-xs font-bold shadow-xs transition-all flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 whitespace-nowrap"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 text-blue-600 ${isSyncing ? 'animate-spin' : ''}`} />
-              <span>{isSyncing ? 'กำลังซิงค์...' : 'กดซิงค์ข้อมูลเดี๋ยวนี้'}</span>
-            </button>
-          </div>
-
           <form onSubmit={handleSaveSettings} className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-sky-100 shadow-sm space-y-6 w-full">
             <div className="space-y-5">
               <h3 className="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-2 border-b border-sky-50 pb-3">
