@@ -13,20 +13,6 @@
       "status": "AVAILABLE",
       "totalBorrowedCount": 0,
       "createdAt": "2026-09-10"
-    },
-    {
-      "id": "TH-001",
-      "title": "เดีย1",
-      "author": "เดีย",
-      "category": "วรรณคดีและวรรณกรรมไทย",
-      "isbn": "978-616-9714-32",
-      "coverUrl": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80",
-      "publishedYear": "2567",
-      "location": "ตู้ภาษาไทย ชั้น 1",
-      "description": "",
-      "status": "AVAILABLE",
-      "totalBorrowedCount": 0,
-      "createdAt": "2026-09-10"
     }
   ],
   "transactions": [],
@@ -40,7 +26,7 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "clientTimestamp": "2026-09-10T11:54:55.261Z",
-  "lastUpdated": "2026-09-10T11:54:55.692Z",
+  "clientTimestamp": "2026-09-10T11:56:46.104Z",
+  "lastUpdated": "2026-09-10T11:55:20.822Z",
   "version": "1.0"
 }
