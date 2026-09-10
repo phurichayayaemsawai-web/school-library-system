@@ -5,12 +5,11 @@ import Link from 'next/link';
 import { useLibrary } from '@/context/LibraryContext';
 import { BookCard } from '@/components/books/BookCard';
 import { BookModal } from '@/components/books/BookModal';
-import { AddBookModal } from '@/components/books/AddBookModal';
 import { BookFilter } from '@/components/books/BookFilter';
 import { BorrowModal } from '@/components/borrow/BorrowModal';
 import { Toast, ToastMessage } from '@/components/ui/Toast';
 import { Book, BookStatus } from '@/types';
-import { BookOpen, PlusCircle } from 'lucide-react';
+import { BookOpen, Settings } from 'lucide-react';
 
 export default function BooksPage() {
   const { books, isAdmin, deleteBook } = useLibrary();
@@ -21,7 +20,6 @@ export default function BooksPage() {
 
   const [selectedBookForView, setSelectedBookForView] = useState<Book | null>(null);
   const [selectedBookForBorrow, setSelectedBookForBorrow] = useState<Book | null>(null);
-  const [isAddBookOpen, setIsAddBookOpen] = useState(false);
   const [toast, setToast] = useState<ToastMessage | null>(null);
 
   // Filter books
@@ -63,15 +61,6 @@ export default function BooksPage() {
             ค้นหา ตรวจสอบสถานะการยืม และทำรายการยืมหนังสือออนไลน์
           </p>
         </div>
-
-        <button
-          type="button"
-          onClick={() => setIsAddBookOpen(true)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all self-start sm:self-auto whitespace-nowrap hover:scale-105 active:scale-95"
-        >
-          <PlusCircle className="w-4 h-4" />
-          <span>+ เพิ่มหนังสือใหม่</span>
-        </button>
       </div>
 
       {/* Filter Component */}
@@ -96,19 +85,20 @@ export default function BooksPage() {
               ยังไม่มีข้อมูลของหนังสือในคลัง
             </h3>
             <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
-              คุณสามารถเริ่มต้นด้วยการกดเพิ่มหนังสือเล่มแรก เพื่อบันทึกเข้าสู่ระบบ
+              สามารถเพิ่มหนังสือใหม่ได้ที่เมนู "ตั้งค่าระบบ" (จัดการคลังหนังสือ)
             </p>
           </div>
-          <div className="pt-2">
-            <button
-              type="button"
-              onClick={() => setIsAddBookOpen(true)}
-              className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
-            >
-              <PlusCircle className="w-4 h-4" />
-              <span>+ เพิ่มหนังสือเล่มแรก</span>
-            </button>
-          </div>
+          {isAdmin && (
+            <div className="pt-2">
+              <Link
+                href="/admin"
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+              >
+                <Settings className="w-4 h-4" />
+                <span>ไปที่ตั้งค่าระบบเพื่อเพิ่มหนังสือ</span>
+              </Link>
+            </div>
+          )}
         </div>
       ) : filteredBooks.length === 0 ? (
         <div className="bg-white rounded-2xl sm:rounded-3xl p-10 sm:p-16 text-center border border-sky-100 shadow-sm space-y-3">
@@ -146,12 +136,6 @@ export default function BooksPage() {
       )}
 
       {/* Modals */}
-      <AddBookModal
-        isOpen={isAddBookOpen}
-        onClose={() => setIsAddBookOpen(false)}
-        onSuccess={(msg) => showToast(msg, 'success')}
-      />
-
       <BookModal
         book={selectedBookForView}
         onClose={() => setSelectedBookForView(null)}
