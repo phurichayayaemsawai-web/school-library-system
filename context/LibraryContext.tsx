@@ -105,6 +105,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, [books, transactions, wishlists, settings]);
 
   const lastLocalMutationTimeRef = useRef<number>(0);
+  const locallyDeletedBookIdsRef = useRef<Set<string>>(new Set());
 
   // Push state to cloud database via /api/sync
   const pushToCloud = useCallback(
@@ -195,13 +196,18 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
             return;
           }
 
-          const cloudBooks: Book[] = cloudData.books;
+          // Filter out any locally deleted books
+          const cloudBooks: Book[] = cloudData.books.filter(
+            (b: Book) => !locallyDeletedBookIdsRef.current.has(b.id.toLowerCase())
+          );
           const rawTrx: BorrowTransaction[] = Array.isArray(cloudData.transactions) ? cloudData.transactions : [];
           const cloudWish = Array.isArray(cloudData.wishlists) ? cloudData.wishlists : [];
           const cloudSet = sanitizeSettings(cloudData.settings);
 
-          // If local has books that haven't reached cloud yet, preserve them
-          const currentLocalBooks = stateRef.current.books || [];
+          // If local has books that haven't reached cloud yet and aren't deleted, preserve them
+          const currentLocalBooks = (stateRef.current.books || []).filter(
+            (b) => !locallyDeletedBookIdsRef.current.has(b.id.toLowerCase())
+          );
           const cloudBookMap = new Map(cloudBooks.map((b) => [b.id.toLowerCase(), b]));
           
           // Combine: start with cloud books, then append any local books not yet in cloud
@@ -215,8 +221,8 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
           const bookIdSet = new Set(mergedBooks.map((b) => b.id));
           const cloudTrx = rawTrx.filter((t) => bookIdSet.has(t.bookId));
 
-          // If we had uncommitted local books, push the complete merged list back to cloud
-          if (mergedBooks.length > cloudBooks.length) {
+          // If we had uncommitted local changes, push the complete merged list back to cloud
+          if (mergedBooks.length !== cloudData.books.length) {
             pushToCloud(mergedBooks, cloudTrx, cloudWish, cloudSet);
           }
 
@@ -453,6 +459,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
     
     // Check if ID exists, update or prepend
+    locallyDeletedBookIdsRef.current.delete(newBook.id.toLowerCase());
     const existingIdx = currentBooks.findIndex((b) => b.id.toLowerCase() === newBook.id.toLowerCase());
     let updated: Book[];
     if (existingIdx >= 0) {
@@ -465,16 +472,18 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   const updateBook = async (id: string, updatedFields: Partial<Book>) => {
+    locallyDeletedBookIdsRef.current.delete(id.toLowerCase());
     const updated = stateRef.current.books.map((b) => (b.id === id ? { ...b, ...updatedFields } : b));
     await saveBooks(updated);
   };
 
   const deleteBook = async (id: string) => {
     lastLocalMutationTimeRef.current = Date.now();
+    locallyDeletedBookIdsRef.current.add(id.toLowerCase());
     const currentBooks = stateRef.current.books;
     const currentTrx = stateRef.current.transactions;
-    const updatedBooks = currentBooks.filter((b) => b.id !== id);
-    const updatedTrx = currentTrx.filter((t) => t.bookId !== id);
+    const updatedBooks = currentBooks.filter((b) => b.id.toLowerCase() !== id.toLowerCase());
+    const updatedTrx = currentTrx.filter((t) => t.bookId.toLowerCase() !== id.toLowerCase());
 
     stateRef.current.books = updatedBooks;
     stateRef.current.transactions = updatedTrx;
