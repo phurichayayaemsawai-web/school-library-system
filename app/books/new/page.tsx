@@ -109,7 +109,9 @@ export default function AddBookPage() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!title.trim() || !author.trim()) {
@@ -117,22 +119,29 @@ export default function AddBookPage() {
       return;
     }
 
-    addBook({
-      id: bookId.trim() || `TH-${String(books.length + 1).padStart(3, '0')}`,
-      title: title.trim(),
-      author: author.trim(),
-      category,
-      isbn: isbn.trim() || `978-616-${Math.floor(1000 + Math.random() * 9000)}-${Math.floor(10 + Math.random() * 90)}`,
-      coverUrl: coverUrl.trim() || sampleCovers[0],
-      publishedYear: publishedYear.trim() || '2567',
-      location: location.trim() || 'ตู้ภาษาไทย',
-      description: description.trim(),
-    });
+    setIsSaving(true);
+    try {
+      await addBook({
+        id: bookId.trim() || `TH-${String(books.length + 1).padStart(3, '0')}`,
+        title: title.trim(),
+        author: author.trim(),
+        category,
+        isbn: isbn.trim() || `978-616-${Math.floor(1000 + Math.random() * 9000)}-${Math.floor(10 + Math.random() * 90)}`,
+        coverUrl: coverUrl.trim() || sampleCovers[0],
+        publishedYear: publishedYear.trim() || '2567',
+        location: location.trim() || 'ตู้ภาษาไทย ชั้น 1',
+        description: description.trim(),
+      });
 
-    setSubmitted(true);
-    setTimeout(() => {
-      router.push('/books');
-    }, 1200);
+      setSubmitted(true);
+      setTimeout(() => {
+        router.push('/books');
+      }, 700);
+    } catch (err) {
+      console.error(err);
+      alert('เกิดข้อผิดพลาดในการบันทึกหนังสือ');
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -377,10 +386,11 @@ export default function AddBookPage() {
                 </Link>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center gap-2 whitespace-nowrap hover:scale-105 active:scale-95"
+                  disabled={isSaving}
+                  className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center gap-2 whitespace-nowrap hover:scale-105 active:scale-95 disabled:opacity-50"
                 >
                   <BookOpen className="w-4 h-4" />
-                  <span>บันทึกหนังสือเข้าสู่ระบบ</span>
+                  <span>{isSaving ? 'กำลังบันทึกและซิงค์ข้อมูล...' : 'บันทึกหนังสือเข้าสู่ระบบ'}</span>
                 </button>
               </div>
             </form>

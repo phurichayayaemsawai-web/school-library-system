@@ -22,10 +22,10 @@ interface LibraryContextType {
   transactions: BorrowTransaction[];
   wishlists: BookWishlist[];
   settings: LibrarySettings;
-  updateSettings: (newSettings: Partial<LibrarySettings>) => void;
-  addBook: (book: Omit<Book, 'id' | 'createdAt' | 'totalBorrowedCount' | 'status'> & { id?: string }) => Book;
-  updateBook: (id: string, book: Partial<Book>) => void;
-  deleteBook: (id: string) => void;
+  updateSettings: (newSettings: Partial<LibrarySettings>) => Promise<void>;
+  addBook: (book: Omit<Book, 'id' | 'createdAt' | 'totalBorrowedCount' | 'status'> & { id?: string }) => Promise<Book>;
+  updateBook: (id: string, book: Partial<Book>) => Promise<void>;
+  deleteBook: (id: string) => Promise<void>;
   borrowBook: (params: BorrowParams) => { success: boolean; message: string; transaction?: BorrowTransaction };
   returnBook: (transactionId: string, returnDate?: string) => { success: boolean; message: string };
   addWishlist: (item: Omit<BookWishlist, 'id' | 'createdAt' | 'status'>) => BookWishlist;
@@ -104,6 +104,8 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     stateRef.current = { books, transactions, wishlists, settings };
   }, [books, transactions, wishlists, settings]);
 
+  const lastLocalMutationTimeRef = useRef<number>(0);
+
   // Push state to cloud database via /api/sync
   const pushToCloud = useCallback(
     async (
@@ -157,6 +159,11 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // Pull data from cloud database via /api/sync
   const syncWithCloud = useCallback(async (force = false) => {
+    // If a local mutation happened very recently (< 4s), do not overwrite with stale GET
+    if (!force && Date.now() - lastLocalMutationTimeRef.current < 4000) {
+      return;
+    }
+
     setIsSyncing(true);
     setSyncStatus('syncing');
 
@@ -176,6 +183,11 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
         // Cloud DB is the Single Source of Truth (SSOT)
         if (Array.isArray(cloudData.books)) {
+          // Double check mutation guard
+          if (!force && Date.now() - lastLocalMutationTimeRef.current < 4000) {
+            return;
+          }
+
           const cloudBooks: Book[] = cloudData.books;
           const rawTrx: BorrowTransaction[] = Array.isArray(cloudData.transactions) ? cloudData.transactions : [];
           const bookIdSet = new Set(cloudBooks.map((b) => b.id));
@@ -184,6 +196,12 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
           const cloudSet = sanitizeSettings(cloudData.settings);
 
           // Update state & localStorage with cloud data
+          stateRef.current = {
+            books: cloudBooks,
+            transactions: cloudTrx,
+            wishlists: cloudWish,
+            settings: cloudSet,
+          };
           setBooks(cloudBooks);
           setTransactions(
             cloudTrx.map((trx: BorrowTransaction) => {
@@ -318,52 +336,61 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   };
 
-  const saveBooks = (newBooks: Book[]) => {
+  const saveBooks = async (newBooks: Book[]) => {
+    lastLocalMutationTimeRef.current = Date.now();
+    stateRef.current.books = newBooks;
     setBooks(newBooks);
     try {
       localStorage.setItem(STORAGE_KEYS.BOOKS, JSON.stringify(newBooks));
     } catch (e) {
       console.warn('Error saving books', e);
     }
-    pushToCloud(newBooks, undefined, undefined, undefined);
+    await pushToCloud(newBooks, undefined, undefined, undefined);
   };
 
-  const saveTransactions = (newTrx: BorrowTransaction[]) => {
+  const saveTransactions = async (newTrx: BorrowTransaction[]) => {
+    lastLocalMutationTimeRef.current = Date.now();
+    stateRef.current.transactions = newTrx;
     setTransactions(newTrx);
     try {
       localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(newTrx));
     } catch (e) {
       console.warn('Error saving transactions', e);
     }
-    pushToCloud(undefined, newTrx, undefined, undefined);
+    await pushToCloud(undefined, newTrx, undefined, undefined);
   };
 
-  const saveWishlists = (newWishlists: BookWishlist[]) => {
+  const saveWishlists = async (newWishlists: BookWishlist[]) => {
+    lastLocalMutationTimeRef.current = Date.now();
+    stateRef.current.wishlists = newWishlists;
     setWishlists(newWishlists);
     try {
       localStorage.setItem(STORAGE_KEYS.WISHLISTS, JSON.stringify(newWishlists));
     } catch (e) {
       console.warn('Error saving wishlists', e);
     }
-    pushToCloud(undefined, undefined, newWishlists, undefined);
+    await pushToCloud(undefined, undefined, newWishlists, undefined);
   };
 
-  const updateSettings = (newSettings: Partial<LibrarySettings>) => {
+  const updateSettings = async (newSettings: Partial<LibrarySettings>) => {
+    lastLocalMutationTimeRef.current = Date.now();
     const updated = { ...settings, ...newSettings };
+    stateRef.current.settings = updated;
     setSettings(updated);
     try {
       localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(updated));
     } catch (e) {
       console.warn('Error saving settings', e);
     }
-    pushToCloud(undefined, undefined, undefined, updated);
+    await pushToCloud(undefined, undefined, undefined, updated);
   };
 
   // Add Book: Supports custom Book ID (รหัสหนังสือ เช่น TH-001) or auto generated
-  const addBook = (data: Omit<Book, 'id' | 'createdAt' | 'totalBorrowedCount' | 'status'> & { id?: string }): Book => {
+  const addBook = async (data: Omit<Book, 'id' | 'createdAt' | 'totalBorrowedCount' | 'status'> & { id?: string }): Promise<Book> => {
+    const currentBooks = stateRef.current.books;
     const customOrGeneratedId = data.id?.trim()
       ? data.id.trim()
-      : `TH-${String(books.length + 1).padStart(3, '0')}`;
+      : `TH-${String(currentBooks.length + 1).padStart(3, '0')}`;
 
     const newBook: Book = {
       ...data,
@@ -372,41 +399,43 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       totalBorrowedCount: 0,
       createdAt: getTodayString(),
     };
-    const updated = [newBook, ...books];
-    saveBooks(updated);
+    
+    // Check if ID exists, update or prepend
+    const existingIdx = currentBooks.findIndex((b) => b.id.toLowerCase() === newBook.id.toLowerCase());
+    let updated: Book[];
+    if (existingIdx >= 0) {
+      updated = currentBooks.map((b, i) => (i === existingIdx ? newBook : b));
+    } else {
+      updated = [newBook, ...currentBooks];
+    }
+    await saveBooks(updated);
     return newBook;
   };
 
-  const updateBook = (id: string, updatedFields: Partial<Book>) => {
-    const updated = books.map((b) => (b.id === id ? { ...b, ...updatedFields } : b));
-    saveBooks(updated);
+  const updateBook = async (id: string, updatedFields: Partial<Book>) => {
+    const updated = stateRef.current.books.map((b) => (b.id === id ? { ...b, ...updatedFields } : b));
+    await saveBooks(updated);
   };
 
-  const deleteBook = (id: string) => {
-    const updatedBooks = books.filter((b) => b.id !== id);
-    const updatedTrx = transactions.filter((t) => t.bookId !== id);
+  const deleteBook = async (id: string) => {
+    lastLocalMutationTimeRef.current = Date.now();
+    const currentBooks = stateRef.current.books;
+    const currentTrx = stateRef.current.transactions;
+    const updatedBooks = currentBooks.filter((b) => b.id !== id);
+    const updatedTrx = currentTrx.filter((t) => t.bookId !== id);
 
-    if (updatedBooks.length === 0) {
-      setBooks([]);
-      setTransactions([]);
-      try {
-        localStorage.setItem(STORAGE_KEYS.BOOKS, JSON.stringify([]));
-        localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify([]));
-      } catch (e) {
-        console.warn('Error saving empty books/transactions', e);
-      }
-      pushToCloud([], [], undefined, undefined);
-    } else {
-      setBooks(updatedBooks);
-      setTransactions(updatedTrx);
-      try {
-        localStorage.setItem(STORAGE_KEYS.BOOKS, JSON.stringify(updatedBooks));
-        localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(updatedTrx));
-      } catch (e) {
-        console.warn('Error saving books/transactions', e);
-      }
-      pushToCloud(updatedBooks, updatedTrx, undefined, undefined);
+    stateRef.current.books = updatedBooks;
+    stateRef.current.transactions = updatedTrx;
+    setBooks(updatedBooks);
+    setTransactions(updatedTrx);
+
+    try {
+      localStorage.setItem(STORAGE_KEYS.BOOKS, JSON.stringify(updatedBooks));
+      localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(updatedTrx));
+    } catch (e) {
+      console.warn('Error saving books/transactions', e);
     }
+    await pushToCloud(updatedBooks, updatedTrx, undefined, undefined);
   };
 
   // Borrow Book: Automatically toggles book status to BORROWED & calculates due date from settings
