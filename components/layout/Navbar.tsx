@@ -152,59 +152,57 @@ export const Navbar: React.FC = () => {
 
           {/* Right Action & Menu */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Status Pill: ซิงค์ข้อมูลแล้ว (แสดงทุกอุปกรณ์) */}
+            <div
+              className={cn(
+                'hidden md:inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-all whitespace-nowrap shadow-2xs',
+                syncStatus === 'synced'
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200/80'
+                  : syncStatus === 'syncing'
+                  ? 'bg-blue-50 text-blue-700 border-blue-200'
+                  : 'bg-amber-50 text-amber-700 border-amber-200'
+              )}
+            >
+              {isSyncing ? (
+                <RefreshCw className="w-3 h-3 text-blue-600 animate-spin shrink-0" />
+              ) : syncStatus === 'synced' ? (
+                <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+              ) : (
+                <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
+              )}
+              <span>
+                {isSyncing ? 'กำลังซิงค์...' : syncStatus === 'synced' ? 'ซิงค์ข้อมูลแล้ว' : 'ออฟไลน์'}
+              </span>
+            </div>
+
+            {/* Button: ซิงค์ข้อมูล (แสดงทุกอุปกรณ์ ไม่จำเป็นต้องล็อกอินแอดมิน) */}
+            <button
+              onClick={() => syncWithCloud(true)}
+              disabled={isSyncing}
+              title="กดเพื่อซิงค์ข้อมูลให้ตรงกันทุกอุปกรณ์ทันที"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-sky-50 hover:bg-sky-100 active:bg-sky-200 text-blue-700 border border-sky-200 transition-colors shadow-2xs whitespace-nowrap"
+            >
+              <RefreshCw className={cn('w-3.5 h-3.5 shrink-0', isSyncing ? 'animate-spin text-blue-600' : 'text-blue-600')} />
+              <span>ซิงค์ข้อมูล</span>
+            </button>
+
             {isAdmin ? (
-              <>
-                {/* Status Pill: ซิงค์ข้อมูลแล้ว (แสดงเฉพาะตอนเป็นแอดมิน) */}
+              /* Admin Status Pill */
+              <div className="flex items-center gap-1.5">
                 <div
-                  className={cn(
-                    'hidden md:inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-all whitespace-nowrap shadow-2xs',
-                    syncStatus === 'synced'
-                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200/80'
-                      : syncStatus === 'syncing'
-                      ? 'bg-blue-50 text-blue-700 border-blue-200'
-                      : 'bg-amber-50 text-amber-700 border-amber-200'
-                  )}
+                  className="inline-flex items-center gap-1 sm:gap-1.5 text-xs font-bold px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 text-white shadow-sm shadow-blue-300/40 select-none whitespace-nowrap cursor-default"
                 >
-                  {isSyncing ? (
-                    <RefreshCw className="w-3 h-3 text-blue-600 animate-spin shrink-0" />
-                  ) : syncStatus === 'synced' ? (
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
-                  ) : (
-                    <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
-                  )}
-                  <span>
-                    {isSyncing ? 'กำลังซิงค์...' : syncStatus === 'synced' ? 'ซิงค์ข้อมูลแล้ว' : 'ออฟไลน์'}
-                  </span>
+                  <ShieldCheck className="w-3.5 h-3.5 text-sky-100 shrink-0" />
+                  <span>แอดมิน</span>
                 </div>
-
-                {/* Button: ซิงค์ข้อมูล (แสดงเฉพาะตอนเป็นแอดมิน) */}
                 <button
-                  onClick={() => syncWithCloud(true)}
-                  disabled={isSyncing}
-                  title="กดเพื่อซิงค์ข้อมูลให้ตรงกันทุกอุปกรณ์"
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-sky-50 hover:bg-sky-100 active:bg-sky-200 text-blue-700 border border-sky-200 transition-colors shadow-2xs whitespace-nowrap"
+                  onClick={logoutAdmin}
+                  className="text-xs font-medium text-slate-500 hover:text-rose-600 px-2 py-1.5 rounded-xl hover:bg-rose-50 transition-colors whitespace-nowrap"
+                  title="ออกจากระบบแอดมิน"
                 >
-                  <RefreshCw className={cn('w-3.5 h-3.5 shrink-0', isSyncing ? 'animate-spin text-blue-600' : 'text-blue-600')} />
-                  <span>ซิงค์ข้อมูล</span>
+                  ออกจากระบบ
                 </button>
-
-                {/* Admin Status Pill (Non-clickable) */}
-                <div className="flex items-center gap-1.5">
-                  <div
-                    className="inline-flex items-center gap-1 sm:gap-1.5 text-xs font-bold px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 text-white shadow-sm shadow-blue-300/40 select-none whitespace-nowrap cursor-default"
-                  >
-                    <ShieldCheck className="w-3.5 h-3.5 text-sky-100 shrink-0" />
-                    <span>แอดมิน</span>
-                  </div>
-                  <button
-                    onClick={logoutAdmin}
-                    className="text-xs font-medium text-slate-500 hover:text-rose-600 px-2 py-1.5 rounded-xl hover:bg-rose-50 transition-colors whitespace-nowrap"
-                    title="ออกจากระบบแอดมิน"
-                  >
-                    ออกจากระบบ
-                  </button>
-                </div>
-              </>
+              </div>
             ) : (
               <Link
                 href="/admin"

@@ -202,39 +202,30 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
           const cloudWish = Array.isArray(cloudData.wishlists) ? cloudData.wishlists : [];
           const cloudSet = sanitizeSettings(cloudData.settings);
 
-          // Only update state if JSON changed to prevent unnecessary re-renders
-          const currentBooksJson = JSON.stringify(stateRef.current.books);
-          const newBooksJson = JSON.stringify(cloudBooks);
-          const currentTrxJson = JSON.stringify(stateRef.current.transactions);
-          const newTrxJson = JSON.stringify(cloudTrx);
-
-          if (currentBooksJson !== newBooksJson) {
-            stateRef.current.books = cloudBooks;
-            setBooks(cloudBooks);
-            try {
-              localStorage.setItem(STORAGE_KEYS.BOOKS, newBooksJson);
-            } catch (e) {}
-          }
-
-          if (currentTrxJson !== newTrxJson) {
-            stateRef.current.transactions = cloudTrx;
-            setTransactions(
-              cloudTrx.map((trx: BorrowTransaction) => {
-                if (trx.status === 'ACTIVE' && isOverdue(trx.dueDate, trx.returnDate)) {
-                  return { ...trx, status: 'OVERDUE' as const };
-                }
-                return trx;
-              })
-            );
-            try {
-              localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, newTrxJson);
-            } catch (e) {}
-          }
-
+          // Always update state to ensure fresh sync on all devices
+          stateRef.current.books = cloudBooks;
+          stateRef.current.transactions = cloudTrx;
           stateRef.current.wishlists = cloudWish;
           stateRef.current.settings = cloudSet;
+
+          setBooks(cloudBooks);
+          setTransactions(
+            cloudTrx.map((trx: BorrowTransaction) => {
+              if (trx.status === 'ACTIVE' && isOverdue(trx.dueDate, trx.returnDate)) {
+                return { ...trx, status: 'OVERDUE' as const };
+              }
+              return trx;
+            })
+          );
           setWishlists(cloudWish);
           setSettings(cloudSet);
+
+          try {
+            localStorage.setItem(STORAGE_KEYS.BOOKS, JSON.stringify(cloudBooks));
+            localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(cloudTrx));
+            localStorage.setItem(STORAGE_KEYS.WISHLISTS, JSON.stringify(cloudWish));
+            localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(cloudSet));
+          } catch (e) {}
 
           const now = new Date();
           setLastSyncedAt(now);
@@ -345,10 +336,10 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       };
     }
 
-    // 3. Ultra-fast background polling: every 2.5 seconds
+    // 3. Ultra-fast background polling: every 1.5 seconds
     const interval = setInterval(() => {
       syncWithCloud(false);
-    }, 2500);
+    }, 1500);
 
     return () => {
       window.removeEventListener('focus', handleImmediateSync);
