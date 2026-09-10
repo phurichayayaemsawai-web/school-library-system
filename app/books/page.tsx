@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useLibrary } from '@/context/LibraryContext';
 import { BookCard } from '@/components/books/BookCard';
 import { BookModal } from '@/components/books/BookModal';
+import { AddBookModal } from '@/components/books/AddBookModal';
 import { BookFilter } from '@/components/books/BookFilter';
 import { BorrowModal } from '@/components/borrow/BorrowModal';
 import { Toast, ToastMessage } from '@/components/ui/Toast';
@@ -20,6 +21,7 @@ export default function BooksPage() {
 
   const [selectedBookForView, setSelectedBookForView] = useState<Book | null>(null);
   const [selectedBookForBorrow, setSelectedBookForBorrow] = useState<Book | null>(null);
+  const [isAddBookOpen, setIsAddBookOpen] = useState(false);
   const [toast, setToast] = useState<ToastMessage | null>(null);
 
   // Filter books
@@ -62,13 +64,14 @@ export default function BooksPage() {
           </p>
         </div>
 
-        <Link
-          href="/books/new"
+        <button
+          type="button"
+          onClick={() => setIsAddBookOpen(true)}
           className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all self-start sm:self-auto whitespace-nowrap hover:scale-105 active:scale-95"
         >
           <PlusCircle className="w-4 h-4" />
-          <span>เพิ่มหนังสือใหม่</span>
-        </Link>
+          <span>+ เพิ่มหนังสือใหม่</span>
+        </button>
       </div>
 
       {/* Filter Component */}
@@ -84,44 +87,29 @@ export default function BooksPage() {
 
       {/* Book Grid */}
       {books.length === 0 ? (
-        isAdmin ? (
-          <div className="bg-white rounded-2xl sm:rounded-3xl p-10 sm:p-16 text-center border-2 border-dashed border-sky-200 shadow-sm space-y-4">
-            <div className="w-16 h-16 rounded-2xl bg-sky-50 text-blue-500 flex items-center justify-center mx-auto">
-              <BookOpen className="w-8 h-8 text-blue-500" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-bold text-slate-800 text-base sm:text-lg">
-                ยังไม่มีข้อมูลของหนังสือในคลัง
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
-                คุณสามารถเริ่มต้นด้วยการลงทะเบียนหนังสือเล่มแรก และกำหนดรหัสหนังสือสำหรับใช้ในระบบห้องสมุด
-              </p>
-            </div>
-            <div className="pt-2">
-              <Link
-                href="/books/new"
-                className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
-              >
-                <PlusCircle className="w-4 h-4" />
-                <span>+ เพิ่มหนังสือเล่มแรก (กำหนดรหัสหนังสือ)</span>
-              </Link>
-            </div>
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-10 sm:p-16 text-center border-2 border-dashed border-sky-200 shadow-sm space-y-4">
+          <div className="w-16 h-16 rounded-2xl bg-sky-50 text-blue-500 flex items-center justify-center mx-auto">
+            <BookOpen className="w-8 h-8 text-blue-500" />
           </div>
-        ) : (
-          <div className="bg-white rounded-2xl sm:rounded-3xl p-10 sm:p-16 text-center border-2 border-dashed border-sky-200 shadow-sm space-y-4">
-            <div className="w-16 h-16 rounded-2xl bg-sky-50 text-blue-500 flex items-center justify-center mx-auto">
-              <BookOpen className="w-8 h-8 text-blue-500" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-bold text-slate-800 text-base sm:text-lg">
-                ยังไม่มีข้อมูลของหนังสือในคลัง
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
-                ผู้ดูแลระบบจะใส่ข้อมูลของหนังสือเข้ามาในภายหลัง
-              </p>
-            </div>
+          <div className="space-y-1">
+            <h3 className="font-bold text-slate-800 text-base sm:text-lg">
+              ยังไม่มีข้อมูลของหนังสือในคลัง
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
+              คุณสามารถเริ่มต้นด้วยการกดเพิ่มหนังสือเล่มแรก เพื่อบันทึกเข้าสู่ระบบ
+            </p>
           </div>
-        )
+          <div className="pt-2">
+            <button
+              type="button"
+              onClick={() => setIsAddBookOpen(true)}
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>+ เพิ่มหนังสือเล่มแรก</span>
+            </button>
+          </div>
+        </div>
       ) : filteredBooks.length === 0 ? (
         <div className="bg-white rounded-2xl sm:rounded-3xl p-10 sm:p-16 text-center border border-sky-100 shadow-sm space-y-3">
           <BookOpen className="w-12 h-12 text-sky-300 mx-auto" />
@@ -158,6 +146,12 @@ export default function BooksPage() {
       )}
 
       {/* Modals */}
+      <AddBookModal
+        isOpen={isAddBookOpen}
+        onClose={() => setIsAddBookOpen(false)}
+        onSuccess={(msg) => showToast(msg, 'success')}
+      />
+
       <BookModal
         book={selectedBookForView}
         onClose={() => setSelectedBookForView(null)}
