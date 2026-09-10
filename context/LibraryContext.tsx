@@ -166,8 +166,8 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // Pull data from cloud database via /api/sync with cache-busting
   const syncWithCloud = useCallback(async (force = false) => {
-    // If a local mutation happened very recently (< 6s), do not overwrite with potentially stale GET
-    if (!force && Date.now() - lastLocalMutationTimeRef.current < 6000) {
+    // If a local mutation happened very recently (< 4s), do not overwrite with potentially stale GET
+    if (!force && Date.now() - lastLocalMutationTimeRef.current < 4000) {
       return;
     }
 
@@ -192,47 +192,24 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         // Cloud DB is the Single Source of Truth (SSOT)
         if (Array.isArray(cloudData.books)) {
           // Double check mutation guard
-          if (!force && Date.now() - lastLocalMutationTimeRef.current < 6000) {
+          if (!force && Date.now() - lastLocalMutationTimeRef.current < 4000) {
             return;
           }
 
-          // Filter out any locally deleted books
-          const cloudBooks: Book[] = cloudData.books.filter(
-            (b: Book) => !locallyDeletedBookIdsRef.current.has(b.id.toLowerCase())
-          );
+          const cloudBooks: Book[] = cloudData.books;
           const rawTrx: BorrowTransaction[] = Array.isArray(cloudData.transactions) ? cloudData.transactions : [];
+          const bookIdSet = new Set(cloudBooks.map((b) => b.id));
+          const cloudTrx = rawTrx.filter((t) => bookIdSet.has(t.bookId));
           const cloudWish = Array.isArray(cloudData.wishlists) ? cloudData.wishlists : [];
           const cloudSet = sanitizeSettings(cloudData.settings);
 
-          // If local has books that haven't reached cloud yet and aren't deleted, preserve them
-          const currentLocalBooks = (stateRef.current.books || []).filter(
-            (b) => !locallyDeletedBookIdsRef.current.has(b.id.toLowerCase())
-          );
-          const cloudBookMap = new Map(cloudBooks.map((b) => [b.id.toLowerCase(), b]));
-          
-          // Combine: start with cloud books, then append any local books not yet in cloud
-          const mergedBooks: Book[] = [...cloudBooks];
-          for (const localBook of currentLocalBooks) {
-            if (!cloudBookMap.has(localBook.id.toLowerCase())) {
-              mergedBooks.unshift(localBook);
-            }
-          }
-
-          const bookIdSet = new Set(mergedBooks.map((b) => b.id));
-          const cloudTrx = rawTrx.filter((t) => bookIdSet.has(t.bookId));
-
-          // If we had uncommitted local changes, push the complete merged list back to cloud
-          if (mergedBooks.length !== cloudData.books.length) {
-            pushToCloud(mergedBooks, cloudTrx, cloudWish, cloudSet);
-          }
-
-          // Update state and persistence
-          stateRef.current.books = mergedBooks;
+          // Direct SSOT application: What is in Cloud is exact reality
+          stateRef.current.books = cloudBooks;
           stateRef.current.transactions = cloudTrx;
           stateRef.current.wishlists = cloudWish;
           stateRef.current.settings = cloudSet;
 
-          setBooks(mergedBooks);
+          setBooks(cloudBooks);
           setTransactions(
             cloudTrx.map((trx: BorrowTransaction) => {
               if (trx.status === 'ACTIVE' && isOverdue(trx.dueDate, trx.returnDate)) {
@@ -245,7 +222,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setSettings(cloudSet);
 
           try {
-            localStorage.setItem(STORAGE_KEYS.BOOKS, JSON.stringify(mergedBooks));
+            localStorage.setItem(STORAGE_KEYS.BOOKS, JSON.stringify(cloudBooks));
             localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(cloudTrx));
             localStorage.setItem(STORAGE_KEYS.WISHLISTS, JSON.stringify(cloudWish));
             localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(cloudSet));
