@@ -1,5 +1,20 @@
 {
-  "books": [],
+  "books": [
+    {
+      "id": "TH-001",
+      "title": "asdasda",
+      "author": "asdasd",
+      "category": "วรรณคดีและวรรณกรรมไทย",
+      "isbn": "978-616-6315-11",
+      "coverUrl": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80",
+      "publishedYear": "2567",
+      "location": "ตู้ภาษาไทย ชั้น 1",
+      "description": "",
+      "status": "AVAILABLE",
+      "totalBorrowedCount": 0,
+      "createdAt": "2026-09-10"
+    }
+  ],
   "transactions": [],
   "wishlists": [],
   "settings": {
@@ -11,7 +26,7 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "clientTimestamp": "2026-09-10T12:43:28.018Z",
-  "lastUpdated": "2026-09-10T12:43:28.252Z",
+  "clientTimestamp": "2026-09-10T13:09:30.721Z",
+  "lastUpdated": "2026-09-10T13:09:28.684Z",
   "version": "1.0"
 }
