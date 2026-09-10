@@ -1,20 +1,5 @@
 {
-  "books": [
-    {
-      "id": "TH-002",
-      "title": "D",
-      "author": "De",
-      "category": "วรรณคดีและวรรณกรรมไทย",
-      "isbn": "978-616-6695-71",
-      "coverUrl": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80",
-      "publishedYear": "2567",
-      "location": "ตู้ภาษาไทย ชั้น 1",
-      "description": "",
-      "status": "AVAILABLE",
-      "totalBorrowedCount": 0,
-      "createdAt": "2026-09-10"
-    }
-  ],
+  "books": [],
   "transactions": [],
   "wishlists": [],
   "settings": {
@@ -26,7 +11,7 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "clientTimestamp": "2026-09-10T11:56:46.104Z",
-  "lastUpdated": "2026-09-10T11:55:20.822Z",
+  "clientTimestamp": "2026-09-10T11:55:27.803Z",
+  "lastUpdated": "2026-09-10T11:55:28.140Z",
   "version": "1.0"
 }
