@@ -1,43 +1,6 @@
 {
-  "books": [
-    {
-      "id": "TH-001",
-      "title": "D",
-      "author": "Df",
-      "category": "วรรณคดีและวรรณกรรมไทย",
-      "isbn": "978-616-8040-13",
-      "coverUrl": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80",
-      "publishedYear": "2567",
-      "location": "ตู้ภาษาไทย ชั้น 1",
-      "description": "",
-      "status": "BORROWED",
-      "totalBorrowedCount": 1,
-      "createdAt": "2026-09-10"
-    }
-  ],
-  "transactions": [
-    {
-      "id": "TRX-2026-001",
-      "bookId": "TH-001",
-      "bookTitle": "D",
-      "bookCoverUrl": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80",
-      "bookCategory": "วรรณคดีและวรรณกรรมไทย",
-      "borrower": {
-        "type": "STUDENT",
-        "name": "พเัพำไ",
-        "studentId": "พ้ำ",
-        "grade": "มัธยมศึกษาปีที่ 1",
-        "room": "13",
-        "phone": "-"
-      },
-      "borrowDate": "2026-09-10",
-      "borrowTime": "19:18",
-      "dueDate": "2026-09-15",
-      "dueTime": "16:30 น.",
-      "status": "ACTIVE",
-      "notes": ""
-    }
-  ],
+  "books": [],
+  "transactions": [],
   "wishlists": [],
   "settings": {
     "schoolName": "ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓",
@@ -48,7 +11,7 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "clientTimestamp": "2026-09-10T12:18:39.058Z",
-  "lastUpdated": "2026-09-10T12:17:13.557Z",
+  "clientTimestamp": "2026-09-10T12:17:44.597Z",
+  "lastUpdated": "2026-09-10T12:17:44.897Z",
   "version": "1.0"
 }
