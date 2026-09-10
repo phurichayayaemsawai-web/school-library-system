@@ -1,20 +1,5 @@
 {
-  "books": [
-    {
-      "id": "TH-002",
-      "title": "ดรีม",
-      "author": "ดรีมเอง",
-      "category": "วรรณคดีและวรรณกรรมไทย",
-      "isbn": "978-616-7663-53",
-      "coverUrl": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80",
-      "publishedYear": "2567",
-      "location": "ตู้ภาษาไทย ชั้น 1",
-      "description": "",
-      "status": "AVAILABLE",
-      "totalBorrowedCount": 0,
-      "createdAt": "2026-09-10"
-    }
-  ],
+  "books": [],
   "transactions": [],
   "wishlists": [],
   "settings": {
@@ -26,7 +11,7 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "clientTimestamp": "2026-09-10T11:45:25.968Z",
-  "lastUpdated": "2026-09-10T11:44:00.474Z",
+  "clientTimestamp": "2026-09-10T11:45:29.040Z",
+  "lastUpdated": "2026-09-10T11:44:03.564Z",
   "version": "1.0"
 }
