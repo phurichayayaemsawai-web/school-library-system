@@ -62,15 +62,13 @@ export default function BooksPage() {
           </p>
         </div>
 
-        {isAdmin && (
-          <Link
-            href="/books/new"
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all self-start sm:self-auto whitespace-nowrap hover:scale-105 active:scale-95"
-          >
-            <PlusCircle className="w-4 h-4" />
-            <span>เพิ่มหนังสือใหม่</span>
-          </Link>
-        )}
+        <Link
+          href="/books/new"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all self-start sm:self-auto whitespace-nowrap hover:scale-105 active:scale-95"
+        >
+          <PlusCircle className="w-4 h-4" />
+          <span>เพิ่มหนังสือใหม่</span>
+        </Link>
       </div>
 
       {/* Filter Component */}

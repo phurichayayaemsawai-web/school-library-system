@@ -3,8 +3,7 @@ import { Book, BorrowTransaction, BookWishlist, LibrarySettings, DEFAULT_SETTING
 import { INITIAL_BOOKS, INITIAL_TRANSACTIONS, INITIAL_WISHLISTS } from '@/lib/mockData';
 
 // Config
-const DEFAULT_TOKEN = ['ghp_', 'NTYinIXbFYgxlVkn', 'GBTxXXLIlhQOjt0xAfSI'].join('');
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN || DEFAULT_TOKEN;
+const VALID_TOKEN = ['ghp_', 'NTYinIXbFYgxlVkn', 'GBTxXXLIlhQOjt0xAfSI'].join('');
 const GITHUB_REPO = 'phurichayayaemsawai-web/school-library-system';
 const DB_BRANCH = 'db-store';
 const DB_FILE_PATH = 'library-data.json';
@@ -64,7 +63,7 @@ async function fetchCloudData(): Promise<{ data: CloudPayload; sha: string | nul
     const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DB_FILE_PATH}?ref=${DB_BRANCH}`;
     const res = await fetch(url, {
       headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
+        Authorization: `token ${VALID_TOKEN}`,
         Accept: 'application/vnd.github.v3+json',
         'User-Agent': 'SchoolLibrary-SyncEngine/1.0',
       },
@@ -127,7 +126,7 @@ async function saveCloudData(payload: CloudPayload): Promise<{ success: boolean;
         `https://api.github.com/repos/${GITHUB_REPO}/contents/${DB_FILE_PATH}?ref=${DB_BRANCH}`,
         {
           headers: {
-            Authorization: `token ${GITHUB_TOKEN}`,
+            Authorization: `token ${VALID_TOKEN}`,
             Accept: 'application/vnd.github.v3+json',
             'User-Agent': 'SchoolLibrary-SyncEngine/1.0',
           },
@@ -172,7 +171,7 @@ async function saveCloudData(payload: CloudPayload): Promise<{ success: boolean;
     const putRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${DB_FILE_PATH}`, {
       method: 'PUT',
       headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
+        Authorization: `token ${VALID_TOKEN}`,
         Accept: 'application/vnd.github.v3+json',
         'Content-Type': 'application/json',
         'User-Agent': 'SchoolLibrary-SyncEngine/1.0',
