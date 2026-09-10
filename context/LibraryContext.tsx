@@ -143,6 +143,12 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setSyncStatus('synced');
           try {
             localStorage.setItem(STORAGE_KEYS.LAST_SYNC, now.toISOString());
+            // Broadcast to other tabs on the same device
+            if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+              const bc = new BroadcastChannel('school_lib_realtime');
+              bc.postMessage({ type: 'SYNC_UPDATE', timestamp: now.toISOString() });
+              bc.close();
+            }
           } catch (e) {}
         } else {
           setSyncStatus('error');
@@ -157,20 +163,20 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     []
   );
 
-  // Pull data from cloud database via /api/sync
+  // Pull data from cloud database via /api/sync with cache-busting
   const syncWithCloud = useCallback(async (force = false) => {
-    // If a local mutation happened very recently (< 4s), do not overwrite with stale GET
-    if (!force && Date.now() - lastLocalMutationTimeRef.current < 4000) {
+    // If a local mutation happened very recently (< 3s), do not overwrite with stale GET
+    if (!force && Date.now() - lastLocalMutationTimeRef.current < 3000) {
       return;
     }
 
-    setIsSyncing(true);
-    setSyncStatus('syncing');
-
     try {
-      const res = await fetch('/api/sync', {
+      const res = await fetch(`/api/sync?_t=${Date.now()}`, {
         method: 'GET',
         cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, max-age=0',
+        },
       });
 
       if (!res.ok) {
@@ -184,7 +190,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         // Cloud DB is the Single Source of Truth (SSOT)
         if (Array.isArray(cloudData.books)) {
           // Double check mutation guard
-          if (!force && Date.now() - lastLocalMutationTimeRef.current < 4000) {
+          if (!force && Date.now() - lastLocalMutationTimeRef.current < 3000) {
             return;
           }
 
@@ -195,31 +201,39 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
           const cloudWish = Array.isArray(cloudData.wishlists) ? cloudData.wishlists : [];
           const cloudSet = sanitizeSettings(cloudData.settings);
 
-          // Update state & localStorage with cloud data
-          stateRef.current = {
-            books: cloudBooks,
-            transactions: cloudTrx,
-            wishlists: cloudWish,
-            settings: cloudSet,
-          };
-          setBooks(cloudBooks);
-          setTransactions(
-            cloudTrx.map((trx: BorrowTransaction) => {
-              if (trx.status === 'ACTIVE' && isOverdue(trx.dueDate, trx.returnDate)) {
-                return { ...trx, status: 'OVERDUE' as const };
-              }
-              return trx;
-            })
-          );
+          // Only update state if JSON changed to prevent unnecessary re-renders
+          const currentBooksJson = JSON.stringify(stateRef.current.books);
+          const newBooksJson = JSON.stringify(cloudBooks);
+          const currentTrxJson = JSON.stringify(stateRef.current.transactions);
+          const newTrxJson = JSON.stringify(cloudTrx);
+
+          if (currentBooksJson !== newBooksJson) {
+            stateRef.current.books = cloudBooks;
+            setBooks(cloudBooks);
+            try {
+              localStorage.setItem(STORAGE_KEYS.BOOKS, newBooksJson);
+            } catch (e) {}
+          }
+
+          if (currentTrxJson !== newTrxJson) {
+            stateRef.current.transactions = cloudTrx;
+            setTransactions(
+              cloudTrx.map((trx: BorrowTransaction) => {
+                if (trx.status === 'ACTIVE' && isOverdue(trx.dueDate, trx.returnDate)) {
+                  return { ...trx, status: 'OVERDUE' as const };
+                }
+                return trx;
+              })
+            );
+            try {
+              localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, newTrxJson);
+            } catch (e) {}
+          }
+
+          stateRef.current.wishlists = cloudWish;
+          stateRef.current.settings = cloudSet;
           setWishlists(cloudWish);
           setSettings(cloudSet);
-
-          try {
-            localStorage.setItem(STORAGE_KEYS.BOOKS, JSON.stringify(cloudBooks));
-            localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(cloudTrx));
-            localStorage.setItem(STORAGE_KEYS.WISHLISTS, JSON.stringify(cloudWish));
-            localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(cloudSet));
-          } catch (e) {}
 
           const now = new Date();
           setLastSyncedAt(now);
@@ -232,8 +246,6 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     } catch (err) {
       console.warn('Could not sync with cloud database:', err);
       setSyncStatus('offline');
-    } finally {
-      setIsSyncing(false);
     }
   }, []);
 
@@ -259,6 +271,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (storedBooks) {
         currentBooks = JSON.parse(storedBooks);
         setBooks(currentBooks);
+        stateRef.current.books = currentBooks;
       } else {
         setBooks([]);
       }
@@ -275,17 +288,22 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
             return trx;
           });
         setTransactions(refreshedTrx);
+        stateRef.current.transactions = refreshedTrx;
       } else {
         setTransactions([]);
       }
 
       if (storedWishlists) {
-        setWishlists(JSON.parse(storedWishlists));
+        const parsedWish = JSON.parse(storedWishlists);
+        setWishlists(parsedWish);
+        stateRef.current.wishlists = parsedWish;
       }
 
       if (storedSettings) {
         const parsed = JSON.parse(storedSettings);
-        setSettings(sanitizeSettings(parsed));
+        const san = sanitizeSettings(parsed);
+        setSettings(san);
+        stateRef.current.settings = san;
       }
     } catch (e) {
       console.warn('LocalStorage not accessible, using in-memory state.', e);
@@ -294,26 +312,48 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
 
     // Immediately trigger cloud sync
-    syncWithCloud();
+    syncWithCloud(true);
   }, [syncWithCloud]);
 
-  // Auto-sync when window gains focus (user switches tabs / devices)
+  // Real-time synchronization across all devices and tabs
   useEffect(() => {
-    const handleFocus = () => {
-      syncWithCloud();
+    const handleImmediateSync = () => {
+      syncWithCloud(true);
     };
 
-    window.addEventListener('focus', handleFocus);
-    window.addEventListener('online', handleFocus);
+    // 1. When user switches to tab, focuses window, or device screen turns on
+    window.addEventListener('focus', handleImmediateSync);
+    window.addEventListener('pageshow', handleImmediateSync);
+    window.addEventListener('online', handleImmediateSync);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        handleImmediateSync();
+      }
+    });
 
-    // Periodic polling every 12 seconds
+    // 2. Multi-tab BroadcastChannel on same device
+    let bc: BroadcastChannel | null = null;
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      bc = new BroadcastChannel('school_lib_realtime');
+      bc.onmessage = (event) => {
+        if (event.data?.type === 'SYNC_UPDATE') {
+          syncWithCloud(true);
+        }
+      };
+    }
+
+    // 3. Ultra-fast background polling: every 2.5 seconds
     const interval = setInterval(() => {
-      syncWithCloud();
-    }, 12000);
+      syncWithCloud(false);
+    }, 2500);
 
     return () => {
-      window.removeEventListener('focus', handleFocus);
-      window.removeEventListener('online', handleFocus);
+      window.removeEventListener('focus', handleImmediateSync);
+      window.removeEventListener('pageshow', handleImmediateSync);
+      window.removeEventListener('online', handleImmediateSync);
+      if (bc) {
+        bc.close();
+      }
       clearInterval(interval);
     };
   }, [syncWithCloud]);

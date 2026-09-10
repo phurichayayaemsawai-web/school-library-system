@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Book, BorrowTransaction, BookWishlist, LibrarySettings, DEFAULT_SETTINGS } from '@/types';
 import { INITIAL_BOOKS, INITIAL_TRANSACTIONS, INITIAL_WISHLISTS } from '@/lib/mockData';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
+
 // Config
 const VALID_TOKEN = ['ghp_', 'NTYinIXbFYgxlVkn', 'GBTxXXLIlhQOjt0xAfSI'].join('');
 const GITHUB_REPO = 'phurichayayaemsawai-web/school-library-system';
@@ -17,7 +21,7 @@ interface CloudPayload {
   version?: string;
 }
 
-// In-memory cache for fast response
+// In-memory cache for ultra-fast response within the same lambda instance
 let memoryCache: {
   data: CloudPayload | null;
   sha: string | null;
@@ -28,7 +32,7 @@ let memoryCache: {
   cachedAt: 0,
 };
 
-const CACHE_TTL_MS = 3000; // 3 seconds cache
+const CACHE_TTL_MS = 500; // 0.5s cache only for rapid burst calls
 
 const DEFAULT_SCHOOL_NAME = 'ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓';
 
@@ -60,12 +64,13 @@ async function fetchCloudData(): Promise<{ data: CloudPayload; sha: string | nul
   }
 
   try {
-    const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DB_FILE_PATH}?ref=${DB_BRANCH}`;
+    const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DB_FILE_PATH}?ref=${DB_BRANCH}&_t=${Date.now()}`;
     const res = await fetch(url, {
       headers: {
         Authorization: `token ${VALID_TOKEN}`,
         Accept: 'application/vnd.github.v3+json',
         'User-Agent': 'SchoolLibrary-SyncEngine/1.0',
+        'Cache-Control': 'no-cache, no-store, max-age=0',
       },
       cache: 'no-store',
     });
@@ -205,12 +210,23 @@ async function saveCloudData(payload: CloudPayload): Promise<{ success: boolean;
 // GET /api/sync
 export async function GET() {
   const { data, sha } = await fetchCloudData();
-  return NextResponse.json({
-    success: true,
-    data,
-    sha,
-    serverTime: new Date().toISOString(),
-  });
+  return NextResponse.json(
+    {
+      success: true,
+      data,
+      sha,
+      serverTime: new Date().toISOString(),
+    },
+    {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+        'CDN-Cache-Control': 'no-store',
+        'Vercel-CDN-Cache-Control': 'no-store',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    }
+  );
 }
 
 // POST /api/sync
