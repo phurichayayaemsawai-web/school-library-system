@@ -180,9 +180,6 @@ export default function AddBookPage() {
                       className="w-full pl-10 pr-3.5 py-2.5 bg-white border border-sky-300 rounded-xl text-xs font-mono font-bold text-blue-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                     />
                   </div>
-                  <p className="text-[11px] text-blue-700 mt-1">
-                    * รหัสนี้จะใช้ให้นักเรียนนำมาบอกครู หรือใช้เครื่องยิงบาร์โค้ดบันทึกการยืมใน 1 วินาที (เมื่อเพิ่มแล้ว จำนวนครั้งที่ถูกยืมจะเริ่มต้นที่ 0 ครั้ง และจะนับสะสมอัตโนมัติทุกครั้งที่มีการยืม)
-                  </p>
                 </div>
 
                 <div className="sm:col-span-2">
