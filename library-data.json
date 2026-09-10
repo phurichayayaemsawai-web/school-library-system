@@ -1,20 +1,5 @@
 {
-  "books": [
-    {
-      "id": "TH-001",
-      "title": "D",
-      "author": "D",
-      "category": "วรรณคดีและวรรณกรรมไทย",
-      "isbn": "978-616-9599-49",
-      "coverUrl": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80",
-      "publishedYear": "2567",
-      "location": "ตู้ภาษาไทย ชั้น 1",
-      "description": "",
-      "status": "AVAILABLE",
-      "totalBorrowedCount": 0,
-      "createdAt": "2026-09-10"
-    }
-  ],
+  "books": [],
   "transactions": [],
   "wishlists": [],
   "settings": {
@@ -26,7 +11,7 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "clientTimestamp": "2026-09-10T12:30:59.072Z",
-  "lastUpdated": "2026-09-10T12:30:59.379Z",
+  "clientTimestamp": "2026-09-10T12:31:10.452Z",
+  "lastUpdated": "2026-09-10T12:31:10.816Z",
   "version": "1.0"
 }
