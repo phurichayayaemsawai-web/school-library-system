@@ -97,8 +97,12 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-16 gap-2">
           {/* Brand Logo */}
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group min-w-0 max-w-[240px] sm:max-w-md lg:max-w-none">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-blue-600 via-blue-500 to-sky-400 flex items-center justify-center text-white shadow-md shadow-blue-200/60 group-hover:scale-105 transition-transform shrink-0">
-              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-white border border-sky-200/80 shadow-sm flex items-center justify-center p-1 shrink-0 overflow-hidden group-hover:scale-105 transition-transform">
+              <img
+                src="/school-logo.png"
+                alt="ตราประจำโรงเรียน"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5">
