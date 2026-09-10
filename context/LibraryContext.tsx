@@ -197,18 +197,36 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
           const cloudBooks: Book[] = cloudData.books;
           const rawTrx: BorrowTransaction[] = Array.isArray(cloudData.transactions) ? cloudData.transactions : [];
-          const bookIdSet = new Set(cloudBooks.map((b) => b.id));
-          const cloudTrx = rawTrx.filter((t) => bookIdSet.has(t.bookId));
           const cloudWish = Array.isArray(cloudData.wishlists) ? cloudData.wishlists : [];
           const cloudSet = sanitizeSettings(cloudData.settings);
 
-          // Always update state to ensure fresh sync on all devices
-          stateRef.current.books = cloudBooks;
+          // If local has books that haven't reached cloud yet, preserve them
+          const currentLocalBooks = stateRef.current.books || [];
+          const cloudBookMap = new Map(cloudBooks.map((b) => [b.id.toLowerCase(), b]));
+          
+          // Combine: start with cloud books, then append any local books not yet in cloud
+          const mergedBooks: Book[] = [...cloudBooks];
+          for (const localBook of currentLocalBooks) {
+            if (!cloudBookMap.has(localBook.id.toLowerCase())) {
+              mergedBooks.unshift(localBook);
+            }
+          }
+
+          const bookIdSet = new Set(mergedBooks.map((b) => b.id));
+          const cloudTrx = rawTrx.filter((t) => bookIdSet.has(t.bookId));
+
+          // If we had uncommitted local books, push the complete merged list back to cloud
+          if (mergedBooks.length > cloudBooks.length) {
+            pushToCloud(mergedBooks, cloudTrx, cloudWish, cloudSet);
+          }
+
+          // Update state and persistence
+          stateRef.current.books = mergedBooks;
           stateRef.current.transactions = cloudTrx;
           stateRef.current.wishlists = cloudWish;
           stateRef.current.settings = cloudSet;
 
-          setBooks(cloudBooks);
+          setBooks(mergedBooks);
           setTransactions(
             cloudTrx.map((trx: BorrowTransaction) => {
               if (trx.status === 'ACTIVE' && isOverdue(trx.dueDate, trx.returnDate)) {
@@ -221,7 +239,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setSettings(cloudSet);
 
           try {
-            localStorage.setItem(STORAGE_KEYS.BOOKS, JSON.stringify(cloudBooks));
+            localStorage.setItem(STORAGE_KEYS.BOOKS, JSON.stringify(mergedBooks));
             localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(cloudTrx));
             localStorage.setItem(STORAGE_KEYS.WISHLISTS, JSON.stringify(cloudWish));
             localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(cloudSet));
