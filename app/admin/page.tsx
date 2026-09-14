@@ -102,17 +102,13 @@ export default function AdminPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const validUser = (settings.adminUsername || 'thaibj3').toLowerCase();
-    const validPass = settings.adminPasscode || '12123';
+    const validUser = (settings.adminUsername || 'thaibj3').trim().toLowerCase();
+    const validPass = (settings.adminPasscode || '12123').trim();
 
     const inputUser = usernameInput.trim().toLowerCase();
     const inputPass = passcodeInput.trim();
 
-    if (
-      (inputUser === validUser && inputPass === validPass) ||
-      (inputUser === 'thaibj3' && inputPass === '12123') ||
-      (inputUser === 'admin' && (inputPass === '1234' || inputPass === '12123'))
-    ) {
+    if (inputUser === validUser && inputPass === validPass) {
       loginAdmin();
       setAuthError(false);
       showToast('เข้าสู่ระบบแอดมินเรียบร้อย', 'success');

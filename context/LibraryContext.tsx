@@ -66,12 +66,18 @@ export const sanitizeSettings = (raw: any): LibrarySettings => {
     ? rawSchool
     : DEFAULT_SCHOOL_NAME;
 
+  const rawUser = typeof raw.adminUsername === 'string' ? raw.adminUsername.trim() : '';
+  const adminUsername = (rawUser && !rawUser.includes('?')) ? rawUser : DEFAULT_SETTINGS.adminUsername;
+
+  const rawPass = typeof raw.adminPasscode === 'string' ? raw.adminPasscode.trim() : '';
+  const adminPasscode = (rawPass && !rawPass.includes('?')) ? rawPass : DEFAULT_SETTINGS.adminPasscode;
+
   return {
     ...DEFAULT_SETTINGS,
     ...raw,
     schoolName,
-    adminUsername: (raw.adminUsername && !raw.adminUsername.includes('?')) ? raw.adminUsername : DEFAULT_SETTINGS.adminUsername,
-    adminPasscode: (raw.adminPasscode && !raw.adminPasscode.includes('?')) ? raw.adminPasscode : DEFAULT_SETTINGS.adminPasscode,
+    adminUsername,
+    adminPasscode,
     studentBorrowDays: Number(raw.studentBorrowDays) || 5,
     teacherBorrowDays: Number(raw.teacherBorrowDays) || 10,
     maxBooksPerPerson: Number(raw.maxBooksPerPerson) || 3,
