@@ -8,9 +8,9 @@
     "teacherBorrowDays": 10,
     "maxBooksPerPerson": 3,
     "finePerDay": 25,
-    "adminUsername": "thaibj",
-    "adminPasscode": "121234"
+    "adminUsername": "thaibj3",
+    "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-14T14:52:46.439Z",
+  "lastUpdated": "2026-09-14T14:53:24.921Z",
   "version": "1.0"
 }
