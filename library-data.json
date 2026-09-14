@@ -1,6 +1,20 @@
 {
   "books": [
     {
+      "id": "TH-004",
+      "title": "กาหลมหรทีก",
+      "author": "ปราปต์",
+      "category": "วรรณคดีและวรรณกรรมไทย",
+      "isbn": "978-616-1322-16",
+      "coverUrl": "https://storage.naiin.com/system/application/bookstore/resource/product/202410/624859/1000275963_front_XXL.jpg?v=1728642664",
+      "publishedYear": "2567",
+      "location": "ตู้ภาษาไทย ชั้น 1",
+      "description": "",
+      "status": "AVAILABLE",
+      "totalBorrowedCount": 0,
+      "createdAt": "2026-09-14"
+    },
+    {
       "id": "TH-003",
       "title": "นครไม่เป็นไร",
       "author": "ชาติ กอบจิตติ",
@@ -54,6 +68,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-14T15:22:09.847Z",
+  "lastUpdated": "2026-09-14T15:24:19.526Z",
   "version": "1.0"
 }
