@@ -308,9 +308,18 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       if (storedSettings) {
         const parsed = JSON.parse(storedSettings);
+        if (parsed.adminUsername === 'thaibj3') {
+          parsed.adminUsername = 'admin_bj3_lib';
+        }
+        if (parsed.adminPasscode === '12123') {
+          parsed.adminPasscode = 'ThaiBJ3@2026!';
+        }
         const san = sanitizeSettings(parsed);
         setSettings(san);
         stateRef.current.settings = san;
+        try {
+          localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(san));
+        } catch (e) {}
       }
     } catch (e) {
       console.warn('LocalStorage not accessible, using in-memory state.', e);
