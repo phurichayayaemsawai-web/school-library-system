@@ -66,22 +66,22 @@ export default function AdminPage() {
   const [isSavingSettings, setIsSavingSettings] = useState(false);
 
   const [schoolName, setSchoolName] = useState(settings.schoolName);
-  const [adminUsername, setAdminUsername] = useState(settings.adminUsername || 'thaibj3');
+  const [adminUsername, setAdminUsername] = useState(settings.adminUsername || 'admin_bj3_lib');
   const [studentBorrowDays, setStudentBorrowDays] = useState<number | string>(settings.studentBorrowDays || 5);
   const [teacherBorrowDays, setTeacherBorrowDays] = useState<number | string>(settings.teacherBorrowDays || 10);
   const [maxBooksPerPerson, setMaxBooksPerPerson] = useState<number | string>(settings.maxBooksPerPerson || 3);
   const [finePerDay, setFinePerDay] = useState<number | string>(settings.finePerDay !== undefined ? settings.finePerDay : 25);
-  const [newPasscode, setNewPasscode] = useState(settings.adminPasscode || '12123');
+  const [newPasscode, setNewPasscode] = useState(settings.adminPasscode || 'ThaiBJ3@2026!');
 
   React.useEffect(() => {
     if (!isDirty) {
       setSchoolName(settings.schoolName || 'ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓');
-      setAdminUsername(settings.adminUsername || 'thaibj3');
+      setAdminUsername(settings.adminUsername || 'admin_bj3_lib');
       setStudentBorrowDays(settings.studentBorrowDays || 5);
       setTeacherBorrowDays(settings.teacherBorrowDays || 10);
       setMaxBooksPerPerson(settings.maxBooksPerPerson || 3);
       setFinePerDay(settings.finePerDay !== undefined ? settings.finePerDay : 25);
-      setNewPasscode(settings.adminPasscode || '12123');
+      setNewPasscode(settings.adminPasscode || 'ThaiBJ3@2026!');
     }
   }, [settings, isDirty]);
 
@@ -102,8 +102,8 @@ export default function AdminPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const validUser = (settings.adminUsername || 'thaibj3').trim().toLowerCase();
-    const validPass = (settings.adminPasscode || '12123').trim();
+    const validUser = (settings.adminUsername || 'admin_bj3_lib').trim().toLowerCase();
+    const validPass = (settings.adminPasscode || 'ThaiBJ3@2026!').trim();
 
     const inputUser = usernameInput.trim().toLowerCase();
     const inputPass = passcodeInput.trim();
@@ -124,8 +124,8 @@ export default function AdminPage() {
     try {
       await updateSettings({
         schoolName: schoolName.trim() || 'ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓',
-        adminUsername: adminUsername.trim() || 'thaibj3',
-        adminPasscode: newPasscode.trim() || '12123',
+        adminUsername: adminUsername.trim() || 'admin_bj3_lib',
+        adminPasscode: newPasscode.trim() || 'ThaiBJ3@2026!',
         studentBorrowDays: Number(studentBorrowDays) || 5,
         teacherBorrowDays: Number(teacherBorrowDays) || 10,
         maxBooksPerPerson: Number(maxBooksPerPerson) || 3,

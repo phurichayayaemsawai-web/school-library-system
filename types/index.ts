@@ -91,8 +91,8 @@ export const DEFAULT_SETTINGS: LibrarySettings = {
   teacherBorrowDays: 10,
   maxBooksPerPerson: 3,
   finePerDay: 25,
-  adminUsername: 'thaibj3',
-  adminPasscode: '12123',
+  adminUsername: 'admin_bj3_lib',
+  adminPasscode: 'ThaiBJ3@2026!',
 };
 
 // Thai Language & General Categories tailored for the Thai Department Library
