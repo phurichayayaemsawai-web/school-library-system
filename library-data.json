@@ -3,7 +3,7 @@
   "transactions": [],
   "wishlists": [],
   "settings": {
-    "schoolName": "ห้องสมุดหมดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓",
+    "schoolName": "ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓",
     "studentBorrowDays": 5,
     "teacherBorrowDays": 10,
     "maxBooksPerPerson": 3,
@@ -11,7 +11,7 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "clientTimestamp": "2026-09-14T13:42:14.161Z",
-  "lastUpdated": "2026-09-14T13:40:35.481Z",
+  "clientTimestamp": "2026-09-14T13:42:20.961Z",
+  "lastUpdated": "2026-09-14T13:40:42.276Z",
   "version": "1.0"
 }
