@@ -1,6 +1,20 @@
 {
   "books": [
     {
+      "id": "TH-005",
+      "title": "ระหว่างทางกลับบ้าน",
+      "author": "อังคาร จันทาทิพย์",
+      "category": "วรรณคดีและวรรณกรรมไทย",
+      "isbn": "978-616-5742-92",
+      "coverUrl": "https://image.makewebcdn.com/makeweb/m_1920x0/KGtN87G25/DefaultData/%E0%B8%A3%E0%B8%B0%E0%B8%AB%E0%B8%A7%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%97%E0%B8%B2%E0%B8%87%E0%B8%81%E0%B8%A5%E0%B8%B1%E0%B8%9A%E0%B8%9A%E0%B9%89%E0%B8%B2%E0%B8%99.png?v=202405291424",
+      "publishedYear": "2567",
+      "location": "ตู้ภาษาไทย ชั้น 1",
+      "description": "",
+      "status": "AVAILABLE",
+      "totalBorrowedCount": 0,
+      "createdAt": "2026-09-14"
+    },
+    {
       "id": "TH-004",
       "title": "กาหลมหรทีก",
       "author": "ปราปต์",
@@ -68,6 +82,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-14T15:24:19.526Z",
+  "lastUpdated": "2026-09-14T15:27:36.650Z",
   "version": "1.0"
 }
