@@ -10,8 +10,8 @@
       "publishedYear": "2567",
       "location": "ตู้ภาษาไทย ชั้น 1",
       "description": "",
-      "status": "AVAILABLE",
-      "totalBorrowedCount": 0,
+      "status": "BORROWED",
+      "totalBorrowedCount": 1,
       "createdAt": "2026-09-14"
     },
     {
@@ -85,7 +85,29 @@
       "createdAt": "2026-09-14"
     }
   ],
-  "transactions": [],
+  "transactions": [
+    {
+      "id": "TRX-2026-001",
+      "bookId": "TH-006",
+      "bookTitle": "นิทานเวตสล",
+      "bookCoverUrl": "https://cdn-local.mebmarket.com/meb/server1/396985/Thumbnail/book_detail_large.gif?2",
+      "bookCategory": "วรรณคดีและวรรณกรรมไทย",
+      "borrower": {
+        "type": "STUDENT",
+        "name": "ปรเมษฐ์",
+        "studentId": "22519",
+        "grade": "มัธยมศึกษาปีที่ 5",
+        "room": "10",
+        "phone": "0992554825"
+      },
+      "borrowDate": "2026-09-14",
+      "borrowTime": "22:33",
+      "dueDate": "2026-09-19",
+      "dueTime": "16:30 น.",
+      "status": "ACTIVE",
+      "notes": ""
+    }
+  ],
   "wishlists": [],
   "settings": {
     "schoolName": "ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓",
@@ -96,6 +118,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-14T15:30:13.473Z",
+  "lastUpdated": "2026-09-14T15:33:40.505Z",
   "version": "1.0"
 }
