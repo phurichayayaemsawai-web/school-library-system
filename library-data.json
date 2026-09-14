@@ -66,8 +66,8 @@
       "publishedYear": "2567",
       "location": "ตู้ภาษาไทย ชั้น 1",
       "description": "",
-      "status": "AVAILABLE",
-      "totalBorrowedCount": 0,
+      "status": "BORROWED",
+      "totalBorrowedCount": 1,
       "createdAt": "2026-09-14"
     },
     {
@@ -86,6 +86,25 @@
     }
   ],
   "transactions": [
+    {
+      "id": "TRX-2026-003",
+      "bookId": "TH-002",
+      "bookTitle": "ซอยเดียวกัน",
+      "bookCoverUrl": "https://bci.kinokuniya.com/jsp/images/book-img/97897/97897425/9789742557485.JPG",
+      "bookCategory": "วรรณคดีและวรรณกรรมไทย",
+      "borrower": {
+        "type": "TEACHER",
+        "name": "ครู ปรเมษฐ์",
+        "department": "กลุ่มสาระการเรียนรู้สังคมศึกษา ศาสนา และวัฒนธรรม",
+        "phone": "0936255872"
+      },
+      "borrowDate": "2026-09-14",
+      "borrowTime": "22:34",
+      "dueDate": "2026-09-24",
+      "dueTime": "16:30 น.",
+      "status": "ACTIVE",
+      "notes": ""
+    },
     {
       "id": "TRX-2026-002",
       "bookId": "TH-005",
@@ -139,6 +158,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-14T15:34:09.421Z",
+  "lastUpdated": "2026-09-14T15:34:38.147Z",
   "version": "1.0"
 }
