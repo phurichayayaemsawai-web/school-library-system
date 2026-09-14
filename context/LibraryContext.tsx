@@ -71,7 +71,7 @@ export const sanitizeSettings = (raw: any): LibrarySettings => {
     ...raw,
     schoolName,
     adminUsername: (raw.adminUsername && !raw.adminUsername.includes('?')) ? raw.adminUsername : DEFAULT_SETTINGS.adminUsername,
-    adminPasscode: (raw.adminPasscode && !raw.adminPasscode.includes('?') && raw.adminPasscode !== '1234') ? raw.adminPasscode : DEFAULT_SETTINGS.adminPasscode,
+    adminPasscode: (raw.adminPasscode && !raw.adminPasscode.includes('?')) ? raw.adminPasscode : DEFAULT_SETTINGS.adminPasscode,
     studentBorrowDays: Number(raw.studentBorrowDays) || 5,
     teacherBorrowDays: Number(raw.teacherBorrowDays) || 10,
     maxBooksPerPerson: Number(raw.maxBooksPerPerson) || 3,

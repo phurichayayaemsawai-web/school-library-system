@@ -62,23 +62,28 @@ export default function AdminPage() {
   const [authError, setAuthError] = useState(false);
 
   // Settings form state
+  const [isDirty, setIsDirty] = useState(false);
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+
   const [schoolName, setSchoolName] = useState(settings.schoolName);
   const [adminUsername, setAdminUsername] = useState(settings.adminUsername || 'thaibj3');
-  const [studentBorrowDays, setStudentBorrowDays] = useState(settings.studentBorrowDays || 5);
-  const [teacherBorrowDays, setTeacherBorrowDays] = useState(settings.teacherBorrowDays || 10);
-  const [maxBooksPerPerson, setMaxBooksPerPerson] = useState(settings.maxBooksPerPerson || 3);
-  const [finePerDay, setFinePerDay] = useState(settings.finePerDay || 25);
+  const [studentBorrowDays, setStudentBorrowDays] = useState<number | string>(settings.studentBorrowDays || 5);
+  const [teacherBorrowDays, setTeacherBorrowDays] = useState<number | string>(settings.teacherBorrowDays || 10);
+  const [maxBooksPerPerson, setMaxBooksPerPerson] = useState<number | string>(settings.maxBooksPerPerson || 3);
+  const [finePerDay, setFinePerDay] = useState<number | string>(settings.finePerDay !== undefined ? settings.finePerDay : 25);
   const [newPasscode, setNewPasscode] = useState(settings.adminPasscode || '12123');
 
   React.useEffect(() => {
-    setSchoolName(settings.schoolName || 'ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓');
-    setAdminUsername(settings.adminUsername || 'thaibj3');
-    setStudentBorrowDays(settings.studentBorrowDays || 5);
-    setTeacherBorrowDays(settings.teacherBorrowDays || 10);
-    setMaxBooksPerPerson(settings.maxBooksPerPerson || 3);
-    setFinePerDay(settings.finePerDay !== undefined ? settings.finePerDay : 25);
-    setNewPasscode(settings.adminPasscode || '12123');
-  }, [settings]);
+    if (!isDirty) {
+      setSchoolName(settings.schoolName || 'ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓');
+      setAdminUsername(settings.adminUsername || 'thaibj3');
+      setStudentBorrowDays(settings.studentBorrowDays || 5);
+      setTeacherBorrowDays(settings.teacherBorrowDays || 10);
+      setMaxBooksPerPerson(settings.maxBooksPerPerson || 3);
+      setFinePerDay(settings.finePerDay !== undefined ? settings.finePerDay : 25);
+      setNewPasscode(settings.adminPasscode || '12123');
+    }
+  }, [settings, isDirty]);
 
   const [toast, setToast] = useState<ToastMessage | null>(null);
   const [activeTab, setActiveTab] = useState<'settings' | 'books' | 'data'>('settings');
@@ -117,18 +122,27 @@ export default function AdminPage() {
     }
   };
 
-  const handleSaveSettings = (e: React.FormEvent) => {
+  const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
-    updateSettings({
-      schoolName: schoolName.trim() || 'ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓',
-      adminUsername: adminUsername.trim() || 'thaibj3',
-      adminPasscode: newPasscode.trim() || '12123',
-      studentBorrowDays: Number(studentBorrowDays) || 5,
-      teacherBorrowDays: Number(teacherBorrowDays) || 10,
-      maxBooksPerPerson: Number(maxBooksPerPerson) || 3,
-      finePerDay: Number(finePerDay) || 25,
-    });
-    showToast('บันทึกการตั้งค่าระบบและบัญชีแอดมินเรียบร้อย', 'success');
+    setIsSavingSettings(true);
+    try {
+      await updateSettings({
+        schoolName: schoolName.trim() || 'ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓',
+        adminUsername: adminUsername.trim() || 'thaibj3',
+        adminPasscode: newPasscode.trim() || '12123',
+        studentBorrowDays: Number(studentBorrowDays) || 5,
+        teacherBorrowDays: Number(teacherBorrowDays) || 10,
+        maxBooksPerPerson: Number(maxBooksPerPerson) || 3,
+        finePerDay: finePerDay !== '' && !isNaN(Number(finePerDay)) ? Number(finePerDay) : 25,
+      });
+      setIsDirty(false);
+      showToast('บันทึกการตั้งค่าระบบเรียบร้อยแล้ว', 'success');
+    } catch (err: any) {
+      console.error(err);
+      showToast('เกิดข้อผิดพลาดในการบันทึกการตั้งค่า', 'error');
+    } finally {
+      setIsSavingSettings(false);
+    }
   };
 
   const handleDeleteBook = (id: string, title: string) => {
@@ -304,7 +318,7 @@ export default function AdminPage() {
             <div className="space-y-5">
               <h3 className="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-2 border-b border-sky-50 pb-3">
                 <Clock className="w-4 h-4 text-blue-600 shrink-0" />
-                <span>กำหนดระยะเวลายืม-คืน และกฎระเบียบห้องสมุด</span>
+                <span>กำหนดระยะเวลายืม-คืน</span>
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -318,7 +332,10 @@ export default function AdminPage() {
                     type="text"
                     required
                     value={schoolName}
-                    onChange={(e) => setSchoolName(e.target.value)}
+                    onChange={(e) => {
+                      setSchoolName(e.target.value);
+                      setIsDirty(true);
+                    }}
                     className="w-full pl-9 pr-3 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none font-medium"
                   />
                 </div>
@@ -334,7 +351,10 @@ export default function AdminPage() {
                     type="text"
                     required
                     value={adminUsername}
-                    onChange={(e) => setAdminUsername(e.target.value)}
+                    onChange={(e) => {
+                      setAdminUsername(e.target.value);
+                      setIsDirty(true);
+                    }}
                     className="w-full pl-9 pr-3 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
                   />
                 </div>
@@ -350,7 +370,10 @@ export default function AdminPage() {
                     type="text"
                     required
                     value={newPasscode}
-                    onChange={(e) => setNewPasscode(e.target.value)}
+                    onChange={(e) => {
+                      setNewPasscode(e.target.value);
+                      setIsDirty(true);
+                    }}
                     className="w-full pl-9 pr-3 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
                   />
                 </div>
@@ -366,7 +389,10 @@ export default function AdminPage() {
                   max="60"
                   required
                   value={studentBorrowDays}
-                  onChange={(e) => setStudentBorrowDays(Number(e.target.value))}
+                  onChange={(e) => {
+                    setStudentBorrowDays(e.target.value);
+                    setIsDirty(true);
+                  }}
                   className="w-full px-3 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
                 />
               </div>
@@ -381,7 +407,10 @@ export default function AdminPage() {
                   max="60"
                   required
                   value={teacherBorrowDays}
-                  onChange={(e) => setTeacherBorrowDays(Number(e.target.value))}
+                  onChange={(e) => {
+                    setTeacherBorrowDays(e.target.value);
+                    setIsDirty(true);
+                  }}
                   className="w-full px-3 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
                 />
               </div>
@@ -396,7 +425,10 @@ export default function AdminPage() {
                   max="20"
                   required
                   value={maxBooksPerPerson}
-                  onChange={(e) => setMaxBooksPerPerson(Number(e.target.value))}
+                  onChange={(e) => {
+                    setMaxBooksPerPerson(e.target.value);
+                    setIsDirty(true);
+                  }}
                   className="w-full px-3 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
                 />
               </div>
@@ -411,7 +443,10 @@ export default function AdminPage() {
                   max="100"
                   required
                   value={finePerDay}
-                  onChange={(e) => setFinePerDay(Number(e.target.value))}
+                  onChange={(e) => {
+                    setFinePerDay(e.target.value);
+                    setIsDirty(true);
+                  }}
                   className="w-full px-3 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-blue-400 focus:bg-white focus:outline-none"
                 />
               </div>
@@ -421,10 +456,11 @@ export default function AdminPage() {
           <div className="pt-4 border-t border-sky-50 flex justify-end">
             <button
               type="submit"
-              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl sm:rounded-2xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center gap-2 hover:scale-[1.02] active:scale-95"
+              disabled={isSavingSettings}
+              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white rounded-xl sm:rounded-2xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center gap-2 hover:scale-[1.02] active:scale-95 disabled:opacity-50"
             >
               <CheckCircle2 className="w-4 h-4" />
-              <span>บันทึกการตั้งค่า</span>
+              <span>{isSavingSettings ? 'กำลังบันทึก...' : 'บันทึกการตั้งค่า'}</span>
             </button>
           </div>
         </form>
