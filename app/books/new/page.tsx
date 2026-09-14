@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useLibrary } from '@/context/LibraryContext';
 import { BOOK_CATEGORIES } from '@/types';
-import { BookOpen, ArrowLeft, Image as ImageIcon, MapPin, Hash, Calendar, Bookmark, CheckCircle2, Scan, AlertCircle } from 'lucide-react';
+import { BookOpen, ArrowLeft, Image as ImageIcon, MapPin, Hash, Calendar, Bookmark, CheckCircle2, Scan, AlertCircle, Upload } from 'lucide-react';
 
 export default function AddBookPage() {
   const router = useRouter();
@@ -24,6 +24,18 @@ export default function AddBookPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [imageError, setImageError] = useState(false);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCoverUrl(reader.result as string);
+        setImageError(false);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -114,6 +126,19 @@ export default function AddBookPage() {
                     </span>
                   </div>
                 )}
+              </div>
+
+              <div>
+                <label className="flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-xl border border-sky-200 bg-sky-50/60 hover:bg-sky-100 text-blue-700 text-xs font-semibold cursor-pointer transition-colors shadow-2xs">
+                  <Upload className="w-4 h-4 text-blue-600" />
+                  <span>เลือกรูปภาพจากอัลบั้ม</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                </label>
               </div>
             </div>
           </div>
@@ -242,14 +267,14 @@ export default function AddBookPage() {
 
                 <div className="sm:col-span-2">
                   <label className="block text-xs font-medium text-slate-700 mb-1">
-                    URL รูปภาพ
+                    หรือ วาง URL รูปภาพ
                   </label>
                   <div className="relative">
                     <ImageIcon className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="url"
                       placeholder="วางลิงก์รูปภาพ (https://...)"
-                      value={coverUrl}
+                      value={coverUrl.startsWith('data:') ? '' : coverUrl}
                       onChange={(e) => {
                         setCoverUrl(e.target.value);
                         setImageError(false);
