@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Book } from '@/types';
 import { Badge } from '@/components/ui/Badge';
 import { X, BookOpen, MapPin, Calendar, Hash, User, Bookmark, Trash2, Pencil } from 'lucide-react';
@@ -14,6 +14,11 @@ interface BookModalProps {
 
 export const BookModal: React.FC<BookModalProps> = ({ book, onClose, onBorrow, onDelete, onEdit }) => {
   const { isAdmin, deleteBook } = useLibrary();
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [book?.id]);
 
   if (!book) return null;
 
@@ -60,15 +65,24 @@ export const BookModal: React.FC<BookModalProps> = ({ book, onClose, onBorrow, o
         <div className="p-4 sm:p-6 md:p-8">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
             {/* Left: Book Cover */}
-            <div className="aspect-[3/4] max-w-[200px] sm:max-w-none mx-auto sm:mx-0 w-full rounded-2xl overflow-hidden bg-slate-100 shadow-md">
-              <img
-                src={book.coverUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80'}
-                alt={book.title}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = 'https://placehold.co/400x600/e2e8f0/0369a1?text=' + encodeURIComponent(book.title.slice(0, 12));
-                }}
-              />
+            <div className="aspect-[3/4] max-w-[200px] sm:max-w-none mx-auto sm:mx-0 w-full rounded-2xl overflow-hidden bg-slate-100 shadow-md flex items-center justify-center">
+              {book.coverUrl && !imageError ? (
+                <img
+                  src={book.coverUrl}
+                  alt={book.title}
+                  className="w-full h-full object-cover"
+                  onError={() => setImageError(true)}
+                />
+              ) : (
+                <div className="p-4 text-center space-y-2 flex flex-col items-center justify-center h-full w-full bg-slate-100">
+                  <div className="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center text-blue-600">
+                    <BookOpen className="w-6 h-6 text-blue-500" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-600 line-clamp-2 px-2 text-center">
+                    {book.title}
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Right: Book Details */}
