@@ -1,20 +1,5 @@
 {
-  "books": [
-    {
-      "id": "TH-001",
-      "title": "ระหว่างทางกลับบ้าน",
-      "author": "อังคาร จันทาทิพย์",
-      "category": "วรรณคดีและวรรณกรรมไทย",
-      "isbn": "9786167552880",
-      "coverUrl": "https://www.chulabook.com/literature/22535?srsltid=AfmBOopSmf-F0J5c6yXo46NueH3bN7rQQ0xEvIHDkcAt5MYntUWyiG0w",
-      "publishedYear": "2560",
-      "location": "ตู้ภาษาไทย ชั้น 1",
-      "description": "",
-      "status": "AVAILABLE",
-      "totalBorrowedCount": 0,
-      "createdAt": "2026-09-14"
-    }
-  ],
+  "books": [],
   "transactions": [],
   "wishlists": [],
   "settings": {
@@ -26,6 +11,6 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-14T12:24:50.267Z",
+  "lastUpdated": "2026-09-14T12:26:49.552Z",
   "version": "1.0"
 }
