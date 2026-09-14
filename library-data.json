@@ -1,6 +1,20 @@
 {
   "books": [
     {
+      "id": "TH-003",
+      "title": "นครไม่เป็นไร",
+      "author": "ชาติ กอบจิตติ",
+      "category": "วรรณคดีและวรรณกรรมไทย",
+      "isbn": "978-616-8107-41",
+      "coverUrl": "https://media.asiabooks.com/media/catalog/product/9/7/9786166163407_2.jpg?auto=webp&format=pjpg&width=1280&height=1600&fit=cover",
+      "publishedYear": "2567",
+      "location": "ตู้ภาษาไทย ชั้น 1",
+      "description": "",
+      "status": "AVAILABLE",
+      "totalBorrowedCount": 0,
+      "createdAt": "2026-09-14"
+    },
+    {
       "id": "TH-002",
       "title": "ซอยเดียวกัน",
       "author": "วาณิช จรุงกิจอนันต์",
@@ -40,6 +54,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-14T15:20:18.351Z",
+  "lastUpdated": "2026-09-14T15:22:09.847Z",
   "version": "1.0"
 }
