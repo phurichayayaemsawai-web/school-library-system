@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useLibrary } from '@/context/LibraryContext';
 import { BOOK_CATEGORIES } from '@/types';
-import { BookOpen, ArrowLeft, Image as ImageIcon, MapPin, Hash, Calendar, Bookmark, CheckCircle2, Upload, Scan, ShieldAlert } from 'lucide-react';
+import { BookOpen, ArrowLeft, Image as ImageIcon, MapPin, Hash, Calendar, Bookmark, CheckCircle2, Upload, Scan, AlertCircle } from 'lucide-react';
 
 export default function AddBookPage() {
   const router = useRouter();
@@ -14,21 +14,16 @@ export default function AddBookPage() {
   const [bookId, setBookId] = useState(`TH-${String(books.length + 1).padStart(3, '0')}`);
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
-  const [category, setCategory] = useState<string>(BOOK_CATEGORIES[0]); // วรรณคดีและวรรณกรรมไทย
+  const [category, setCategory] = useState<string>(BOOK_CATEGORIES[0]);
   const [isbn, setIsbn] = useState('');
   const [publishedYear, setPublishedYear] = useState('2567');
   const [location, setLocation] = useState('ตู้ภาษาไทย ชั้น 1');
-  const [coverUrl, setCoverUrl] = useState('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80');
+  const [coverUrl, setCoverUrl] = useState('');
   const [description, setDescription] = useState('');
   const [submitted, setSubmitted] = useState(false);
-
-  const sampleCovers = [
-    'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1532012164546-f432f2e3edd3?w=600&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=600&auto=format&fit=crop&q=80',
-  ];
+  const [isSaving, setIsSaving] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -36,22 +31,23 @@ export default function AddBookPage() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setCoverUrl(reader.result as string);
+        setImageError(false);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const [isSaving, setIsSaving] = useState(false);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!title.trim() || !author.trim()) {
-      alert('กรุณากรอกชื่อหนังสือและชื่อผู้แต่ง');
+      setErrorMsg('กรุณากรอกชื่อหนังสือและชื่อผู้แต่ง');
       return;
     }
 
     setIsSaving(true);
+    setErrorMsg(null);
+
     try {
       await addBook({
         id: bookId.trim() || `TH-${String(books.length + 1).padStart(3, '0')}`,
@@ -59,7 +55,7 @@ export default function AddBookPage() {
         author: author.trim(),
         category,
         isbn: isbn.trim() || `978-616-${Math.floor(1000 + Math.random() * 9000)}-${Math.floor(10 + Math.random() * 90)}`,
-        coverUrl: coverUrl.trim() || sampleCovers[0],
+        coverUrl: coverUrl.trim(),
         publishedYear: publishedYear.trim() || '2567',
         location: location.trim() || 'ตู้ภาษาไทย ชั้น 1',
         description: description.trim(),
@@ -69,9 +65,9 @@ export default function AddBookPage() {
       setTimeout(() => {
         router.push('/books');
       }, 700);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert('เกิดข้อผิดพลาดในการบันทึกหนังสือ');
+      setErrorMsg(err.message || 'เกิดข้อผิดพลาดในการบันทึกหนังสือไปยังฐานข้อมูล');
       setIsSaving(false);
     }
   };
@@ -114,15 +110,22 @@ export default function AddBookPage() {
                 <span>ภาพปกหนังสือ (Live Preview)</span>
               </h3>
 
-              <div className="aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 shadow-inner border border-slate-200">
-                <img
-                  src={coverUrl}
-                  alt="Preview ปกหนังสือ"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'https://placehold.co/400x600/e2e8f0/475569?text=Cover+Preview';
-                  }}
-                />
+              <div className="aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 shadow-inner border border-slate-200 flex items-center justify-center">
+                {coverUrl && !imageError ? (
+                  <img
+                    src={coverUrl}
+                    alt="Preview ปกหนังสือ"
+                    className="w-full h-full object-cover"
+                    onError={() => setImageError(true)}
+                  />
+                ) : (
+                  <div className="p-4 text-center space-y-2">
+                    <BookOpen className="w-10 h-10 text-slate-300 mx-auto" />
+                    <span className="text-[11px] text-slate-400 font-medium block">
+                      ยังไม่ได้ระบุรูปภาพปก
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Upload local file */}
@@ -138,31 +141,19 @@ export default function AddBookPage() {
                   />
                 </label>
               </div>
-
-              {/* Sample cover presets */}
-              <div>
-                <span className="text-[11px] font-semibold text-slate-500 block mb-1.5">หรือเลือกรูปตัวอย่าง:</span>
-                <div className="flex gap-2 overflow-x-auto pb-1">
-                  {sampleCovers.map((url, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => setCoverUrl(url)}
-                      className={`w-10 h-14 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-all ${
-                        coverUrl === url ? 'border-blue-600 scale-105 shadow-xs' : 'border-slate-200 opacity-70 hover:opacity-100'
-                      }`}
-                    >
-                      <img src={url} alt="preset" className="w-full h-full object-cover" />
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
 
           {/* Right Column: Form details */}
           <div className="md:col-span-2">
             <form onSubmit={handleSubmit} className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-sky-100 shadow-sm space-y-5">
+              {errorMsg && (
+                <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 font-medium flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
+                  <span>{errorMsg}</span>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Book ID */}
                 <div className="sm:col-span-2 p-4 bg-sky-50/70 border border-sky-200 rounded-2xl">
@@ -277,13 +268,16 @@ export default function AddBookPage() {
 
                 <div className="sm:col-span-2">
                   <label className="block text-xs font-medium text-slate-700 mb-1">
-                    URL รูปภาพปก
+                    URL รูปภาพปก (ทางเลือกเพิ่มเติม)
                   </label>
                   <input
                     type="url"
                     placeholder="https://..."
                     value={coverUrl}
-                    onChange={(e) => setCoverUrl(e.target.value)}
+                    onChange={(e) => {
+                      setCoverUrl(e.target.value);
+                      setImageError(false);
+                    }}
                     className="w-full px-3.5 py-2.5 bg-sky-50/30 border border-sky-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none"
                   />
                 </div>

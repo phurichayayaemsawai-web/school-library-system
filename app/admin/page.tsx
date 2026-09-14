@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLibrary } from '@/context/LibraryContext';
 import { Toast, ToastMessage } from '@/components/ui/Toast';
+import { EditBookModal } from '@/components/books/EditBookModal';
+import { Book } from '@/types';
 import { 
   ShieldCheck, 
   Settings, 
@@ -12,6 +14,7 @@ import {
   Clock, 
   PlusCircle, 
   Trash2, 
+  Pencil,
   Lock, 
   Unlock, 
   Sparkles, 
@@ -79,6 +82,7 @@ export default function AdminPage() {
 
   const [toast, setToast] = useState<ToastMessage | null>(null);
   const [activeTab, setActiveTab] = useState<'settings' | 'books' | 'data'>('settings');
+  const [selectedBookForEdit, setSelectedBookForEdit] = useState<Book | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -482,13 +486,22 @@ export default function AdminPage() {
                         </span>
                       </td>
                       <td className="py-3 px-3 text-right whitespace-nowrap">
-                        <button
-                          onClick={() => handleDeleteBook(b.id, b.title)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
-                          title="ลบหนังสือ"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        <div className="flex items-center justify-end gap-1">
+                          <button
+                            onClick={() => setSelectedBookForEdit(b)}
+                            className="p-1.5 text-slate-400 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition-colors"
+                            title="แก้ไขหนังสือ"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteBook(b.id, b.title)}
+                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                            title="ลบหนังสือ"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -556,6 +569,13 @@ export default function AdminPage() {
           </div>
         </div>
       )}
+
+      {/* Edit Book Modal */}
+      <EditBookModal
+        book={selectedBookForEdit}
+        onClose={() => setSelectedBookForEdit(null)}
+        onSuccess={(msg) => showToast(msg, 'success')}
+      />
     </div>
   );
 }

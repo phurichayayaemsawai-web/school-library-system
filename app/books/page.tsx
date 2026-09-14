@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useLibrary } from '@/context/LibraryContext';
 import { BookCard } from '@/components/books/BookCard';
 import { BookModal } from '@/components/books/BookModal';
+import { EditBookModal } from '@/components/books/EditBookModal';
 import { BookFilter } from '@/components/books/BookFilter';
 import { BorrowModal } from '@/components/borrow/BorrowModal';
 import { Toast, ToastMessage } from '@/components/ui/Toast';
@@ -20,6 +21,7 @@ export default function BooksPage() {
 
   const [selectedBookForView, setSelectedBookForView] = useState<Book | null>(null);
   const [selectedBookForBorrow, setSelectedBookForBorrow] = useState<Book | null>(null);
+  const [selectedBookForEdit, setSelectedBookForEdit] = useState<Book | null>(null);
   const [toast, setToast] = useState<ToastMessage | null>(null);
 
   // Filter books
@@ -126,6 +128,7 @@ export default function BooksPage() {
               book={book}
               onView={(b) => setSelectedBookForView(b)}
               onBorrow={(b) => setSelectedBookForBorrow(b)}
+              onEdit={(b) => setSelectedBookForEdit(b)}
               onDelete={(b) => {
                 deleteBook(b.id);
                 showToast(`ลบหนังสือ "${b.title}" เรียบร้อยแล้ว`, 'info');
@@ -140,10 +143,17 @@ export default function BooksPage() {
         book={selectedBookForView}
         onClose={() => setSelectedBookForView(null)}
         onBorrow={(b) => setSelectedBookForBorrow(b)}
+        onEdit={(b) => setSelectedBookForEdit(b)}
         onDelete={(b) => {
           deleteBook(b.id);
           showToast(`ลบหนังสือ "${b.title}" เรียบร้อยแล้ว`, 'info');
         }}
+      />
+
+      <EditBookModal
+        book={selectedBookForEdit}
+        onClose={() => setSelectedBookForEdit(null)}
+        onSuccess={(msg) => showToast(msg, 'success')}
       />
 
       <BorrowModal

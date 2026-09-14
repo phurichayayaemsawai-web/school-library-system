@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Book, BorrowTransaction, BookWishlist, LibrarySettings, DEFAULT_SETTINGS } from '@/types';
 import { INITIAL_BOOKS, INITIAL_TRANSACTIONS, INITIAL_WISHLISTS } from '@/lib/mockData';
+import { broadcastSyncEvent } from '@/lib/realtime';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -32,7 +33,7 @@ let memoryCache: {
   cachedAt: 0,
 };
 
-const CACHE_TTL_MS = 500; // 0.5s cache only for rapid burst calls
+const CACHE_TTL_MS = 500;
 
 const DEFAULT_SCHOOL_NAME = 'ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓';
 
@@ -57,7 +58,6 @@ function sanitizeSettings(raw: any): LibrarySettings {
 }
 
 async function fetchCloudData(): Promise<{ data: CloudPayload; sha: string | null }> {
-  // Check memory cache
   const now = Date.now();
   if (memoryCache.data && now - memoryCache.cachedAt < CACHE_TTL_MS) {
     return { data: memoryCache.data, sha: memoryCache.sha };
@@ -124,7 +124,6 @@ async function fetchCloudData(): Promise<{ data: CloudPayload; sha: string | nul
 
 async function saveCloudData(payload: CloudPayload): Promise<{ success: boolean; sha?: string; error?: string }> {
   try {
-    // 1. Get latest file SHA on db-store branch
     let currentSha = memoryCache.sha;
     try {
       const checkRes = await fetch(
@@ -146,7 +145,6 @@ async function saveCloudData(payload: CloudPayload): Promise<{ success: boolean;
       console.warn('Could not check SHA, using cached SHA', e);
     }
 
-    // 2. Prepare payload
     const booksList = Array.isArray(payload.books) ? payload.books : [];
     const bookIdSet = new Set(booksList.map((b) => b.id));
     const rawTransactions = Array.isArray(payload.transactions) ? payload.transactions : [];
@@ -193,12 +191,18 @@ async function saveCloudData(payload: CloudPayload): Promise<{ success: boolean;
     const putJson = await putRes.json();
     const newSha = putJson.content?.sha || null;
 
-    // Update memory cache
     memoryCache = {
       data: updatedPayload,
       sha: newSha,
       cachedAt: Date.now(),
     };
+
+    // Broadcast SSE Realtime Event
+    broadcastSyncEvent({
+      type: "BOOKS_UPDATED",
+      books: updatedPayload.books,
+      timestamp: new Date().toISOString(),
+    });
 
     return { success: true, sha: newSha };
   } catch (error: any) {
@@ -232,16 +236,62 @@ export async function GET() {
 // POST /api/sync
 export async function POST(req: NextRequest) {
   try {
-    const body: CloudPayload = await req.json();
+    const body: any = await req.json();
 
-    if (!body || !Array.isArray(body.books)) {
+    if (!body) {
       return NextResponse.json(
-        { success: false, message: 'Invalid payload structure. books array is required.' },
+        { success: false, message: 'Invalid payload structure.' },
         { status: 400 }
       );
     }
 
-    const saveResult = await saveCloudData(body);
+    const currentData = (await fetchCloudData()).data;
+    const action = body.action || "sync_all";
+
+    let targetBooks = currentData.books || [];
+
+    if (action === "ADD_BOOK") {
+      const newBook = body.book;
+      if (!newBook || !newBook.id) {
+        return NextResponse.json({ success: false, message: "Invalid book payload" }, { status: 400 });
+      }
+      if (targetBooks.some((b) => b.id === newBook.id)) {
+        return NextResponse.json(
+          { success: false, message: `รหัสหนังสือ "${newBook.id}" มีอยู่ในระบบแล้ว` },
+          { status: 400 }
+        );
+      }
+      targetBooks = [newBook, ...targetBooks];
+    } else if (action === "UPDATE_BOOK") {
+      const { id, updates } = body;
+      if (!id || !updates) {
+        return NextResponse.json({ success: false, message: "Invalid update payload" }, { status: 400 });
+      }
+      targetBooks = targetBooks.map((b) => (b.id === id ? { ...b, ...updates } : b));
+    } else if (action === "DELETE_BOOK") {
+      const { id } = body;
+      if (!id) {
+        return NextResponse.json({ success: false, message: "Invalid delete payload" }, { status: 400 });
+      }
+      targetBooks = targetBooks.filter((b) => b.id !== id);
+    } else {
+      if (!Array.isArray(body.books)) {
+        return NextResponse.json(
+          { success: false, message: 'Invalid payload structure. books array is required.' },
+          { status: 400 }
+        );
+      }
+      targetBooks = body.books;
+    }
+
+    const payloadToSave: CloudPayload = {
+      books: targetBooks,
+      transactions: body.transactions !== undefined ? body.transactions : currentData.transactions,
+      wishlists: body.wishlists !== undefined ? body.wishlists : currentData.wishlists,
+      settings: body.settings !== undefined ? sanitizeSettings(body.settings) : currentData.settings,
+    };
+
+    const saveResult = await saveCloudData(payloadToSave);
 
     if (saveResult.success) {
       return NextResponse.json({
@@ -249,9 +299,10 @@ export async function POST(req: NextRequest) {
         message: 'ข้อมูลถูกซิงค์ขึ้น Cloud Database เรียบร้อยแล้ว',
         lastUpdated: new Date().toISOString(),
         sha: saveResult.sha,
+        data: payloadToSave,
         stats: {
-          booksCount: body.books.length,
-          transactionsCount: body.transactions?.length || 0,
+          booksCount: targetBooks.length,
+          transactionsCount: payloadToSave.transactions?.length || 0,
         },
       });
     } else {

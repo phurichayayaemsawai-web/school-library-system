@@ -337,10 +337,24 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       };
     }
 
-    // 3. Ultra-fast background polling: every 1.5 seconds
+    // 3. Server-Sent Events (SSE) Realtime Stream from cloud
+    let eventSource: EventSource | null = null;
+    try {
+      eventSource = new EventSource('/api/sync/stream');
+      eventSource.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === 'BOOKS_UPDATED') {
+            syncWithCloud(true);
+          }
+        } catch (e) {}
+      };
+    } catch (e) {}
+
+    // 4. Background polling as fallback: every 2 seconds
     const interval = setInterval(() => {
       syncWithCloud(false);
-    }, 1500);
+    }, 2000);
 
     return () => {
       window.removeEventListener('focus', handleImmediateSync);
@@ -348,6 +362,9 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       window.removeEventListener('online', handleImmediateSync);
       if (bc) {
         bc.close();
+      }
+      if (eventSource) {
+        eventSource.close();
       }
       clearInterval(interval);
     };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Book } from '@/types';
 import { Badge } from '@/components/ui/Badge';
-import { X, BookOpen, MapPin, Calendar, Hash, User, Bookmark, Trash2 } from 'lucide-react';
+import { X, BookOpen, MapPin, Calendar, Hash, User, Bookmark, Trash2, Pencil } from 'lucide-react';
 import { useLibrary } from '@/context/LibraryContext';
 
 interface BookModalProps {
@@ -9,9 +9,10 @@ interface BookModalProps {
   onClose: () => void;
   onBorrow: (book: Book) => void;
   onDelete?: (book: Book) => void;
+  onEdit?: (book: Book) => void;
 }
 
-export const BookModal: React.FC<BookModalProps> = ({ book, onClose, onBorrow, onDelete }) => {
+export const BookModal: React.FC<BookModalProps> = ({ book, onClose, onBorrow, onDelete, onEdit }) => {
   const { isAdmin, deleteBook } = useLibrary();
 
   if (!book) return null;
@@ -140,14 +141,29 @@ export const BookModal: React.FC<BookModalProps> = ({ book, onClose, onBorrow, o
         <div className="px-4 sm:px-6 py-3.5 sm:py-4 bg-slate-50 border-t border-slate-100 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3 sticky bottom-0">
           <div>
             {isAdmin && (
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-2xs whitespace-nowrap"
-              >
-                <Trash2 className="w-3.5 h-3.5 text-rose-600" />
-                <span>ลบหนังสือเล่มนี้</span>
-              </button>
+              <div className="flex items-center gap-2">
+                {onEdit && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onEdit(book);
+                    }}
+                    className="px-3.5 py-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-2xs whitespace-nowrap"
+                  >
+                    <Pencil className="w-3.5 h-3.5 text-sky-600" />
+                    <span>แก้ไขหนังสือ</span>
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-2xs whitespace-nowrap"
+                >
+                  <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                  <span>ลบหนังสือ</span>
+                </button>
+              </div>
             )}
           </div>
 

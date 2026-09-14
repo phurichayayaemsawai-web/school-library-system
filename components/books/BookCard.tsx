@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Book } from '@/types';
 import { Badge } from '@/components/ui/Badge';
-import { BookOpen, User, MapPin, Hash, ArrowUpRight, Trash2 } from 'lucide-react';
+import { BookOpen, User, MapPin, Hash, ArrowUpRight, Trash2, Pencil } from 'lucide-react';
 import { useLibrary } from '@/context/LibraryContext';
 
 interface BookCardProps {
   book: Book;
   onBorrow?: (book: Book) => void;
   onView?: (book: Book) => void;
+  onEdit?: (book: Book) => void;
   onDelete?: (book: Book) => void;
 }
 
-export const BookCard: React.FC<BookCardProps> = ({ book, onBorrow, onView, onDelete }) => {
+export const BookCard: React.FC<BookCardProps> = ({ book, onBorrow, onView, onEdit, onDelete }) => {
   const { isAdmin, deleteBook } = useLibrary();
+  const [imageError, setImageError] = useState(false);
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -25,38 +27,66 @@ export const BookCard: React.FC<BookCardProps> = ({ book, onBorrow, onView, onDe
     }
   };
 
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onEdit) onEdit(book);
+  };
+
   return (
     <div className="group bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 overflow-hidden shadow-xs hover:shadow-card transition-all duration-300 flex flex-col hover:-translate-y-1">
       {/* Cover Image Container */}
       <div 
-        className="relative aspect-[3/4] w-full overflow-hidden bg-slate-100 cursor-pointer"
+        className="relative aspect-[3/4] w-full overflow-hidden bg-slate-100 cursor-pointer flex items-center justify-center"
         onClick={() => onView && onView(book)}
       >
-        <img
-          src={book.coverUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80'}
-          alt={book.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = 'https://placehold.co/400x600/e2e8f0/0369a1?text=' + encodeURIComponent(book.title.slice(0, 12));
-          }}
-        />
+        {book.coverUrl && !imageError ? (
+          <img
+            src={book.coverUrl}
+            alt={book.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className="p-4 text-center space-y-2 flex flex-col items-center justify-center h-full w-full bg-slate-100">
+            <div className="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center text-blue-600">
+              <BookOpen className="w-6 h-6 text-blue-500" />
+            </div>
+            <span className="text-[10px] font-bold text-slate-500 line-clamp-2 px-2 text-center">
+              {book.title}
+            </span>
+          </div>
+        )}
+
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3 sm:p-4">
           <span className="text-[11px] sm:text-xs text-white font-medium flex items-center gap-1">
             ดูรายละเอียด <ArrowUpRight className="w-3.5 h-3.5" />
           </span>
         </div>
-        <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
+
+        <div className="absolute top-2.5 right-2.5 flex items-center gap-1">
           <Badge status={book.status} type="book" />
           {isAdmin && (
-            <button
-              onClick={handleDelete}
-              title="ลบหนังสือเล่มนี้"
-              className="p-1 rounded-md bg-rose-600/90 hover:bg-rose-700 text-white backdrop-blur-xs transition-colors shadow-2xs"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-            </button>
+            <>
+              {onEdit && (
+                <button
+                  onClick={handleEdit}
+                  title="แก้ไขหนังสือเล่มนี้"
+                  className="p-1 rounded-md bg-blue-600/90 hover:bg-blue-700 text-white backdrop-blur-xs transition-colors shadow-2xs"
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                </button>
+              )}
+              <button
+                onClick={handleDelete}
+                title="ลบหนังสือเล่มนี้"
+                className="p-1 rounded-md bg-rose-600/90 hover:bg-rose-700 text-white backdrop-blur-xs transition-colors shadow-2xs"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </>
           )}
         </div>
+
         <div className="absolute top-2.5 left-2.5">
           <span className="text-[10px] font-mono font-bold bg-slate-900/85 text-white px-2 py-0.5 rounded-md backdrop-blur-xs shadow-2xs whitespace-nowrap">
             {book.id}
