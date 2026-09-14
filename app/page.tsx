@@ -127,16 +127,16 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Card 4: ระยะเวลายืม (สำหรับครู 10 วัน สำหรับนักเรียน 5 วัน) */}
+        {/* Card 4: ระยะเวลายืม (สำหรับครู / สำหรับนักเรียน) */}
         <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-sky-100 shadow-sm hover:border-sky-200 transition-all flex items-center justify-between">
           <div className="min-w-0 space-y-1">
             <p className="text-xs font-medium text-slate-500 truncate whitespace-nowrap">ระยะเวลายืม</p>
             <div className="space-y-0.5">
               <p className="text-xs sm:text-sm font-bold text-slate-800 truncate whitespace-nowrap">
-                สำหรับนักเรียน <span className="text-blue-600 font-black">5 วัน</span>
+                สำหรับนักเรียน <span className="text-blue-600 font-black">{settings.studentBorrowDays} วัน</span>
               </p>
               <p className="text-xs sm:text-sm font-bold text-slate-800 truncate whitespace-nowrap">
-                สำหรับครู <span className="text-indigo-600 font-black">10 วัน</span>
+                สำหรับครู <span className="text-indigo-600 font-black">{settings.teacherBorrowDays} วัน</span>
               </p>
             </div>
           </div>

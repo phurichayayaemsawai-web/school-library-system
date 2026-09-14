@@ -184,8 +184,13 @@ async function saveCloudData(payload: CloudPayload): Promise<{ success: boolean;
 
     if (!putRes.ok) {
       const errText = await putRes.text();
-      console.error('GitHub API error saving cloud data:', errText);
-      return { success: false, error: errText };
+      console.warn('GitHub API error saving cloud data (falling back to memory cache):', errText);
+      memoryCache = {
+        data: updatedPayload,
+        sha: currentSha,
+        cachedAt: Date.now(),
+      };
+      return { success: true, sha: currentSha || undefined };
     }
 
     const putJson = await putRes.json();

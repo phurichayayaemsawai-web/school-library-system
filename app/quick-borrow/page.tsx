@@ -140,7 +140,7 @@ export default function QuickBorrowPage() {
       borrowTime: borrowTimeNow,
       dueDate: calculatedDueDate,
       dueTime: '16:30 น.',
-      notes: `ยืมผ่านหน้าทำรายการยืมหนังสือ (${borrowerType === 'STUDENT' ? 'นักเรียน 5 วัน' : 'ครู 10 วัน'})`,
+      notes: `ยืมผ่านหน้าทำรายการยืมหนังสือ (${borrowerType === 'STUDENT' ? `นักเรียน ${settings.studentBorrowDays} วัน` : `ครู ${settings.teacherBorrowDays} วัน`})`,
     });
 
     if (result.success && result.transaction) {
@@ -177,19 +177,19 @@ export default function QuickBorrowPage() {
         <div className="space-y-1">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-semibold text-white mb-1 shadow-2xs whitespace-nowrap">
             <Bookmark className="w-3.5 h-3.5 text-sky-200 fill-sky-200 shrink-0" />
-            <span>Thai Language library</span>
+            <span>{settings.schoolName || 'Thai Language library'}</span>
           </div>
           <h1 className="text-xl sm:text-3xl font-black tracking-tight">
             ทำรายการยืมหนังสือ
           </h1>
           <p className="text-xs sm:text-sm text-sky-100/90 font-normal">
-            ค้นหาและบันทึกการยืมหนังสือของห้องสมุดหมวดภาษาไทย
+            ค้นหาและบันทึกการยืมหนังสือของ{settings.schoolName || 'ห้องสมุดหมวดภาษาไทย'}
           </p>
         </div>
 
         <div className="bg-white/15 backdrop-blur-md px-4 py-3 rounded-xl sm:rounded-2xl border border-white/25 text-center flex-shrink-0 self-stretch sm:self-auto">
           <span className="text-[11px] text-sky-100 block whitespace-nowrap">ระยะเวลายืมตามระเบียบ</span>
-          <span className="text-lg font-black text-white">5-10 วัน</span>
+          <span className="text-lg font-black text-white">{settings.studentBorrowDays}-{settings.teacherBorrowDays} วัน</span>
         </div>
       </div>
 
@@ -216,7 +216,7 @@ export default function QuickBorrowPage() {
             </div>
             <div className="min-w-0">
               <span className="text-[11px] font-semibold text-slate-500 block truncate">
-                กำหนดส่งคืน ({borrowerType === 'STUDENT' ? 'นักเรียน 5 วัน' : 'ครู 10 วัน'})
+                กำหนดส่งคืน ({borrowerType === 'STUDENT' ? `นักเรียน ${settings.studentBorrowDays} วัน` : `ครู ${settings.teacherBorrowDays} วัน`})
               </span>
               <p className="text-xs sm:text-sm font-bold text-indigo-950 truncate">
                 ภายในวันที่ <strong className="text-indigo-600 font-black">{formatThaiDate(calculatedDueDate)}</strong>

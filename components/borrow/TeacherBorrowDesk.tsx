@@ -201,7 +201,7 @@ export const TeacherBorrowDesk: React.FC<TeacherBorrowDeskProps> = ({ onSuccess 
             href="/admin"
             className="text-xs font-bold text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl sm:rounded-2xl transition-colors border border-blue-200/60 whitespace-nowrap"
           >
-            ⚙️ ระยะเวลายืม ({settings.studentBorrowDays} วัน)
+            ⚙️ ระยะเวลายืม (นักเรียน {settings.studentBorrowDays} วัน / ครู {settings.teacherBorrowDays} วัน)
           </Link>
         </div>
       </div>

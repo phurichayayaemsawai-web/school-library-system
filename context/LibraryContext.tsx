@@ -207,7 +207,6 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
           stateRef.current.books = cloudBooks;
           stateRef.current.transactions = cloudTrx;
           stateRef.current.wishlists = cloudWish;
-          stateRef.current.settings = cloudSet;
 
           setBooks(cloudBooks);
           setTransactions(
@@ -219,13 +218,20 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
             })
           );
           setWishlists(cloudWish);
-          setSettings(cloudSet);
+
+          // Only update settings if no local mutation occurred recently (< 15s)
+          if (force || Date.now() - lastLocalMutationTimeRef.current >= 15000) {
+            stateRef.current.settings = cloudSet;
+            setSettings(cloudSet);
+            try {
+              localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(cloudSet));
+            } catch (e) {}
+          }
 
           try {
             localStorage.setItem(STORAGE_KEYS.BOOKS, JSON.stringify(cloudBooks));
             localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(cloudTrx));
             localStorage.setItem(STORAGE_KEYS.WISHLISTS, JSON.stringify(cloudWish));
-            localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(cloudSet));
           } catch (e) {}
 
           const now = new Date();
@@ -356,10 +362,23 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       syncWithCloud(false);
     }, 2000);
 
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEYS.SETTINGS && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          const san = sanitizeSettings(parsed);
+          setSettings(san);
+          stateRef.current.settings = san;
+        } catch (err) {}
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+
     return () => {
       window.removeEventListener('focus', handleImmediateSync);
       window.removeEventListener('pageshow', handleImmediateSync);
       window.removeEventListener('online', handleImmediateSync);
+      window.removeEventListener('storage', handleStorageChange);
       if (bc) {
         bc.close();
       }
@@ -426,11 +445,16 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const updateSettings = async (newSettings: Partial<LibrarySettings>) => {
     lastLocalMutationTimeRef.current = Date.now();
-    const updated = { ...settings, ...newSettings };
+    const updated = sanitizeSettings({ ...stateRef.current.settings, ...newSettings });
     stateRef.current.settings = updated;
     setSettings(updated);
     try {
       localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(updated));
+      if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+        const bc = new BroadcastChannel('school_lib_realtime');
+        bc.postMessage({ type: 'SYNC_UPDATE', timestamp: new Date().toISOString() });
+        bc.close();
+      }
     } catch (e) {
       console.warn('Error saving settings', e);
     }

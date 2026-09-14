@@ -18,7 +18,7 @@ import {
 
 interface TransactionTableProps {
   transactions: BorrowTransaction[];
-  onReturnClick?: (trx) => void;
+  onReturnClick?: (trx: BorrowTransaction) => void;
   title?: string;
   showFilters?: boolean;
 }
