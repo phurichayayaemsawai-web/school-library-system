@@ -1,6 +1,20 @@
 {
   "books": [
     {
+      "id": "TH-003",
+      "title": "ซอยเดียวกัน",
+      "author": "วาณิช จรุงกิจอนันต์",
+      "category": "วรรณคดีและวรรณกรรมไทย",
+      "isbn": "9789742557485",
+      "coverUrl": "https://bci.kinokuniya.com/jsp/images/book-img/97897/97897425/9789742557485.JPG",
+      "publishedYear": "2526",
+      "location": "ตู้ภาษาไทย ชั้น 1",
+      "description": "",
+      "status": "AVAILABLE",
+      "totalBorrowedCount": 0,
+      "createdAt": "2026-09-14"
+    },
+    {
       "id": "TH-002",
       "title": "กาลครั้งหนึ่งในความฝัน",
       "author": "อัญชัน",
@@ -64,7 +78,6 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "12123"
   },
-  "clientTimestamp": "2026-09-14T12:43:56.103Z",
-  "lastUpdated": "2026-09-14T12:43:56.601Z",
+  "lastUpdated": "2026-09-14T12:55:21.275Z",
   "version": "1.0"
 }
