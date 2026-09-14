@@ -13,20 +13,6 @@
       "status": "AVAILABLE",
       "totalBorrowedCount": 0,
       "createdAt": "2026-09-14"
-    },
-    {
-      "id": "TH-001",
-      "title": "ระหว่างทางกลับบ้าน",
-      "author": "อังคาร จันทาทิพย์",
-      "category": "วรรณคดีและวรรณกรรมไทย",
-      "isbn": "9786167552880",
-      "coverUrl": "https://fv.lnwfile.com/qo2f0u.jpg",
-      "publishedYear": "2560",
-      "location": "ตู้ภาษาไทย ชั้น 1",
-      "description": "ระหว่างทางกลับบ้าน คือรวมบทกวีที่เล่าถึง นิยามของ \"บ้าน\" ผ่าน 3 มิติหลัก: บ้านเกิดในความทรงจำและความผูกพัน, บ้านของคนพลัดถิ่นและผู้ลี้ภัยที่ต้องระหกระเหินในสังคม, และ บ้านเชิงจิตวิญญาณที่เป็นพื้นที่ปลอดภัยทางใจของมนุษย์ทุกคน",
-      "status": "AVAILABLE",
-      "totalBorrowedCount": 0,
-      "createdAt": "2026-09-14"
     }
   ],
   "transactions": [],
@@ -40,6 +26,6 @@
     "adminUsername": "thaibj3",
     "adminPasscode": "160334"
   },
-  "lastUpdated": "2026-09-14T13:18:15.892Z",
+  "lastUpdated": "2026-09-14T13:18:21.738Z",
   "version": "1.0"
 }
