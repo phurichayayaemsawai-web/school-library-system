@@ -10,12 +10,34 @@
       "publishedYear": "2560",
       "location": "ตู้ภาษาไทย ชั้น 1",
       "description": "รวมบทกวี \"ระหว่างทางกลับบ้าน\" ของ \"อังคาร จันทาทิพย์\" นำเสนอความคิดเรื่อง \"บ้าน\" ในหลากหลายมิติ ทั้งบ้านของผู้ประพันธ์เอง และบ้านของผู้คนหลากหลายอาชีพ หลากหลายชนชั้นในสังคมไทยและสังคมโลก อาทิ บ้านของแรงงานอพยพข้ามชาติ บ้านของชาวโรฮิงญา บ้านของผู้ลี้ภัยสงคราม บ้านจึงมีความหมายมากกว่าสถานที่เกิดและที่พำนักอาศัย แต่บ้านเป็นพื้นที่แห่งความทรงจำ ความรัก ความผูกพันและความสุขของสมาชิกในครอบครัว",
-      "status": "AVAILABLE",
-      "totalBorrowedCount": 0,
+      "status": "BORROWED",
+      "totalBorrowedCount": 1,
       "createdAt": "2026-09-14"
     }
   ],
-  "transactions": [],
+  "transactions": [
+    {
+      "id": "TRX-2026-001",
+      "bookId": "TH-002",
+      "bookTitle": "ระหว่างทางกลับบ้าน",
+      "bookCoverUrl": "https://image.makewebcdn.com/makeweb/m_1920x0/KGtN87G25/DefaultData/%E0%B8%A3%E0%B8%B0%E0%B8%AB%E0%B8%A7%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%97%E0%B8%B2%E0%B8%87%E0%B8%81%E0%B8%A5%E0%B8%B1%E0%B8%9A%E0%B8%9A%E0%B9%89%E0%B8%B2%E0%B8%99.png?v=202405291424",
+      "bookCategory": "วรรณคดีและวรรณกรรมไทย",
+      "borrower": {
+        "type": "STUDENT",
+        "name": "น.ส.สุมัชญา กลั่นศิริ",
+        "studentId": "22543",
+        "grade": "มัธยมศึกษาปีที่ 4",
+        "room": "10",
+        "phone": "0624179302"
+      },
+      "borrowDate": "2026-09-14",
+      "borrowTime": "22:06",
+      "dueDate": "2026-09-19",
+      "dueTime": "16:30 น.",
+      "status": "ACTIVE",
+      "notes": ""
+    }
+  ],
   "wishlists": [],
   "settings": {
     "schoolName": "ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓",
@@ -26,6 +48,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-14T15:03:51.307Z",
+  "lastUpdated": "2026-09-14T15:06:29.212Z",
   "version": "1.0"
 }
