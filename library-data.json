@@ -80,7 +80,7 @@
       "publishedYear": "2567",
       "location": "ตู้ภาษาไทย ชั้น 1",
       "description": "",
-      "status": "BORROWED",
+      "status": "AVAILABLE",
       "totalBorrowedCount": 1,
       "createdAt": "2026-09-14"
     }
@@ -102,8 +102,10 @@
       "borrowTime": "07:57",
       "dueDate": "2026-09-25",
       "dueTime": "16:30 น.",
-      "status": "ACTIVE",
-      "notes": ""
+      "status": "RETURNED",
+      "notes": "",
+      "returnDate": "2026-09-15",
+      "returnTime": "08:09"
     },
     {
       "id": "TRX-2026-005",
@@ -219,6 +221,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-15T01:08:38.197Z",
+  "lastUpdated": "2026-09-15T01:09:19.663Z",
   "version": "1.0"
 }
