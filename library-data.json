@@ -212,13 +212,13 @@
   "wishlists": [],
   "settings": {
     "schoolName": "ห้องสมุดหมวดภาษาไทย โรงเรียนบรรหารแจ่มใสวิทยา ๓",
-    "studentBorrowDays": 1,
+    "studentBorrowDays": 5,
     "teacherBorrowDays": 10,
     "maxBooksPerPerson": 3,
     "finePerDay": 25,
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-15T00:57:39.253Z",
+  "lastUpdated": "2026-09-15T01:08:38.197Z",
   "version": "1.0"
 }
