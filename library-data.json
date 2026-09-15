@@ -80,12 +80,31 @@
       "publishedYear": "2567",
       "location": "ตู้ภาษาไทย ชั้น 1",
       "description": "",
-      "status": "AVAILABLE",
-      "totalBorrowedCount": 0,
+      "status": "BORROWED",
+      "totalBorrowedCount": 1,
       "createdAt": "2026-09-14"
     }
   ],
   "transactions": [
+    {
+      "id": "TRX-2026-006",
+      "bookId": "TH-001",
+      "bookTitle": "กาลครั้งหนึ่งในความฝัน",
+      "bookCoverUrl": "https://api.chulabook.com/images/pid-194265.webp",
+      "bookCategory": "วรรณคดีและวรรณกรรมไทย",
+      "borrower": {
+        "type": "TEACHER",
+        "name": "ครูไฮคิว",
+        "department": "งานแนะแนว",
+        "phone": "-"
+      },
+      "borrowDate": "2026-09-15",
+      "borrowTime": "07:57",
+      "dueDate": "2026-09-25",
+      "dueTime": "16:30 น.",
+      "status": "ACTIVE",
+      "notes": ""
+    },
     {
       "id": "TRX-2026-005",
       "bookId": "TH-003",
@@ -200,6 +219,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-15T00:48:24.596Z",
+  "lastUpdated": "2026-09-15T00:57:39.253Z",
   "version": "1.0"
 }
