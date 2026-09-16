@@ -2,7 +2,7 @@
   "books": [
     {
       "id": "TH-009",
-      "title": "ผีอาเซียน เล่ม4",
+      "title": "ผีอาเซียน",
       "author": "Character House Studio",
       "category": "วรรณคดีและวรรณกรรมไทย",
       "isbn": "978-616-04-7125-6",
@@ -271,6 +271,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-16T02:47:00.998Z",
+  "lastUpdated": "2026-09-16T02:47:50.289Z",
   "version": "1.0"
 }
