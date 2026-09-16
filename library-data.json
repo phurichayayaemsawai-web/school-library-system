@@ -24,7 +24,7 @@
       "publishedYear": "2560",
       "location": "ตู้ภาษาไทย ชั้น 1",
       "description": "",
-      "status": "BORROWED",
+      "status": "AVAILABLE",
       "totalBorrowedCount": 1,
       "createdAt": "2026-09-16"
     },
@@ -52,7 +52,7 @@
       "publishedYear": "2568",
       "location": "ตู้ภาษาไทย ชั้น 1",
       "description": "",
-      "status": "AVAILABLE",
+      "status": "BORROWED",
       "totalBorrowedCount": 1,
       "createdAt": "2026-09-16"
     },
@@ -214,8 +214,10 @@
       "borrowTime": "10:12",
       "dueDate": "2026-09-26",
       "dueTime": "16:30 น.",
-      "status": "ACTIVE",
-      "notes": "นิยาย"
+      "status": "RETURNED",
+      "notes": "นิยาย",
+      "returnDate": "2026-09-16",
+      "returnTime": "19:12"
     },
     {
       "id": "TRX-2026-007",
@@ -235,10 +237,8 @@
       "borrowTime": "10:09",
       "dueDate": "2026-09-21",
       "dueTime": "16:30 น.",
-      "status": "RETURNED",
-      "notes": "",
-      "returnDate": "2026-09-16",
-      "returnTime": "19:12"
+      "status": "ACTIVE",
+      "notes": ""
     },
     {
       "id": "TRX-2026-006",
@@ -385,6 +385,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-16T12:12:11.121Z",
+  "lastUpdated": "2026-09-16T12:12:12.471Z",
   "version": "1.0"
 }
