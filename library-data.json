@@ -1,6 +1,20 @@
 {
   "books": [
     {
+      "id": "TH-014",
+      "title": "คนหาปลา",
+      "author": "เสกสรรค์ ประเสริฐกุล",
+      "category": "วรรณคดีและวรรณกรรมไทย",
+      "isbn": "978-616-510-974-1",
+      "coverUrl": "https://bookonline.praphansarn.com/assets/img/cover_book/571/64cc7e00359ad.jpg",
+      "publishedYear": "2528",
+      "location": "ตู้ภาษาไทย ชั้น 1",
+      "description": "",
+      "status": "AVAILABLE",
+      "totalBorrowedCount": 0,
+      "createdAt": "2026-09-16"
+    },
+    {
       "id": "TH-013",
       "title": "สิงโตนอกคอก",
       "author": "จิดานันท์ เหลืองเพียรสมุท",
@@ -327,6 +341,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-16T03:01:39.414Z",
+  "lastUpdated": "2026-09-16T03:05:05.809Z",
   "version": "1.0"
 }
