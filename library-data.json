@@ -1,6 +1,20 @@
 {
   "books": [
     {
+      "id": "TH-008",
+      "title": "บ้านเก่า",
+      "author": "โชคชัย บัณฑิต",
+      "category": "วรรณคดีและวรรณกรรมไทย",
+      "isbn": "9786167374710",
+      "coverUrl": "https://storage.naiin.com/system/application/bookstore/resource/product/202010/514817/1000237464_front_XXL.jpg?v=1725775065",
+      "publishedYear": "2544",
+      "location": "ตู้ภาษาไทย ชั้น 1",
+      "description": "",
+      "status": "AVAILABLE",
+      "totalBorrowedCount": 0,
+      "createdAt": "2026-09-16"
+    },
+    {
       "id": "TH-007",
       "title": "ความน่าจะเป็น",
       "author": "ปราบดา หยุ่น",
@@ -243,6 +257,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-16T02:16:19.781Z",
+  "lastUpdated": "2026-09-16T02:41:57.423Z",
   "version": "1.0"
 }
