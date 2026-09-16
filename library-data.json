@@ -164,7 +164,7 @@
       "publishedYear": "2567",
       "location": "ตู้ภาษาไทย ชั้น 1",
       "description": "",
-      "status": "BORROWED",
+      "status": "AVAILABLE",
       "totalBorrowedCount": 1,
       "createdAt": "2026-09-14"
     },
@@ -277,8 +277,10 @@
       "borrowTime": "07:48",
       "dueDate": "2026-09-16",
       "dueTime": "16:30 น.",
-      "status": "ACTIVE",
-      "notes": ""
+      "status": "RETURNED",
+      "notes": "",
+      "returnDate": "2026-09-16",
+      "returnTime": "16:54"
     },
     {
       "id": "TRX-2026-004",
@@ -381,6 +383,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-16T03:12:13.989Z",
+  "lastUpdated": "2026-09-16T09:54:26.834Z",
   "version": "1.0"
 }
