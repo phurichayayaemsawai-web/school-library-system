@@ -1,6 +1,20 @@
 {
   "books": [
     {
+      "id": "TH-013",
+      "title": "สิงโตนอกคอก",
+      "author": "จิดานันท์ เหลืองเพียรสมุท",
+      "category": "วรรณคดีและวรรณกรรมไทย",
+      "isbn": "9786161819101",
+      "coverUrl": "https://di.lnwfile.com/_webp_max_images/600/600/hy/ty/ns.webp",
+      "publishedYear": "2560",
+      "location": "ตู้ภาษาไทย ชั้น 1",
+      "description": "",
+      "status": "AVAILABLE",
+      "totalBorrowedCount": 0,
+      "createdAt": "2026-09-16"
+    },
+    {
       "id": "TH-012",
       "title": "ผียุโรป",
       "author": "Character House Studio",
@@ -313,6 +327,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-16T02:58:00.484Z",
+  "lastUpdated": "2026-09-16T03:01:39.414Z",
   "version": "1.0"
 }
