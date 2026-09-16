@@ -1,6 +1,20 @@
 {
   "books": [
     {
+      "id": "TH-012",
+      "title": "ผียุโรป",
+      "author": "Character House Studio",
+      "category": "วรรณคดีและวรรณกรรมไทย",
+      "isbn": "9786160471249",
+      "coverUrl": "https://img.fictionlog.co/ebooks/users/5bac9d55b825e9002727a620/cover-images/ZD9BYHUxhm2lLiTrbvy4A5Oq.jpeg",
+      "publishedYear": "2568",
+      "location": "ตู้ภาษาไทย ชั้น 1",
+      "description": "",
+      "status": "AVAILABLE",
+      "totalBorrowedCount": 0,
+      "createdAt": "2026-09-16"
+    },
+    {
       "id": "TH-011",
       "title": "ผีไทย",
       "author": "Character House Studio",
@@ -299,6 +313,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-16T02:55:08.520Z",
+  "lastUpdated": "2026-09-16T02:58:00.484Z",
   "version": "1.0"
 }
