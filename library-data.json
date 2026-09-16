@@ -52,8 +52,8 @@
       "publishedYear": "2568",
       "location": "ตู้ภาษาไทย ชั้น 1",
       "description": "",
-      "status": "AVAILABLE",
-      "totalBorrowedCount": 0,
+      "status": "BORROWED",
+      "totalBorrowedCount": 1,
       "createdAt": "2026-09-16"
     },
     {
@@ -199,6 +199,27 @@
   ],
   "transactions": [
     {
+      "id": "TRX-2026-007",
+      "bookId": "TH-011",
+      "bookTitle": "ผีไทย",
+      "bookCoverUrl": "https://platform-api.nanmeebooks.com/uploads/images/image-1738130529583-sm.webp",
+      "bookCategory": "วรรณคดีและวรรณกรรมไทย",
+      "borrower": {
+        "type": "STUDENT",
+        "name": "น.ส.สุมัชญา กลั่นศิริ",
+        "studentId": "22543",
+        "grade": "มัธยมศึกษาปีที่ 4",
+        "room": "10",
+        "phone": "0624179302"
+      },
+      "borrowDate": "2026-09-16",
+      "borrowTime": "10:09",
+      "dueDate": "2026-09-21",
+      "dueTime": "16:30 น.",
+      "status": "ACTIVE",
+      "notes": ""
+    },
+    {
       "id": "TRX-2026-006",
       "bookId": "TH-001",
       "bookTitle": "กาลครั้งหนึ่งในความฝัน",
@@ -341,6 +362,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-16T03:06:26.057Z",
+  "lastUpdated": "2026-09-16T03:10:06.231Z",
   "version": "1.0"
 }
