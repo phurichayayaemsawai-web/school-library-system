@@ -10,8 +10,8 @@
       "publishedYear": "2528",
       "location": "ตู้ภาษาไทย ชั้น 1",
       "description": "",
-      "status": "AVAILABLE",
-      "totalBorrowedCount": 0,
+      "status": "BORROWED",
+      "totalBorrowedCount": 1,
       "createdAt": "2026-09-16"
     },
     {
@@ -198,6 +198,27 @@
     }
   ],
   "transactions": [
+    {
+      "id": "TRX-2026-009",
+      "bookId": "TH-014",
+      "bookTitle": "คนหาปลา",
+      "bookCoverUrl": "https://bookonline.praphansarn.com/assets/img/cover_book/571/64cc7e00359ad.jpg",
+      "bookCategory": "วรรณคดีและวรรณกรรมไทย",
+      "borrower": {
+        "type": "STUDENT",
+        "name": "ประมด",
+        "studentId": "22540",
+        "grade": "มัธยมศึกษาปีที่ 1",
+        "room": "1",
+        "phone": "-"
+      },
+      "borrowDate": "2026-09-17",
+      "borrowTime": "09:10",
+      "dueDate": "2026-09-22",
+      "dueTime": "16:30 น.",
+      "status": "ACTIVE",
+      "notes": ""
+    },
     {
       "id": "TRX-2026-008",
       "bookId": "TH-013",
@@ -387,6 +408,6 @@
     "adminUsername": "thaibj",
     "adminPasscode": "12123"
   },
-  "lastUpdated": "2026-09-16T12:12:20.531Z",
+  "lastUpdated": "2026-09-17T02:10:58.997Z",
   "version": "1.0"
 }
